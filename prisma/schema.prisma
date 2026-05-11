@@ -1,0 +1,221 @@
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+enum RoleStatus {
+  SUPER_ADMIN
+  FINANCE
+  DAILY_ADMIN
+  MARKETING_STAFF
+  MARKETING_SEMENTARA
+}
+
+model Pegawai {
+  id      String  @id @default(cuid())
+  nama    String
+  prefix String?
+  kode   String?
+  jabatan String?
+  Departemen String? 
+  dailyActivities DailyActivity[]
+  hakAksesKaryawan     HakAksesKaryawan[]
+
+  user    User?
+}
+
+model User {
+  id        String     @id @default(cuid())
+  pegawaiId String     @unique
+  phone     String     @unique
+  email     String     @unique
+  password  String
+  role      RoleStatus
+  createdAt DateTime   @default(now())
+  devices   DeviceTrusted[]
+  otps      OtpCode[]
+  refreshTokens RefreshToken[]  //
+
+  pegawai   Pegawai    @relation(fields: [pegawaiId], references: [id])
+}
+
+model RefreshToken {
+  id         String   @id @default(cuid())
+  token      String   @unique
+  userId     String
+  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  deviceHash String
+  expiresAt  DateTime
+  createdAt  DateTime @default(now())
+
+  @@index([userId])
+}
+
+model DeviceTrusted {
+  id         String   @id @default(cuid())
+  userId     String
+  deviceHash String   // hash dari fingerprint device
+  label      String?  // misal: "Chrome - Windows"
+  createdAt  DateTime @default(now())
+  user       User     @relation(fields: [userId], references: [id])
+
+  @@unique([userId, deviceHash])
+}
+
+model OtpCode {
+  id         String   @id @default(cuid())
+  userId     String
+  code       String
+  deviceHash String
+  expiresAt  DateTime
+  used       Boolean  @default(false)
+  createdAt  DateTime @default(now())  // ← tambah ini
+  user       User     @relation(fields: [userId], references: [id])
+}
+
+model TabPerusahaan {
+  noInduk              String    @id @map("0NO_INDUK")        @db.VarChar(50)
+  company              String?   @map("1COMPANY")             @db.VarChar(255)
+  alamat               String?   @map("2ALAMAT")              @db.VarChar(255)
+  alamatWaktu          String    @map("2ALAMAT_WAKTU")        @db.VarChar(4)
+  kategoriCpn          String?   @map("3KATEGORICPN")        @db.VarChar(255)
+  alamatFactory        String?   @map("4ALAMATFACTORY")      @db.VarChar(255)
+  alamatFactoryWaktu   String    @map("4ALAMATFACTORY_WAKTU") @db.VarChar(4)
+  telp                 String?   @map("5TELP")               @db.VarChar(255)
+  fax                  String?   @map("6FAX")                @db.VarChar(255)
+  email                String?   @map("7EMAIL")              @db.VarChar(255)
+  lineOfBusiness       String?   @map("8LINEOFBUSINESS")     @db.VarChar(255)
+  produksi             String?   @map("16PRoduksi")          @db.VarChar(255)
+  iso9000              String?   @map("17ISO9000")           @db.VarChar(255)
+  csrPr                String?   @map("18CSR_PR")            @db.VarChar(255)
+  iso14000             String?   @map("19ISO14000")          @db.VarChar(255)
+  proper               String    @map("19PROPER")            @db.VarChar(255)
+  ohsas18001smk3       String?   @map("20OHSAS18001SMK3")    @db.VarChar(255)
+  group                String?   @map("21GROUP")             @db.VarChar(255)
+  tglRecord            String?   @map("22TGLRECORD")         @db.VarChar(255)
+  acc                  String?   @map("23ACC")               @db.VarChar(225)
+  accCsr               String    @map("23ACC_CSR")           @db.VarChar(50)
+  accTsm               String    @map("23ACC_TSM")           @db.VarChar(50)
+  accEpm               String    @map("23ACC_EPM")           @db.VarChar(50)
+  ket                  String?   @map("24KET")
+  noGroup              String?   @map("25NO_GROUP")          @db.VarChar(25)
+  groupInduk           String?   @map("26GROUP_INDUK")       @db.VarChar(255)
+  infoKeu              String    @map("27InfoKEU")           @db.VarChar(255)
+  tglInfoKeu           String    @map("tglInfoKEU")          @db.VarChar(10)
+  prioritasMa          String?   @map("PRIORITAS_MA")        @db.VarChar(50)
+  prioritasAe          String?   @map("PRIORITAS_AE")        @db.VarChar(50)
+  kd2                  String?   @map("KD_2")                @db.VarChar(50)
+  kd3                  String?   @map("KD_3")                @db.VarChar(50)
+  kd4                  String?   @map("KD_4")                @db.VarChar(50)
+  kd5                  String?   @map("KD_5")                @db.VarChar(50)
+  fasilitas            String?                               @db.VarChar(255)
+  ims                  String?   @map("IMS")                 @db.VarChar(255)
+  khusus               String?                               @db.VarChar(255)
+  region               String?                               @db.VarChar(50)
+  tglRecordEnv         String?   @map("tglrecordENV")        @db.VarChar(20)
+  tglRecordCsr         String    @map("tglrecordCSR")        @db.VarChar(20)
+  tglRecordTsm         String    @map("tglrecordTSM")        @db.VarChar(20)
+  tglRecordEpm         String    @map("tglrecordEPM")        @db.VarChar(20)
+  permodalan           String?                               @db.VarChar(255)
+  inputter             String                                @db.VarChar(50)
+  dateInput            DateTime  @map("dateinput")
+  updatter             String                                @db.VarChar(50)
+  dateUpdate           DateTime  @map("dateupdate")
+  recquestAcount       String                                @db.VarChar(10)
+  dateRecquestAcount   DateTime  @map("daterecquestAcount")
+  pesertaTot           Int       @map("PesertaTot")
+  pesertaInh           Int       @map("PesertaInh")
+  butuhTraining        String    @map("ButuhTraining")       @db.VarChar(255)
+  kirimPos             String?   @map("KIRIMPOS")            @db.VarChar(5)
+  vendor               String    @map("Vendor")              @db.VarChar(15)
+  expiredVendor        DateTime  @map("expired_Vendor")      @db.Date
+  indukKab             String    @map("INDUK_KAB")           @db.VarChar(10)
+  indukProv            String    @map("INDUK_PROV")          @db.VarChar(10)
+  bdoAction            String    @map("BDO_action")          @db.VarChar(50)
+  subBidangProper      String    @map("Sub_Bidang_PROPER")   @db.VarChar(100)
+  nilaiSubBidangProper Int       @map("Nilai_Sub_Bidang_PROPER")
+
+  idSimpel           String?   @map("ID_SIMPEL")           @db.VarChar(50)
+  lineBisnisSub      String?   @map("LINE_BISNIS_SUB")     @db.VarChar(255)
+  batasEmas          Int?      @map("BATAS_EMAS")
+  batasHijau         Int?      @map("BATAS_HIJAU")
+  cabangSite         String?   @map("CABANG_SITE")         @db.VarChar(255)
+  pesaing            String?   @map("PESAING")             @db.VarChar(255)
+  prosedurPelatihan  String?   @map("PROSEDUR_PELATIHAN")  @db.VarChar(255)
+
+
+
+  contactPersons    ContactPersonPerusahaan[]
+  dailyActivities   DailyActivity[] 
+  hakAksesKaryawan     HakAksesKaryawan[]
+
+  @@map("tabperusahaan")
+}
+
+model ContactPersonPerusahaan {
+  kode              String   @id @default(cuid()) @map("KODE") @db.VarChar(50)
+  kodePerusahaan    String   @map("KODE_PERUSAHAAN") @db.VarChar(50)
+  nama              String   @map("NAMA") @db.VarChar(255)
+  teknisTertinggi   Boolean  @default(false) @map("TEKNIS_TERTINGGI")
+  jabatan           String?  @map("JABATAN") @db.VarChar(255)
+  hp                String?  @map("HP") @db.VarChar(50)
+  email             String?  @map("EMAIL") @db.VarChar(255)
+  posisi            String?  @map("POSISI") @db.VarChar(50) // "Alamat Pusat" | "Alamat Factory"
+  keuangan          String?  @map("KEUANGAN") @db.VarChar(50) // "Penagihan" | "-"
+  minta             String?  @map("MINTA") @db.VarChar(255)
+  ket               String?  @map("KET") @db.Text
+
+  // Relasi ke TabPerusahaan
+  perusahaan        TabPerusahaan @relation(fields: [kodePerusahaan], references: [noInduk], onDelete: Cascade)
+
+  // Timestamps
+  createdAt         DateTime @default(now()) @map("created_at")
+  updatedAt         DateTime @updatedAt @map("updated_at")
+
+  @@index([kodePerusahaan])
+  @@map("contact_person_perusahaan")
+}
+
+model DailyActivity {
+  id              String   @id @default(cuid()) @map("ID")
+  pegawaiId       String   @map("PEGAWAI_ID") @db.VarChar(50) // Foreign key ke Pegawai
+  perusahaanId    String   @map("PERUSAHAAN_ID") @db.VarChar(50) // Foreign key ke TabPerusahaan
+  kontak          String   @map("KONTAK") @db.VarChar(255)
+  jenisTraining   String   @map("JENIS_TRAINING") @db.VarChar(255)
+  keterangan      String   @map("KETERANGAN") @db.VarChar(255)
+  kategori        String   @map("KATEGORI") @db.VarChar(255)
+  inout           String   @map("INOUT") @db.VarChar(50)
+  tanggal         String   @map("TANGGAL") @db.VarChar(50)
+  dateTarget      DateTime? @map("DATE_TARGET") @db.Date 
+  perusahaan      String   @map("PERUSAHAAN") @db.VarChar(255)
+
+  // Relasi ke Pegawai
+  pegawai         Pegawai  @relation(fields: [pegawaiId], references: [id], onDelete: Cascade)
+
+  // Relasi ke TabPerusahaan
+  tabPerusahaan   TabPerusahaan @relation(fields: [perusahaanId], references: [noInduk], onDelete: Cascade)
+
+  createdAt       DateTime @default(now()) @map("created_at")
+  updatedAt       DateTime @updatedAt @map("updated_at")
+
+  @@index([perusahaanId])
+  @@index([pegawaiId])
+  @@map("daily_activity")
+}
+
+model HakAksesKaryawan {
+  id            String    @id @default(cuid())
+  perusahaanId  String
+  pegawaiId     String?   // Nullable
+  jenisAkses    String
+  status        String?
+  tanggalDibuat DateTime  @default(now())
+
+  // Relasi
+  perusahaan    TabPerusahaan @relation(fields: [perusahaanId], references: [noInduk])
+  pegawai       Pegawai?      @relation(fields: [pegawaiId], references: [id]) // Relasi optional
+}
