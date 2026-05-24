@@ -254,8 +254,8 @@ model TabPosPerusahaan {
 model Penawaran {
   id            String   @id @default(cuid())
   kodePelatihan String[]
-  tanggal       DateTime
-  filePath      String?   @db.VarChar(500)
+  tanggal       DateTime @default(now())
+  filePath      String?  @db.VarChar(500)
 
   @@map("penawaran")
 }
