@@ -22,8 +22,14 @@ const {
   getPosPerusahaan,
   updatePosPerusahaan,
   deletePosPerusahaan,
+  createPenawaran,
+  updatePenawaran,
+  deletePenawaran,
+  getPenawaranById,
+  getPenawaran,
 } = require("../controllers");
 const { authMiddleware } = require("../middlewares/auth.middleware");
+const upload = require("../middlewares/upload.middleware");
 
 // Route tanpa parameter
 router.get("/perusahaan", authMiddleware, getTabPerusahaanList);
@@ -102,5 +108,21 @@ router.put(
   updatePosPerusahaan,
 );
 router.delete("/perusahaan/pos", authMiddleware, deletePosPerusahaan);
+
+router.post(
+  "/penawaran",
+  authMiddleware,
+  upload.single("file"),
+  createPenawaran,
+);
+router.get("/penawaran", authMiddleware, getPenawaran);
+router.get("/penawaran/:id", authMiddleware, getPenawaranById);
+router.put(
+  "/penawaran/:id",
+  authMiddleware,
+  upload.single("file"),
+  updatePenawaran,
+);
+router.delete("/penawaran/:id", authMiddleware, deletePenawaran);
 
 module.exports = router;

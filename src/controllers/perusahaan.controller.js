@@ -1422,6 +1422,119 @@ const deletePosPerusahaan = async (req, res) => {
   }
 };
 
+const createPenawaran = async (req, res) => {
+  try {
+    const { kodePelatihan } = req.body;
+
+    if (!kodePelatihan) {
+      return res.status(400).json({ message: "kodePelatihan wajib diisi." });
+    }
+
+    const kodeArray = Array.isArray(kodePelatihan)
+      ? kodePelatihan
+      : JSON.parse(kodePelatihan);
+
+    const penawaran = await prisma.penawaran.create({
+      data: { kodePelatihan: kodeArray },
+    });
+
+    return res.status(201).json(penawaran);
+  } catch (err) {
+    console.error("[createPenawaran error]", err);
+    return res.status(500).json({ message: "Terjadi kesalahan server." });
+  }
+};
+
+// ── GET ALL ──
+const getPenawaran = async (req, res) => {
+  try {
+    const penawaran = await prisma.penawaran.findMany({
+      orderBy: { tanggal: "desc" },
+    });
+    return res.status(200).json(penawaran);
+  } catch (err) {
+    console.error("[getPenawaran error]", err);
+    return res.status(500).json({ message: "Terjadi kesalahan server." });
+  }
+};
+
+// ── GET BY ID ──
+const getPenawaranById = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const penawaran = await prisma.penawaran.findUnique({ where: { id } });
+    if (!penawaran)
+      return res.status(404).json({ message: "Penawaran tidak ditemukan." });
+    return res.status(200).json(penawaran);
+  } catch (err) {
+    console.error("[getPenawaranById error]", err);
+    return res.status(500).json({ message: "Terjadi kesalahan server." });
+  }
+};
+
+// ── UPDATE ──
+const updatePenawaran = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { kodePelatihan, tanggal } = req.body;
+    const file = req.file;
+
+    const existing = await prisma.penawaran.findUnique({ where: { id } });
+    if (!existing) {
+      if (file) fs.unlinkSync(file.path);
+      return res.status(404).json({ message: "Penawaran tidak ditemukan." });
+    }
+
+    const kodeArray = kodePelatihan
+      ? Array.isArray(kodePelatihan)
+        ? kodePelatihan
+        : JSON.parse(kodePelatihan)
+      : existing.kodePelatihan;
+
+    // Hapus file lama kalau ada file baru
+    if (file && existing.filePath && fs.existsSync(existing.filePath)) {
+      fs.unlinkSync(existing.filePath);
+    }
+
+    const updated = await prisma.penawaran.update({
+      where: { id },
+      data: {
+        kodePelatihan: kodeArray,
+        ...(tanggal && { tanggal: new Date(tanggal) }),
+        ...(file && { filePath: file.path }),
+      },
+    });
+
+    return res.status(200).json(updated);
+  } catch (err) {
+    console.error("[updatePenawaran error]", err);
+    if (req.file) fs.unlinkSync(req.file.path);
+    return res.status(500).json({ message: "Terjadi kesalahan server." });
+  }
+};
+
+// ── DELETE ──
+const deletePenawaran = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    const existing = await prisma.penawaran.findUnique({ where: { id } });
+    if (!existing)
+      return res.status(404).json({ message: "Penawaran tidak ditemukan." });
+
+    if (existing.filePath && fs.existsSync(existing.filePath)) {
+      fs.unlinkSync(existing.filePath);
+    }
+
+    await prisma.penawaran.delete({ where: { id } });
+
+    return res.status(200).json({ message: "Penawaran berhasil dihapus." });
+  } catch (err) {
+    console.error("[deletePenawaran error]", err);
+    return res.status(500).json({ message: "Terjadi kesalahan server." });
+  }
+};
+
 module.exports = {
   getTabPerusahaanList,
   createPerusahaan,
@@ -1444,6 +1557,11 @@ module.exports = {
   getPosPerusahaan,
   updatePosPerusahaan,
   deletePosPerusahaan,
+  createPenawaran,
+  getPenawaran,
+  getPenawaranById,
+  updatePenawaran,
+  deletePenawaran,
 };
 
 // Taruh ini di bagian atas file controller lo
