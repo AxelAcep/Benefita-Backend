@@ -152,6 +152,8 @@ model TabPerusahaan {
   contactPersons    ContactPersonPerusahaan[]
   dailyActivities   DailyActivity[] 
   hakAksesKaryawan     HakAksesKaryawan[]
+  logs LogPerubahanPerusahaan[]
+  posPerusahaan TabPosPerusahaan[]
 
   @@map("tabperusahaan")
 }
@@ -218,4 +220,33 @@ model HakAksesKaryawan {
   // Relasi
   perusahaan    TabPerusahaan @relation(fields: [perusahaanId], references: [noInduk])
   pegawai       Pegawai?      @relation(fields: [pegawaiId], references: [id]) // Relasi optional
+}
+
+model LogPerubahanPerusahaan {
+  id             String   @id @default(cuid())
+  perusahaanId   String   @map("perusahaan_id")
+  field          String   // Nama field yang diubah (misal: "alamat", "company", atau "HAK_AKSES")
+  dataLama       Json?    @map("data_lama")
+  dataBaru       Json?    @map("data_baru")
+  diubahOleh     String   @map("diubah_oleh") // Nama atau ID user
+  tanggal        DateTime @default(now())
+
+  // Relasi ke TabPerusahaan (Optional, biar bisa ditarik dari sisi perusahaan)
+  perusahaan     TabPerusahaan @relation(fields: [perusahaanId], references: [noInduk], onDelete: Cascade)
+
+  @@index([perusahaanId])
+  @@map("log_perubahan_perusahaan")
+}
+
+model TabPosPerusahaan {
+  id       String        @id @default(cuid())
+  nama     String        @db.VarChar(255)
+  jabatan  String        @db.VarChar(255)
+  followUp String?       @map("FOLLOW_UP") @db.VarChar(255)
+  noInduk  String        @map("NO_INDUK") @db.VarChar(50)
+  acc      String        @map("ACC") @db.VarChar(255)
+
+  perusahaan TabPerusahaan @relation(fields: [noInduk], references: [noInduk])
+
+  @@map("tabposperusahaan")
 }

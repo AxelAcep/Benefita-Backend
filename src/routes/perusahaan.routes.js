@@ -17,6 +17,11 @@ const {
   deleteDailyActivity,
   getHakAksesPerusahaan,
   editHakAksesPerusahaan,
+  getLogPerusahaan,
+  createPosPerusahaan,
+  getPosPerusahaan,
+  updatePosPerusahaan,
+  deletePosPerusahaan,
 } = require("../controllers");
 const { authMiddleware } = require("../middlewares/auth.middleware");
 
@@ -87,5 +92,15 @@ router.delete(
   authMiddleware,
   deleteDailyActivity,
 );
+router.get("/perusahaan/:perusahaanId/logs", authMiddleware, getLogPerusahaan);
+
+router.post("/perusahaan/pos", authMiddleware, createPosPerusahaan);
+router.get("/perusahaan/pos/:idPerusahaan", authMiddleware, getPosPerusahaan);
+router.put(
+  "/perusahaan/pos/:idPerusahaan",
+  authMiddleware,
+  updatePosPerusahaan,
+);
+router.delete("/perusahaan/pos", authMiddleware, deletePosPerusahaan);
 
 module.exports = router;

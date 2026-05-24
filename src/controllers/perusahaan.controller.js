@@ -310,49 +310,9 @@ const getOnePerusahaan = async (req, res) => {
 const updatePerusahaan = async (req, res) => {
   try {
     const { noInduk } = req.params;
+    const body = req.body; // Kita ambil body utuh buat diloop nanti
 
-    const {
-      // Card Perusahaan
-      company,
-      idSimpel,
-      // Card Lokasi
-      alamat,
-      alamatWaktu,
-      alamatFactory,
-      alamatFactoryWaktu,
-      // Card Sertifikasi
-      iso9000,
-      iso14000,
-      ohsas18001smk3,
-      // Card Klasifikasi & Kepemilikan
-      kategoriCpn,
-      lineOfBusiness,
-      lineBisnisSub,
-      permodalan,
-      // Card Properti & Finansial
-      nilaiSubBidangProper,
-      batasEmas,
-      batasHijau,
-      fasilitas,
-      infoKeu,
-      ket,
-      group,
-      bdoAction,
-      prioritasMa,
-      prioritasAe,
-      vendor,
-      // Card Informasi Lainnya
-      cabangSite,
-      pesaing,
-      butuhTraining,
-      prosedurPelatihan,
-      //card kontak
-      telp,
-      fax,
-      email,
-    } = req.body;
-
-    // Cek data ada
+    // 1. Cek data lama (Existing)
     const existing = await prisma.tabPerusahaan.findUnique({
       where: { noInduk },
     });
@@ -365,75 +325,69 @@ const updatePerusahaan = async (req, res) => {
 
     const now = new Date();
     const userId = req.user?.userId ?? "system";
-
     let userName = "system";
+
+    // 2. Cari nama user yang merubah
     if (userId !== "system") {
       const userWithPegawai = await prisma.user.findUnique({
         where: { id: userId },
         select: {
-          pegawai: {
-            select: {
-              nama: true,
-            },
-          },
+          pegawai: { select: { nama: true } },
         },
       });
-
       if (userWithPegawai?.pegawai) {
         userName = userWithPegawai.pegawai.nama;
       }
     }
 
-    const updated = await prisma.tabPerusahaan.update({
-      where: { noInduk },
-      data: {
-        // Perusahaan
-        ...(company !== undefined && { company }),
-        ...(idSimpel !== undefined && { idSimpel }),
-        // Lokasi
-        ...(alamat !== undefined && { alamat }),
-        ...(alamatWaktu !== undefined && { alamatWaktu }),
-        ...(alamatFactory !== undefined && { alamatFactory }),
-        ...(alamatFactoryWaktu !== undefined && { alamatFactoryWaktu }),
-        // Sertifikasi
-        ...(iso9000 !== undefined && { iso9000 }),
-        ...(iso14000 !== undefined && { iso14000 }),
-        ...(ohsas18001smk3 !== undefined && { ohsas18001smk3 }),
-        // Klasifikasi
-        ...(kategoriCpn !== undefined && { kategoriCpn }),
-        ...(lineOfBusiness !== undefined && { lineOfBusiness }),
-        ...(lineBisnisSub !== undefined && { lineBisnisSub }),
-        ...(permodalan !== undefined && { permodalan }),
-        // Properti & Finansial
-        ...(nilaiSubBidangProper !== undefined && { nilaiSubBidangProper }),
-        ...(batasEmas !== undefined && { batasEmas }),
-        ...(batasHijau !== undefined && { batasHijau }),
-        ...(fasilitas !== undefined && { fasilitas }),
-        ...(infoKeu !== undefined && { infoKeu }),
-        ...(ket !== undefined && { ket }),
-        ...(group !== undefined && { group }),
-        ...(bdoAction !== undefined && { bdoAction }),
-        ...(prioritasMa !== undefined && { prioritasMa }),
-        ...(prioritasAe !== undefined && { prioritasAe }),
-        ...(vendor !== undefined && { vendor }),
-        // Informasi Lainnya
-        ...(cabangSite !== undefined && { cabangSite }),
-        ...(pesaing !== undefined && { pesaing }),
-        ...(butuhTraining !== undefined && { butuhTraining }),
-        ...(prosedurPelatihan !== undefined && { prosedurPelatihan }),
-        // Sistem
-        updatter: userName,
-        dateUpdate: now,
-        //kontak
-        ...(telp !== undefined && { telp }),
-        ...(fax !== undefined && { fax }),
-        ...(email !== undefined && { email }),
-      },
+    // 3. Eksekusi Update & Logging dalam satu Transaksi
+    const result = await prisma.$transaction(async (tx) => {
+      // List field yang mau kita abaikan (yang gak perlu masuk log history)
+      const ignoredFields = ["updatter", "dateUpdate", "dateInput", "inputter"];
+      const logs = [];
+
+      // Bandingkan data lama vs data baru
+      for (const key in body) {
+        // Cek apakah field ada di model, bukan ignored, dan nilainya berubah
+        if (
+          body[key] !== undefined &&
+          !ignoredFields.includes(key) &&
+          body[key] !== existing[key]
+        ) {
+          logs.push({
+            perusahaanId: noInduk,
+            field: key.toUpperCase(),
+            dataLama: existing[key] !== null ? String(existing[key]) : "KOSONG",
+            dataBaru: body[key] !== null ? String(body[key]) : "KOSONG",
+            diubahOleh: userName,
+            tanggal: now,
+          });
+        }
+      }
+
+      // Jalankan Update Perusahaan
+      const updatedData = await tx.tabPerusahaan.update({
+        where: { noInduk },
+        data: {
+          ...body, // Prisma bakal otomatis ignore field yang gak ada di skema
+          updatter: userName,
+          dateUpdate: now,
+        },
+      });
+
+      // Simpan Log Perubahan jika ada
+      if (logs.length > 0) {
+        await tx.logPerubahanPerusahaan.createMany({
+          data: logs,
+        });
+      }
+
+      return updatedData;
     });
 
     return res.status(200).json({
       message: "Data perusahaan berhasil diperbarui.",
-      data: updated,
+      data: result,
     });
   } catch (err) {
     console.error("[updatePerusahaan error]", err);
@@ -546,50 +500,89 @@ const createContactPerson = async (req, res) => {
 const updateContactPerson = async (req, res) => {
   try {
     const { noInduk, kode } = req.params;
-    const {
-      nama,
-      teknisTertinggi,
-      jabatan,
-      hp,
-      email,
-      posisi,
-      keuangan,
-      minta,
-      ket,
-    } = req.body;
+    const body = req.body;
 
-    // Cek contact person ada & milik perusahaan ini
+    // 1. Cek contact person ada & milik perusahaan ini
     const existing = await prisma.contactPersonPerusahaan.findUnique({
       where: { kode },
     });
 
     if (!existing) {
-      return res.status(404).json({
-        message: "Contact person tidak ditemukan.",
-      });
+      return res
+        .status(404)
+        .json({ message: "Contact person tidak ditemukan." });
     }
 
     if (existing.kodePerusahaan !== noInduk) {
-      return res.status(403).json({
-        message: "Contact person bukan milik perusahaan ini.",
-      });
+      return res
+        .status(403)
+        .json({ message: "Contact person bukan milik perusahaan ini." });
     }
 
-    const result = await prisma.contactPersonPerusahaan.update({
-      where: { kode },
-      data: {
-        ...(nama !== undefined && { nama: nama.trim() }),
-        ...(teknisTertinggi !== undefined && {
-          teknisTertinggi: Boolean(teknisTertinggi),
-        }),
-        ...(jabatan !== undefined && { jabatan: jabatan || null }),
-        ...(hp !== undefined && { hp: hp || null }),
-        ...(email !== undefined && { email: email || null }),
-        ...(posisi !== undefined && { posisi: posisi || null }),
-        ...(keuangan !== undefined && { keuangan: keuangan || null }),
-        ...(minta !== undefined && { minta: minta || null }),
-        ...(ket !== undefined && { ket: ket || null }),
-      },
+    // 2. Cari nama user yang merubah (Logic yang sama dengan updatePerusahaan)
+    const userId = req.user?.userId ?? "system";
+    let userName = "system";
+    if (userId !== "system") {
+      const userWithPegawai = await prisma.user.findUnique({
+        where: { id: userId },
+        select: { pegawai: { select: { nama: true } } },
+      });
+      if (userWithPegawai?.pegawai) userName = userWithPegawai.pegawai.nama;
+    }
+
+    // 3. Jalankan Transaksi
+    const result = await prisma.$transaction(async (tx) => {
+      const logs = [];
+      const ignoredFields = [
+        "updatedAt",
+        "createdAt",
+        "kode",
+        "kodePerusahaan",
+      ];
+
+      // Bandingkan perubahan
+      for (const key in body) {
+        if (
+          body[key] !== undefined &&
+          !ignoredFields.includes(key) &&
+          body[key] !== existing[key]
+        ) {
+          logs.push({
+            perusahaanId: noInduk, // Tetap arahkan ke noInduk perusahaan
+            field: `CP_${existing.nama}_${key.toUpperCase()}`, // Field name lebih deskriptif
+            dataLama: existing[key] !== null ? String(existing[key]) : "KOSONG",
+            dataBaru: body[key] !== null ? String(body[key]) : "KOSONG",
+            diubahOleh: userName,
+          });
+        }
+      }
+
+      // Update Contact Person
+      const updatedCP = await tx.contactPersonPerusahaan.update({
+        where: { kode },
+        data: {
+          ...(body.nama !== undefined && { nama: body.nama.trim() }),
+          ...(body.teknisTertinggi !== undefined && {
+            teknisTertinggi: Boolean(body.teknisTertinggi),
+          }),
+          ...(body.jabatan !== undefined && { jabatan: body.jabatan || null }),
+          ...(body.hp !== undefined && { hp: body.hp || null }),
+          ...(body.email !== undefined && { email: body.email || null }),
+          ...(body.posisi !== undefined && { posisi: body.posisi || null }),
+          ...(body.keuangan !== undefined && {
+            keuangan: body.keuangan || null,
+          }),
+          ...(body.minta !== undefined && { minta: body.minta || null }),
+          ...(body.ket !== undefined && { ket: body.ket || null }),
+        },
+      });
+
+      // Simpan Logs
+      if (logs.length > 0) {
+        await tx.logPerubahanPerusahaan.createMany({ data: logs });
+      }
+
+      return updatedCP;
     });
 
     return res.status(200).json({
@@ -1015,6 +1008,8 @@ const getHakAksesPerusahaan = async (req, res) => {
             id: true,
             nama: true,
             jabatan: true,
+            kode: true,
+            prefix: true,
           },
         },
       },
@@ -1049,31 +1044,19 @@ const editHakAksesPerusahaan = async (req, res) => {
   try {
     const { perusahaanId, akses } = req.body;
 
-    // ── Validasi input ──
+    // ── 1. Validasi Input Awal ──
     if (!perusahaanId || !akses || !Array.isArray(akses)) {
-      return res.status(400).json({
-        message: "perusahaanId dan akses (array) wajib diisi.",
-      });
+      return res
+        .status(400)
+        .json({ message: "perusahaanId dan akses (array) wajib diisi." });
     }
 
-    // Validasi jenis akses
     const validJenisAkses = ["ENV", "CSR", "TSM", "EPM"];
-    const invalidAkses = akses.filter(
-      (a) => !validJenisAkses.includes(a.jenisAkses),
-    );
-    if (invalidAkses.length > 0) {
-      return res.status(400).json({
-        message: `Jenis akses tidak valid: ${invalidAkses.map((a) => a.jenisAkses).join(", ")}`,
-      });
-    }
 
-    // ── Cek apakah perusahaan ada ──
+    // ── 2. Cek Perusahaan & User yang Mengubah ──
     const perusahaan = await prisma.tabPerusahaan.findUnique({
       where: { noInduk: perusahaanId },
-      select: {
-        noInduk: true,
-        company: true,
-      },
+      select: { noInduk: true, company: true },
     });
 
     if (!perusahaan) {
@@ -1082,97 +1065,360 @@ const editHakAksesPerusahaan = async (req, res) => {
       });
     }
 
-    // ── Proses setiap jenis akses ──
-    for (const { jenisAkses, pegawaiIds } of akses) {
-      // Validasi: Maksimal 4 pegawai per jenis akses
-      if (pegawaiIds.length > 4) {
-        return res.status(400).json({
-          message: `Jenis akses ${jenisAkses} tidak boleh memiliki lebih dari 4 pegawai.`,
-        });
-      }
+    const userName = await getEditorName(req); // Pakai helper yang kita bikin tadi
 
-      // Validasi: Pegawai tidak boleh memiliki lebih dari 2 jenis akses di perusahaan ini
-      for (const pegawaiId of pegawaiIds) {
-        const existingAksesPegawai = await prisma.hakAksesKaryawan.findMany({
-          where: {
-            perusahaanId,
-            pegawaiId,
-          },
+    // ── 3. Jalankan Transaksi ──
+    await prisma.$transaction(async (tx) => {
+      for (const item of akses) {
+        const { jenisAkses, pegawaiIds, status } = item;
+
+        // Validasi Item
+        if (!jenisAkses || !Array.isArray(pegawaiIds)) {
+          throw new Error("Format item akses tidak valid.");
+        }
+        if (!validJenisAkses.includes(jenisAkses)) {
+          throw new Error(`Jenis akses tidak valid: ${jenisAkses}`);
+        }
+
+        // A. Validasi Bisnis: Maksimal 4 pegawai per jenis akses
+        if (pegawaiIds.length > 4) {
+          throw new Error(
+            `Jenis akses ${jenisAkses} tidak boleh memiliki lebih dari 4 pegawai.`,
+          );
+        }
+
+        // B. Validasi Bisnis: Pegawai tidak boleh > 2 jenis akses di perusahaan ini
+        for (const pegawaiId of pegawaiIds) {
+          const existingAksesPegawai = await tx.hakAksesKaryawan.findMany({
+            where: { perusahaanId, pegawaiId },
+          });
+
+          const isAlreadyInThisAkses = existingAksesPegawai.some(
+            (a) => a.jenisAkses === jenisAkses,
+          );
+
+          if (existingAksesPegawai.length >= 2 && !isAlreadyInThisAkses) {
+            throw new Error(
+              `Pegawai dengan ID ${pegawaiId} sudah memiliki 2 jenis akses di perusahaan ini.`,
+            );
+          }
+        }
+
+        // C. LOGGING: Ambil Nama Lama vs Nama Baru
+        const oldAkses = await tx.hakAksesKaryawan.findMany({
+          where: { perusahaanId, jenisAkses },
+          include: { pegawai: { select: { nama: true } } },
+        });
+        const namaLama =
+          oldAkses
+            .map((a) => a.pegawai.nama)
+            .sort()
+            .join(", ") || "KOSONG";
+
+        const newPegawais = await tx.pegawai.findMany({
+          where: { id: { in: pegawaiIds } },
+          select: { nama: true },
+        });
+        const namaBaru =
+          newPegawais
+            .map((p) => p.nama)
+            .sort()
+            .join(", ") || "KOSONG";
+
+        // Bandingkan dan catat log jika ada perubahan personil
+        if (namaLama !== namaBaru) {
+          await tx.logPerubahanPerusahaan.create({
+            data: {
+              perusahaanId,
+              field: `AKSES_${jenisAkses}`,
+              dataLama: namaLama,
+              dataBaru: namaBaru,
+              diubahOleh: userName,
+            },
+          });
+        }
+
+        // D. EKSEKUSI DATA: Delete & Create (Sinkronisasi)
+        await tx.hakAksesKaryawan.deleteMany({
+          where: { perusahaanId, jenisAkses },
         });
 
-        if (
-          existingAksesPegawai.length >= 2 &&
-          !existingAksesPegawai.some((a) => a.jenisAkses === jenisAkses)
-        ) {
-          return res.status(400).json({
-            message: `Pegawai dengan ID ${pegawaiId} sudah memiliki 2 jenis akses di perusahaan ini.`,
+        if (pegawaiIds.length > 0) {
+          await tx.hakAksesKaryawan.createMany({
+            data: pegawaiIds.map((id) => ({
+              perusahaanId,
+              pegawaiId: id,
+              jenisAkses,
+              status: status,
+              tanggalDibuat: new Date(),
+            })),
           });
         }
       }
-
-      // Hapus semua pegawai dari jenis akses ini
-      await prisma.hakAksesKaryawan.deleteMany({
-        where: {
-          perusahaanId,
-          jenisAkses,
-        },
-      });
-
-      // Tambahkan pegawai baru ke jenis akses ini
-      const newAkses = pegawaiIds.map((pegawaiId) => ({
-        perusahaanId,
-        pegawaiId,
-        jenisAkses,
-        status: "MU", // Default status
-        tanggalDibuat: new Date(),
-      }));
-
-      if (newAkses.length > 0) {
-        await prisma.hakAksesKaryawan.createMany({
-          data: newAkses,
-        });
-      }
-    }
-
-    // ── Ambil data terbaru ──
-    const updatedAkses = await prisma.hakAksesKaryawan.findMany({
-      where: { perusahaanId },
-      select: {
-        jenisAkses: true,
-        status: true,
-        pegawai: {
-          select: {
-            id: true,
-            nama: true,
-            jabatan: true,
-          },
-        },
-      },
     });
 
-    // Format response
-    const response = {
+    // ── 4. Ambil Data Terbaru untuk Response ──
+    const updatedAkses = await prisma.hakAksesKaryawan.findMany({
+      where: { perusahaanId },
+      include: { pegawai: { select: { id: true, nama: true, jabatan: true } } },
+    });
+
+    const formattedAkses = validJenisAkses.map((jenis) => {
+      const filtered = updatedAkses.filter((a) => a.jenisAkses === jenis);
+      return {
+        jenisAkses: jenis,
+        status: filtered.length > 0 ? filtered[0].status : null,
+        pegawai: filtered.map((f) => f.pegawai),
+      };
+    });
+
+    return res.status(200).json({
       perusahaanId: perusahaan.noInduk,
       company: perusahaan.company,
-      akses: validJenisAkses.map((jenis) => {
-        const aksesData = updatedAkses.find((a) => a.jenisAkses === jenis) || {
-          pegawai: [],
-          status: null,
-        };
-        return {
-          jenisAkses: jenis,
-          status: aksesData.status,
-          pegawai: aksesData.pegawai,
-        };
+      akses: formattedAkses,
+    });
+  } catch (err) {
+    console.error("[editHakAksesPerusahaan error]", err);
+    const errorMessage = err.message || "Terjadi kesalahan server.";
+
+    // Identifikasi apakah ini error validasi yang kita buat (400) atau error database (500)
+    const isValidationError =
+      errorMessage.includes("tidak boleh memiliki") ||
+      errorMessage.includes("sudah memiliki 2 jenis akses") ||
+      errorMessage.includes("Format item") ||
+      errorMessage.includes("tidak ditemukan");
+
+    return res.status(isValidationError ? 400 : 500).json({
+      success: false,
+      message: errorMessage,
+    });
+  }
+};
+
+const getLogPerusahaan = async (req, res) => {
+  try {
+    const { perusahaanId } = req.params;
+    const { page = 1, limit = 10, search = "" } = req.query;
+
+    const skip = (Number(page) - 1) * Number(limit);
+    const take = Number(limit);
+    const searchString = String(search || "").trim();
+
+    // ── KUNCI PERBAIKAN DI SINI ──
+    // Kita filter dulu mana yang bisa di-search pake 'contains'
+    const whereClause = {
+      perusahaanId,
+      ...(searchString && {
+        OR: [
+          { field: { contains: searchString, mode: "insensitive" } },
+          { diubahOleh: { contains: searchString, mode: "insensitive" } },
+          // { dataLama: ... } dihapus karena tipenya JSON (Penyebab Error)
+          // { dataBaru: ... } dihapus karena tipenya JSON (Penyebab Error)
+        ],
       }),
     };
 
-    return res.status(200).json(response);
-  } catch (err) {
-    console.error("[editHakAksesPerusahaan error]", err);
-    return res.status(500).json({
-      message: "Terjadi kesalahan server.",
+    // 1. Hitung total data
+    const totalData = await prisma.logPerubahanPerusahaan.count({
+      where: whereClause,
     });
+
+    // 2. Ambil data
+    const logs = await prisma.logPerubahanPerusahaan.findMany({
+      where: whereClause,
+      orderBy: { tanggal: "desc" },
+      skip,
+      take,
+    });
+
+    const totalPages = Math.ceil(totalData / take);
+
+    return res.status(200).json({
+      success: true,
+      data: logs,
+      pagination: {
+        totalData,
+        totalPages,
+        currentPage: Number(page),
+        limit: take,
+      },
+    });
+  } catch (err) {
+    console.error("[getLogPerusahaan error]", err);
+    return res.status(500).json({
+      success: false,
+      message: "Terjadi kesalahan saat mengambil history perubahan.",
+    });
+  }
+};
+
+// ── CREATE ──
+const createPosPerusahaan = async (req, res) => {
+  try {
+    const { noInduk, nama, jabatan, acc, followUp } = req.body;
+
+    if ((!noInduk || !nama || !jabatan, !acc)) {
+      return res
+        .status(400)
+        .json({ message: "noInduk, nama, dan jabatan wajib diisi." });
+    }
+
+    const perusahaan = await prisma.tabPerusahaan.findUnique({
+      where: { noInduk },
+      select: { noInduk: true, company: true },
+    });
+    if (!perusahaan)
+      return res
+        .status(404)
+        .json({ message: `Perusahaan ${noInduk} tidak ditemukan.` });
+
+    const userName = await getEditorName(req);
+
+    const pos = await prisma.$transaction(async (tx) => {
+      const created = await tx.tabPosPerusahaan.create({
+        data: { noInduk, nama, jabatan, acc, followUp },
+      });
+
+      await tx.logPerubahanPerusahaan.create({
+        data: {
+          perusahaanId: noInduk,
+          field: "POS_PERUSAHAAN",
+          dataLama: null,
+          dataBaru: { id: created.id, nama, jabatan, acc, followUp },
+          diubahOleh: userName,
+        },
+      });
+
+      return created;
+    });
+
+    return res.status(201).json(pos);
+  } catch (err) {
+    console.error("[createPosPerusahaan error]", err);
+    return res.status(500).json({ message: "Terjadi kesalahan server." });
+  }
+};
+
+// ── GET ──
+const getPosPerusahaan = async (req, res) => {
+  try {
+    const { idPerusahaan } = req.params;
+
+    const perusahaan = await prisma.tabPerusahaan.findUnique({
+      where: { noInduk: idPerusahaan },
+      select: { noInduk: true },
+    });
+    if (!perusahaan)
+      return res
+        .status(404)
+        .json({ message: `Perusahaan ${idPerusahaan} tidak ditemukan.` });
+
+    const pos = await prisma.tabPosPerusahaan.findMany({
+      where: { noInduk: idPerusahaan },
+    });
+
+    return res.status(200).json(pos);
+  } catch (err) {
+    console.error("[getPosPerusahaan error]", err);
+    return res.status(500).json({ message: "Terjadi kesalahan server." });
+  }
+};
+
+// ── UPDATE ──
+const updatePosPerusahaan = async (req, res) => {
+  try {
+    const { idPerusahaan } = req.params;
+    const { id, nama, jabatan, acc, followUp } = req.body;
+
+    if (!id) return res.status(400).json({ message: "id pos wajib diisi." });
+
+    const existing = await prisma.tabPosPerusahaan.findFirst({
+      where: { id, noInduk: idPerusahaan },
+    });
+    if (!existing)
+      return res.status(404).json({ message: "POS tidak ditemukan." });
+
+    const userName = await getEditorName(req);
+
+    const updated = await prisma.$transaction(async (tx) => {
+      const result = await tx.tabPosPerusahaan.update({
+        where: { id },
+        data: {
+          ...(nama && { nama }),
+          ...(jabatan && { jabatan }),
+          ...(acc && { acc }),
+          ...(followUp !== undefined && { followUp }),
+        },
+      });
+
+      await tx.logPerubahanPerusahaan.create({
+        data: {
+          perusahaanId: idPerusahaan,
+          field: "POS_PERUSAHAAN",
+          dataLama: {
+            id: existing.id,
+            nama: existing.nama,
+            jabatan: existing.jabatan,
+            followUp: existing.followUp,
+          },
+          dataBaru: {
+            id: result.id,
+            nama: result.nama,
+            jabatan: result.jabatan,
+            followUp: result.followUp,
+          },
+          diubahOleh: userName,
+        },
+      });
+
+      return result;
+    });
+
+    return res.status(200).json(updated);
+  } catch (err) {
+    console.error("[updatePosPerusahaan error]", err);
+    return res.status(500).json({ message: "Terjadi kesalahan server." });
+  }
+};
+
+// ── DELETE ──
+const deletePosPerusahaan = async (req, res) => {
+  try {
+    const { id } = req.body;
+
+    if (!id) return res.status(400).json({ message: "id pos wajib diisi." });
+
+    const existing = await prisma.tabPosPerusahaan.findUnique({
+      where: { id },
+    });
+    if (!existing)
+      return res.status(404).json({ message: "POS tidak ditemukan." });
+
+    const userName = await getEditorName(req);
+
+    await prisma.$transaction(async (tx) => {
+      await tx.tabPosPerusahaan.delete({ where: { id } });
+
+      await tx.logPerubahanPerusahaan.create({
+        data: {
+          perusahaanId: existing.noInduk,
+          field: "POS_PERUSAHAAN",
+          dataLama: {
+            id: existing.id,
+            nama: existing.nama,
+            jabatan: existing.jabatan,
+            followUp: existing.followUp,
+          },
+          dataBaru: null,
+          diubahOleh: userName,
+        },
+      });
+    });
+
+    return res.status(200).json({ message: "POS berhasil dihapus." });
+  } catch (err) {
+    console.error("[deletePosPerusahaan error]", err);
+    return res.status(500).json({ message: "Terjadi kesalahan server." });
   }
 };
 
@@ -1193,4 +1439,32 @@ module.exports = {
   deleteDailyActivity,
   getHakAksesPerusahaan,
   editHakAksesPerusahaan,
+  getLogPerusahaan,
+  createPosPerusahaan,
+  getPosPerusahaan,
+  updatePosPerusahaan,
+  deletePosPerusahaan,
+};
+
+// Taruh ini di bagian atas file controller lo
+const getEditorName = async (req) => {
+  try {
+    const userId = req.user?.userId;
+
+    if (!userId) return "system";
+
+    const userWithPegawai = await prisma.user.findUnique({
+      where: { id: userId },
+      select: {
+        pegawai: {
+          select: { nama: true },
+        },
+      },
+    });
+
+    return userWithPegawai?.pegawai?.nama || "system";
+  } catch (error) {
+    console.error("Error in getEditorName:", error);
+    return "system";
+  }
 };
