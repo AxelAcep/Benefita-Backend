@@ -24,6 +24,7 @@ model Pegawai {
   Departemen String? 
   dailyActivities DailyActivity[]
   hakAksesKaryawan     HakAksesKaryawan[]
+  permohonanHakAkses PermohonanHakAkses[]
 
   user    User?
 }
@@ -154,6 +155,7 @@ model TabPerusahaan {
   hakAksesKaryawan     HakAksesKaryawan[]
   logs LogPerubahanPerusahaan[]
   posPerusahaan TabPosPerusahaan[]
+  permohonanHakAkses PermohonanHakAkses[]
 
   @@map("tabperusahaan")
 }
@@ -258,4 +260,18 @@ model Penawaran {
   filePath      String?  @db.VarChar(500)
 
   @@map("penawaran")
+}
+
+model PermohonanHakAkses {
+  id           String    @id @default(cuid())
+  perusahaanId String    @map("perusahaan_id")
+  pegawaiId    String    @map("pegawai_id")
+  jenisAkses   String    @map("jenis_akses") @db.VarChar(10)
+  terima       Boolean?
+  tanggal      DateTime  @default(now())
+
+  perusahaan   TabPerusahaan @relation(fields: [perusahaanId], references: [noInduk])
+  pegawai      Pegawai       @relation(fields: [pegawaiId], references: [id])
+
+  @@map("permohonan_hak_akses")
 }

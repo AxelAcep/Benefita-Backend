@@ -1535,6 +1535,256 @@ const deletePenawaran = async (req, res) => {
   }
 };
 
+// ── 1. CREATE (Pegawai Mengajukan) ──
+const createPermohonanHakAkses = async (req, res) => {
+  try {
+    const { perusahaanId, pegawaiId, jenisAkses } = req.body;
+
+    if (!perusahaanId || !pegawaiId || !jenisAkses) {
+      return res.status(400).json({
+        message: "perusahaanId, pegawaiId, dan jenisAkses wajib diisi.",
+      });
+    }
+
+    if (!validJenisAkses.includes(jenisAkses)) {
+      return res.status(400).json({
+        message: `jenisAkses tidak valid. Pilih: ${validJenisAkses.join(", ")}`,
+      });
+    }
+
+    const [perusahaan, pegawai] = await Promise.all([
+      prisma.tabPerusahaan.findUnique({
+        where: { noInduk: perusahaanId },
+        select: { noInduk: true },
+      }),
+      prisma.pegawai.findUnique({
+        where: { id: pegawaiId },
+        select: { id: true },
+      }),
+    ]);
+
+    if (!perusahaan)
+      return res.status(404).json({ message: "Perusahaan tidak ditemukan." });
+    if (!pegawai)
+      return res.status(404).json({ message: "Pegawai tidak ditemukan." });
+
+    // Validasi 1: pending yang sama
+    const pendingExist = await prisma.permohonanHakAkses.findFirst({
+      where: { perusahaanId, pegawaiId, jenisAkses, terima: null },
+    });
+    if (pendingExist) {
+      return res.status(400).json({
+        message: "Sudah ada permohonan pending untuk jenis akses ini.",
+      });
+    }
+
+    // Validasi 2: maks 2 jenis akses per pegawai di perusahaan ini
+    const aksesAktif = await prisma.hakAksesKaryawan.findMany({
+      where: { perusahaanId, pegawaiId },
+    });
+    const sudahDiJenisIni = aksesAktif.some((a) => a.jenisAkses === jenisAkses);
+    if (aksesAktif.length >= 2 && !sudahDiJenisIni) {
+      return res.status(400).json({
+        message: "Pegawai sudah memiliki 2 jenis akses di perusahaan ini.",
+      });
+    }
+
+    // Validasi 3: slot maks 4
+    const slotTerisi = await prisma.hakAksesKaryawan.count({
+      where: { perusahaanId, jenisAkses },
+    });
+    if (slotTerisi >= 4) {
+      return res
+        .status(400)
+        .json({ message: `Slot ${jenisAkses} di perusahaan ini sudah penuh.` });
+    }
+
+    const permohonan = await prisma.permohonanHakAkses.create({
+      data: { perusahaanId, pegawaiId, jenisAkses },
+      include: {
+        perusahaan: { select: { noInduk: true, company: true } },
+        pegawai: { select: { id: true, nama: true } },
+      },
+    });
+
+    return res.status(201).json(permohonan);
+  } catch (err) {
+    console.error("[createPermohonanHakAkses error]", err);
+    return res.status(500).json({ message: "Terjadi kesalahan server." });
+  }
+};
+
+// ── 2. GET ALL PAGINATION ──
+const getPermohonanHakAkses = async (req, res) => {
+  try {
+    const { page = 1, limit = 10, search = "" } = req.query;
+    const skip = (Number(page) - 1) * Number(limit);
+
+    const where = search
+      ? {
+          OR: [
+            {
+              perusahaan: {
+                company: { contains: search, mode: "insensitive" },
+              },
+            },
+            {
+              perusahaan: {
+                noInduk: { contains: search, mode: "insensitive" },
+              },
+            },
+            { pegawai: { nama: { contains: search, mode: "insensitive" } } },
+            { jenisAkses: { contains: search, mode: "insensitive" } },
+          ],
+        }
+      : {};
+
+    const [total, data] = await Promise.all([
+      prisma.permohonanHakAkses.count({ where }),
+      prisma.permohonanHakAkses.findMany({
+        where,
+        skip,
+        take: Number(limit),
+        orderBy: { tanggal: "desc" },
+        include: {
+          perusahaan: { select: { noInduk: true, company: true } },
+          pegawai: { select: { id: true, nama: true } },
+        },
+      }),
+    ]);
+
+    // Ambil pegawai yang sudah assign di jenis yang sama per permohonan
+    const enriched = await Promise.all(
+      data.map(async (item) => {
+        const pegawaiAssigned = await prisma.hakAksesKaryawan.findMany({
+          where: {
+            perusahaanId: item.perusahaanId,
+            jenisAkses: item.jenisAkses,
+          },
+          include: { pegawai: { select: { id: true, nama: true } } },
+        });
+
+        return {
+          id: item.id,
+          kodePerusahaan: item.perusahaan.noInduk,
+          namaPerusahaan: item.perusahaan.company,
+          jenisAkses: item.jenisAkses,
+          pegawaiAssigned: pegawaiAssigned.map((a) => a.pegawai),
+          pegawaiPengaju: item.pegawai,
+          tanggal: item.tanggal,
+          status:
+            item.terima === null
+              ? "pending"
+              : item.terima
+                ? "diterima"
+                : "ditolak",
+        };
+      }),
+    );
+
+    return res.status(200).json({
+      data: enriched,
+      pagination: {
+        totalData: total,
+        totalPages: Math.ceil(total / Number(limit)),
+        currentPage: Number(page),
+        limit: Number(limit),
+      },
+    });
+  } catch (err) {
+    console.error("[getPermohonanHakAkses error]", err);
+    return res.status(500).json({ message: "Terjadi kesalahan server." });
+  }
+};
+
+// ── 3. TERIMA / TOLAK ──
+const updateStatusPermohonan = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { terima } = req.body;
+
+    if (typeof terima !== "boolean") {
+      return res.status(400).json({ message: "Field terima harus boolean." });
+    }
+
+    const permohonan = await prisma.permohonanHakAkses.findUnique({
+      where: { id },
+    });
+    if (!permohonan)
+      return res.status(404).json({ message: "Permohonan tidak ditemukan." });
+    if (permohonan.terima !== null) {
+      return res
+        .status(400)
+        .json({ message: "Permohonan sudah diproses sebelumnya." });
+    }
+
+    const updated = await prisma.$transaction(async (tx) => {
+      const result = await tx.permohonanHakAkses.update({
+        where: { id },
+        data: { terima },
+        include: {
+          perusahaan: { select: { noInduk: true, company: true } },
+          pegawai: { select: { id: true, nama: true } },
+        },
+      });
+
+      if (terima) {
+        // Re-validasi saat approve
+        const [slotTerisi, aksesAktif] = await Promise.all([
+          tx.hakAksesKaryawan.count({
+            where: {
+              perusahaanId: permohonan.perusahaanId,
+              jenisAkses: permohonan.jenisAkses,
+            },
+          }),
+          tx.hakAksesKaryawan.findMany({
+            where: {
+              perusahaanId: permohonan.perusahaanId,
+              pegawaiId: permohonan.pegawaiId,
+            },
+          }),
+        ]);
+
+        if (slotTerisi >= 4)
+          throw new Error(
+            `Slot ${permohonan.jenisAkses} sudah penuh saat approve.`,
+          );
+
+        const sudahDiJenisIni = aksesAktif.some(
+          (a) => a.jenisAkses === permohonan.jenisAkses,
+        );
+        if (aksesAktif.length >= 2 && !sudahDiJenisIni) {
+          throw new Error(
+            "Pegawai sudah memiliki 2 jenis akses di perusahaan ini.",
+          );
+        }
+
+        await tx.hakAksesKaryawan.create({
+          data: {
+            perusahaanId: permohonan.perusahaanId,
+            pegawaiId: permohonan.pegawaiId,
+            jenisAkses: permohonan.jenisAkses,
+            tanggalDibuat: new Date(),
+          },
+        });
+      }
+
+      return result;
+    });
+
+    return res.status(200).json(updated);
+  } catch (err) {
+    console.error("[updateStatusPermohonan error]", err);
+    const isValidation =
+      err.message?.includes("penuh") || err.message?.includes("sudah memiliki");
+    return res
+      .status(isValidation ? 400 : 500)
+      .json({ message: err.message || "Terjadi kesalahan server." });
+  }
+};
+
+const validJenisAkses = ["ENV", "CSR", "TSM", "EPM"];
+
 module.exports = {
   getTabPerusahaanList,
   createPerusahaan,
@@ -1562,6 +1812,9 @@ module.exports = {
   getPenawaranById,
   updatePenawaran,
   deletePenawaran,
+  createPermohonanHakAkses,
+  getPermohonanHakAkses,
+  updateStatusPermohonan,
 };
 
 // Taruh ini di bagian atas file controller lo

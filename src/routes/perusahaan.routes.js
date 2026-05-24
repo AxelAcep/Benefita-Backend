@@ -27,6 +27,9 @@ const {
   deletePenawaran,
   getPenawaranById,
   getPenawaran,
+  createPermohonanHakAkses,
+  updateStatusPermohonan,
+  getPermohonanHakAkses,
 } = require("../controllers");
 const { authMiddleware } = require("../middlewares/auth.middleware");
 const upload = require("../middlewares/upload.middleware");
@@ -124,5 +127,13 @@ router.put(
   updatePenawaran,
 );
 router.delete("/penawaran/:id", authMiddleware, deletePenawaran);
+
+router.post("/permohonan-hak-akses", authMiddleware, createPermohonanHakAkses);
+router.get("/permohonan-hak-akses", authMiddleware, getPermohonanHakAkses);
+router.patch(
+  "/permohonan-hak-akses/:id/status",
+  authMiddleware,
+  updateStatusPermohonan,
+);
 
 module.exports = router;
