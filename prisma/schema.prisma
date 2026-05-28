@@ -16,32 +16,32 @@ enum RoleStatus {
 }
 
 model Pegawai {
-  id      String  @id @default(cuid())
-  nama    String
-  prefix String?
-  kode   String?
-  jabatan String?
-  Departemen String? 
-  dailyActivities DailyActivity[]
-  hakAksesKaryawan     HakAksesKaryawan[]
+  id                 String               @id @default(cuid())
+  nama               String
+  prefix             String?
+  kode               String?
+  jabatan            String?
+  Departemen         String?
+  dailyActivities    DailyActivity[]
+  hakAksesKaryawan   HakAksesKaryawan[]
   permohonanHakAkses PermohonanHakAkses[]
 
-  user    User?
+  user User?
 }
 
 model User {
-  id        String     @id @default(cuid())
-  pegawaiId String     @unique
-  phone     String     @unique
-  email     String     @unique
-  password  String
-  role      RoleStatus
-  createdAt DateTime   @default(now())
-  devices   DeviceTrusted[]
-  otps      OtpCode[]
-  refreshTokens RefreshToken[]  //
+  id            String          @id @default(cuid())
+  pegawaiId     String          @unique
+  phone         String          @unique
+  email         String          @unique
+  password      String
+  role          RoleStatus
+  createdAt     DateTime        @default(now())
+  devices       DeviceTrusted[]
+  otps          OtpCode[]
+  refreshTokens RefreshToken[] //
 
-  pegawai   Pegawai    @relation(fields: [pegawaiId], references: [id])
+  pegawai Pegawai @relation(fields: [pegawaiId], references: [id])
 }
 
 model RefreshToken {
@@ -59,8 +59,8 @@ model RefreshToken {
 model DeviceTrusted {
   id         String   @id @default(cuid())
   userId     String
-  deviceHash String   // hash dari fingerprint device
-  label      String?  // misal: "Chrome - Windows"
+  deviceHash String // hash dari fingerprint device
+  label      String? // misal: "Chrome - Windows"
   createdAt  DateTime @default(now())
   user       User     @relation(fields: [userId], references: [id])
 
@@ -74,77 +74,81 @@ model OtpCode {
   deviceHash String
   expiresAt  DateTime
   used       Boolean  @default(false)
-  createdAt  DateTime @default(now())  // ← tambah ini
+  createdAt  DateTime @default(now()) // ← tambah ini
   user       User     @relation(fields: [userId], references: [id])
 }
 
 model TabPerusahaan {
   // =========================
-  // COMMON (SEMUA JENIS)
+  // CORE (WAJIB MINIMAL)
   // =========================
-  noInduk      String  @id @map("0NO_INDUK") @db.VarChar(50)
-  company      String? @map("1COMPANY") @db.VarChar(255)
-  alamat       String? @map("2ALAMAT") @db.VarChar(255)
-  telp         String? @map("5TELP") @db.VarChar(255)
-  fax          String? @map("6FAX") @db.VarChar(255)
-  email        String? @map("7EMAIL") @db.VarChar(255)
-  ket          String? @map("24KET")
-  fasilitas    String? @db.VarChar(255)
-  butuhTraining String @map("ButuhTraining") @db.VarChar(255)
-  prioritasMa  String? @map("PRIORITAS_MA") @db.VarChar(50)
-  prioritasAe  String? @map("PRIORITAS_AE") @db.VarChar(50)
-  group        String? @map("21GROUP") @db.VarChar(255)
+  noInduk       String  @id @map("0NO_INDUK") @db.VarChar(50)
+  jenisInstansi String  @default("PERUSAHAAN") @db.VarChar(50)
 
-  jenisInstansi String @default("PERUSAHAAN") @db.VarChar(50)
+  company       String? @map("1COMPANY") @db.VarChar(255)
 
   // =========================
-  // LOKASI (SHARED PERUSAHAAN / RS)
+  // COMMON INFO
   // =========================
-  alamatWaktu          String @map("2ALAMAT_WAKTU") @db.VarChar(4)
-  alamatFactory        String? @map("4ALAMATFACTORY") @db.VarChar(255)
-  alamatFactoryWaktu   String @map("4ALAMATFACTORY_WAKTU") @db.VarChar(4)
+  alamat        String? @map("2ALAMAT") @db.VarChar(255)
+  telp          String? @map("5TELP") @db.VarChar(255)
+  fax           String? @map("6FAX") @db.VarChar(255)
+  email         String? @map("7EMAIL") @db.VarChar(255)
+  ket           String? @map("24KET")
+  fasilitas     String? @db.VarChar(255)
+  butuhTraining String? @map("ButuhTraining") @db.VarChar(255)
+  prioritasMa   String? @map("PRIORITAS_MA") @db.VarChar(50)
+  prioritasAe   String? @map("PRIORITAS_AE") @db.VarChar(50)
+  group         String? @map("21GROUP") @db.VarChar(255)
+
+  // =========================
+  // LOKASI
+  // =========================
+  alamatWaktu        String? @map("2ALAMAT_WAKTU") @db.VarChar(4)
+  alamatFactory      String? @map("4ALAMATFACTORY") @db.VarChar(255)
+  alamatFactoryWaktu String? @map("4ALAMATFACTORY_WAKTU") @db.VarChar(4)
 
   kotaKabupaten String? @db.VarChar(100)
   provinsi      String? @db.VarChar(100)
 
   // =========================
-  // SERTIFIKASI (PERUSAHAAN / RS)
+  // SERTIFIKASI
   // =========================
   iso9000        String? @map("17ISO9000") @db.VarChar(255)
   iso14000       String? @map("19ISO14000") @db.VarChar(255)
   ohsas18001smk3 String? @map("20OHSAS18001SMK3") @db.VarChar(255)
 
   // =========================
-  // KLASIFIKASI (PERUSAHAAN / RS / PEMDA / SEKOLAH)
+  // KLASIFIKASI
   // =========================
   kategoriCpn    String? @map("3KATEGORICPN") @db.VarChar(255)
-  lineOfBusiness  String? @map("8LINEOFBUSINESS") @db.VarChar(255)
-  lineBisnisSub   String? @map("LINE_BISNIS_SUB") @db.VarChar(255)
-  permodalan      String? @db.VarChar(255)
+  lineOfBusiness String? @map("8LINEOFBUSINESS") @db.VarChar(255)
+  lineBisnisSub  String? @map("LINE_BISNIS_SUB") @db.VarChar(255)
+  permodalan     String? @db.VarChar(255)
 
   // =========================
-  // FINANSIAL / PROPERTI (PERUSAHAAN / RS)
+  // FINANSIAL
   // =========================
-  nilaiSubBidangProper Int @map("Nilai_Sub_Bidang_PROPER")
+  nilaiSubBidangProper Int? @map("Nilai_Sub_Bidang_PROPER")
   batasEmas            Int?
   batasHijau           Int?
-  infoKeu              String @map("27InfoKEU") @db.VarChar(255)
+  infoKeu              String? @map("27InfoKEU") @db.VarChar(255)
 
-  bdoAction String @map("BDO_action") @db.VarChar(50)
-  vendor    String @map("Vendor") @db.VarChar(15)
-
-  // =========================
-  // OPSIONAL BUSINESS INFO
-  // =========================
-  cabangSite         String? @db.VarChar(255)
-  pesaing            String? @db.VarChar(255)
-  prosedurPelatihan  String? @db.VarChar(255)
+  bdoAction String? @map("BDO_action") @db.VarChar(50)
+  vendor    String? @map("Vendor") @db.VarChar(15)
 
   // =========================
-  // INSTANSI PEMDA
+  // BUSINESS INFO
   // =========================
-  instansi    String? @db.VarChar(255)
-  sekilasLh   String? @db.Text
+  cabangSite        String? @db.VarChar(255)
+  pesaing           String? @db.VarChar(255)
+  prosedurPelatihan String? @db.VarChar(255)
+
+  // =========================
+  // PEMDA
+  // =========================
+  instansi  String? @db.VarChar(255)
+  sekilasLh String? @db.Text
 
   rsud                Int? @default(0)
   indPengolahan       Int? @default(0)
@@ -161,10 +165,10 @@ model TabPerusahaan {
   // =========================
   // INSTANSI DAERAH
   // =========================
-  kode            String? @db.VarChar(100)
-  tender1         String? @db.VarChar(255)
-  tender2         String? @db.VarChar(255)
-  tender3         String? @db.VarChar(255)
+  kode             String? @db.VarChar(100)
+  tender1          String? @db.VarChar(255)
+  tender2          String? @db.VarChar(255)
+  tender3          String? @db.VarChar(255)
   pelatihanDiikuti String? @db.Text
 
   // =========================
@@ -176,91 +180,61 @@ model TabPerusahaan {
   cpSekolah   String? @db.VarChar(255)
 
   // =========================
-  // UNUSED / LEGACY (JANGAN DIPAKAI FRONTEND BARU)
+  // RELATION
   // =========================
-  produksi
-  csrPr
-  proper
-  tglRecord
-  tglInfoKeu
-  tglRecordEnv
-  tglRecordCsr
-  tglRecordTsm
-  tglRecordEpm
-  acc
-  accCsr
-  accTsm
-  accEpm
-  kd2
-  kd3
-  kd4
-  kd5
-  ims
-  khusus
-  region
-  noGroup
-  groupInduk
-  pesertaTot
-  pesertaInh
-  kirimPos
-  expiredVendor
-  indukKab
-  indukProv
-
-
-  contactPersons            ContactPersonPerusahaan[]
-  dailyActivities           DailyActivity[] 
-  hakAksesKaryawan          HakAksesKaryawan[]
-  logs                      LogPerubahanPerusahaan[]
-  posPerusahaan             TabPosPerusahaan[]
-  permohonanHakAkses        PermohonanHakAkses[]
+  contactPersons     ContactPersonPerusahaan[]
+  dailyActivities    DailyActivity[]
+  hakAksesKaryawan   HakAksesKaryawan[]
+  logs               LogPerubahanPerusahaan[]
+  posPerusahaan      TabPosPerusahaan[]
+  permohonanHakAkses PermohonanHakAkses[]
 }
 
 model ContactPersonPerusahaan {
-  kode              String   @id @default(cuid()) @map("KODE") @db.VarChar(50)
-  kodePerusahaan    String   @map("KODE_PERUSAHAAN") @db.VarChar(50)
-  nama              String   @map("NAMA") @db.VarChar(255)
-  teknisTertinggi   Boolean  @default(false) @map("TEKNIS_TERTINGGI")
-  jabatan           String?  @map("JABATAN") @db.VarChar(255)
-  hp                String?  @map("HP") @db.VarChar(50)
-  email             String?  @map("EMAIL") @db.VarChar(255)
-  posisi            String?  @map("POSISI") @db.VarChar(50) // "Alamat Pusat" | "Alamat Factory"
-  keuangan          String?  @map("KEUANGAN") @db.VarChar(50) // "Penagihan" | "-"
-  minta             String?  @map("MINTA") @db.VarChar(255)
-  ket               String?  @map("KET") @db.Text
+  kode            String  @id @default(cuid()) @map("KODE") @db.VarChar(50)
+  kodePerusahaan  String  @map("KODE_PERUSAHAAN") @db.VarChar(50)
+  nama            String  @map("NAMA") @db.VarChar(255)
+  teknisTertinggi Boolean @default(false) @map("TEKNIS_TERTINGGI")
+  jabatan         String? @map("JABATAN") @db.VarChar(255)
+  hp              String? @map("HP") @db.VarChar(50)
+  email           String? @map("EMAIL") @db.VarChar(255)
+  posisi          String? @map("POSISI") @db.VarChar(50) // "Alamat Pusat" | "Alamat Factory"
+  keuangan        String? @map("KEUANGAN") @db.VarChar(50) // "Penagihan" | "-"
+  minta           String? @map("MINTA") @db.VarChar(255)
+  ket             String? @map("KET") @db.Text
 
   // Relasi ke TabPerusahaan
-  perusahaan        TabPerusahaan @relation(fields: [kodePerusahaan], references: [noInduk], onDelete: Cascade)
+  perusahaan TabPerusahaan @relation(fields: [kodePerusahaan], references: [noInduk], onDelete: Cascade)
 
   // Timestamps
-  createdAt         DateTime @default(now()) @map("created_at")
-  updatedAt         DateTime @updatedAt @map("updated_at")
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
 
   @@index([kodePerusahaan])
   @@map("contact_person_perusahaan")
 }
 
 model DailyActivity {
-  id              String   @id @default(cuid()) @map("ID")
-  pegawaiId       String   @map("PEGAWAI_ID") @db.VarChar(50) // Foreign key ke Pegawai
-  perusahaanId    String   @map("PERUSAHAAN_ID") @db.VarChar(50) // Foreign key ke TabPerusahaan
-  kontak          String   @map("KONTAK") @db.VarChar(255)
-  jenisTraining   String   @map("JENIS_TRAINING") @db.VarChar(255)
-  keterangan      String   @map("KETERANGAN") @db.VarChar(255)
-  kategori        String   @map("KATEGORI") @db.VarChar(255)
-  inout           String   @map("INOUT") @db.VarChar(50)
-  tanggal         String   @map("TANGGAL") @db.VarChar(50)
-  dateTarget      DateTime? @map("DATE_TARGET") @db.Date 
-  perusahaan      String   @map("PERUSAHAAN") @db.VarChar(255)
+  id            String    @id @default(cuid()) @map("ID")
+  pegawaiId     String    @map("PEGAWAI_ID") @db.VarChar(50) // Foreign key ke Pegawai
+  perusahaanId  String    @map("PERUSAHAAN_ID") @db.VarChar(50) // Foreign key ke TabPerusahaan
+  kontak        String    @map("KONTAK") @db.VarChar(255)
+  jenisTraining String    @map("JENIS_TRAINING") @db.VarChar(255)
+  keterangan    String    @map("KETERANGAN") @db.VarChar(255)
+  kategori      String    @map("KATEGORI") @db.VarChar(255)
+  inout         String    @map("INOUT") @db.VarChar(50)
+  tanggal       String    @map("TANGGAL") @db.VarChar(50)
+  dateTarget    DateTime? @map("DATE_TARGET") @db.Date
+  perusahaan    String    @map("PERUSAHAAN") @db.VarChar(255)
 
   // Relasi ke Pegawai
-  pegawai         Pegawai  @relation(fields: [pegawaiId], references: [id], onDelete: Cascade)
+  pegawai Pegawai @relation(fields: [pegawaiId], references: [id], onDelete: Cascade)
 
   // Relasi ke TabPerusahaan
-  tabPerusahaan   TabPerusahaan @relation(fields: [perusahaanId], references: [noInduk], onDelete: Cascade)
+  tabPerusahaan TabPerusahaan @relation(fields: [perusahaanId], references: [noInduk], onDelete: Cascade)
 
-  createdAt       DateTime @default(now()) @map("created_at")
-  updatedAt       DateTime @updatedAt @map("updated_at")
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
 
   @@index([perusahaanId])
   @@index([pegawaiId])
@@ -268,41 +242,41 @@ model DailyActivity {
 }
 
 model HakAksesKaryawan {
-  id            String    @id @default(cuid())
+  id            String   @id @default(cuid())
   perusahaanId  String
-  pegawaiId     String?   // Nullable
+  pegawaiId     String? // Nullable
   jenisAkses    String
   status        String?
-  tanggalDibuat DateTime  @default(now())
+  tanggalDibuat DateTime @default(now())
 
   // Relasi
-  perusahaan    TabPerusahaan @relation(fields: [perusahaanId], references: [noInduk])
-  pegawai       Pegawai?      @relation(fields: [pegawaiId], references: [id]) // Relasi optional
+  perusahaan TabPerusahaan @relation(fields: [perusahaanId], references: [noInduk])
+  pegawai    Pegawai?      @relation(fields: [pegawaiId], references: [id]) // Relasi optional
 }
 
 model LogPerubahanPerusahaan {
-  id             String   @id @default(cuid())
-  perusahaanId   String   @map("perusahaan_id")
-  field          String   // Nama field yang diubah (misal: "alamat", "company", atau "HAK_AKSES")
-  dataLama       Json?    @map("data_lama")
-  dataBaru       Json?    @map("data_baru")
-  diubahOleh     String   @map("diubah_oleh") // Nama atau ID user
-  tanggal        DateTime @default(now())
+  id           String   @id @default(cuid())
+  perusahaanId String   @map("perusahaan_id")
+  field        String // Nama field yang diubah (misal: "alamat", "company", atau "HAK_AKSES")
+  dataLama     Json?    @map("data_lama")
+  dataBaru     Json?    @map("data_baru")
+  diubahOleh   String   @map("diubah_oleh") // Nama atau ID user
+  tanggal      DateTime @default(now())
 
   // Relasi ke TabPerusahaan (Optional, biar bisa ditarik dari sisi perusahaan)
-  perusahaan     TabPerusahaan @relation(fields: [perusahaanId], references: [noInduk], onDelete: Cascade)
+  perusahaan TabPerusahaan @relation(fields: [perusahaanId], references: [noInduk], onDelete: Cascade)
 
   @@index([perusahaanId])
   @@map("log_perubahan_perusahaan")
 }
 
 model TabPosPerusahaan {
-  id       String        @id @default(cuid())
-  nama     String        @db.VarChar(255)
-  jabatan  String        @db.VarChar(255)
-  followUp String?       @map("FOLLOW_UP") @db.VarChar(255)
-  noInduk  String        @map("NO_INDUK") @db.VarChar(50)
-  acc      String        @map("ACC") @db.VarChar(255)
+  id       String  @id @default(cuid())
+  nama     String  @db.VarChar(255)
+  jabatan  String  @db.VarChar(255)
+  followUp String? @map("FOLLOW_UP") @db.VarChar(255)
+  noInduk  String  @map("NO_INDUK") @db.VarChar(50)
+  acc      String  @map("ACC") @db.VarChar(255)
 
   perusahaan TabPerusahaan @relation(fields: [noInduk], references: [noInduk])
 
@@ -319,15 +293,15 @@ model Penawaran {
 }
 
 model PermohonanHakAkses {
-  id           String    @id @default(cuid())
-  perusahaanId String    @map("perusahaan_id")
-  pegawaiId    String    @map("pegawai_id")
-  jenisAkses   String    @map("jenis_akses") @db.VarChar(10)
+  id           String   @id @default(cuid())
+  perusahaanId String   @map("perusahaan_id")
+  pegawaiId    String   @map("pegawai_id")
+  jenisAkses   String   @map("jenis_akses") @db.VarChar(10)
   terima       Boolean?
-  tanggal      DateTime  @default(now())
+  tanggal      DateTime @default(now())
 
-  perusahaan   TabPerusahaan @relation(fields: [perusahaanId], references: [noInduk])
-  pegawai      Pegawai       @relation(fields: [pegawaiId], references: [id])
+  perusahaan TabPerusahaan @relation(fields: [perusahaanId], references: [noInduk])
+  pegawai    Pegawai       @relation(fields: [pegawaiId], references: [id])
 
   @@map("permohonan_hak_akses")
 }
