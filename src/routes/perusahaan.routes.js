@@ -2,7 +2,7 @@ const express = require("express");
 const router = express.Router();
 const {
   getTabPerusahaanList,
-  createPerusahaan,
+  createTabPerusahaan,
   updatePerusahaan,
   getOnePerusahaan,
   getContactPersonList,
@@ -36,7 +36,7 @@ const upload = require("../middlewares/upload.middleware");
 
 // Route tanpa parameter
 router.get("/perusahaan", authMiddleware, getTabPerusahaanList);
-router.post("/perusahaan", authMiddleware, createPerusahaan);
+router.post("/perusahaan", authMiddleware, createTabPerusahaan);
 
 // Route spesifik harus didefinisikan sebelum route dengan parameter dinamis
 router.get(

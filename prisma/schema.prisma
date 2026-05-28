@@ -79,85 +79,141 @@ model OtpCode {
 }
 
 model TabPerusahaan {
-  noInduk              String    @id @map("0NO_INDUK")        @db.VarChar(50)
-  company              String?   @map("1COMPANY")             @db.VarChar(255)
-  alamat               String?   @map("2ALAMAT")              @db.VarChar(255)
-  alamatWaktu          String    @map("2ALAMAT_WAKTU")        @db.VarChar(4)
-  kategoriCpn          String?   @map("3KATEGORICPN")        @db.VarChar(255)
-  alamatFactory        String?   @map("4ALAMATFACTORY")      @db.VarChar(255)
-  alamatFactoryWaktu   String    @map("4ALAMATFACTORY_WAKTU") @db.VarChar(4)
-  telp                 String?   @map("5TELP")               @db.VarChar(255)
-  fax                  String?   @map("6FAX")                @db.VarChar(255)
-  email                String?   @map("7EMAIL")              @db.VarChar(255)
-  lineOfBusiness       String?   @map("8LINEOFBUSINESS")     @db.VarChar(255)
-  produksi             String?   @map("16PRoduksi")          @db.VarChar(255)
-  iso9000              String?   @map("17ISO9000")           @db.VarChar(255)
-  csrPr                String?   @map("18CSR_PR")            @db.VarChar(255)
-  iso14000             String?   @map("19ISO14000")          @db.VarChar(255)
-  proper               String    @map("19PROPER")            @db.VarChar(255)
-  ohsas18001smk3       String?   @map("20OHSAS18001SMK3")    @db.VarChar(255)
-  group                String?   @map("21GROUP")             @db.VarChar(255)
-  tglRecord            String?   @map("22TGLRECORD")         @db.VarChar(255)
-  acc                  String?   @map("23ACC")               @db.VarChar(225)
-  accCsr               String    @map("23ACC_CSR")           @db.VarChar(50)
-  accTsm               String    @map("23ACC_TSM")           @db.VarChar(50)
-  accEpm               String    @map("23ACC_EPM")           @db.VarChar(50)
-  ket                  String?   @map("24KET")
-  noGroup              String?   @map("25NO_GROUP")          @db.VarChar(25)
-  groupInduk           String?   @map("26GROUP_INDUK")       @db.VarChar(255)
-  infoKeu              String    @map("27InfoKEU")           @db.VarChar(255)
-  tglInfoKeu           String    @map("tglInfoKEU")          @db.VarChar(10)
-  prioritasMa          String?   @map("PRIORITAS_MA")        @db.VarChar(50)
-  prioritasAe          String?   @map("PRIORITAS_AE")        @db.VarChar(50)
-  kd2                  String?   @map("KD_2")                @db.VarChar(50)
-  kd3                  String?   @map("KD_3")                @db.VarChar(50)
-  kd4                  String?   @map("KD_4")                @db.VarChar(50)
-  kd5                  String?   @map("KD_5")                @db.VarChar(50)
-  fasilitas            String?                               @db.VarChar(255)
-  ims                  String?   @map("IMS")                 @db.VarChar(255)
-  khusus               String?                               @db.VarChar(255)
-  region               String?                               @db.VarChar(50)
-  tglRecordEnv         String?   @map("tglrecordENV")        @db.VarChar(20)
-  tglRecordCsr         String    @map("tglrecordCSR")        @db.VarChar(20)
-  tglRecordTsm         String    @map("tglrecordTSM")        @db.VarChar(20)
-  tglRecordEpm         String    @map("tglrecordEPM")        @db.VarChar(20)
-  permodalan           String?                               @db.VarChar(255)
-  inputter             String                                @db.VarChar(50)
-  dateInput            DateTime  @map("dateinput")
-  updatter             String                                @db.VarChar(50)
-  dateUpdate           DateTime  @map("dateupdate")
-  recquestAcount       String                                @db.VarChar(10)
-  dateRecquestAcount   DateTime  @map("daterecquestAcount")
-  pesertaTot           Int       @map("PesertaTot")
-  pesertaInh           Int       @map("PesertaInh")
-  butuhTraining        String    @map("ButuhTraining")       @db.VarChar(255)
-  kirimPos             String?   @map("KIRIMPOS")            @db.VarChar(5)
-  vendor               String    @map("Vendor")              @db.VarChar(15)
-  expiredVendor        DateTime  @map("expired_Vendor")      @db.Date
-  indukKab             String    @map("INDUK_KAB")           @db.VarChar(10)
-  indukProv            String    @map("INDUK_PROV")          @db.VarChar(10)
-  bdoAction            String    @map("BDO_action")          @db.VarChar(50)
-  subBidangProper      String    @map("Sub_Bidang_PROPER")   @db.VarChar(100)
-  nilaiSubBidangProper Int       @map("Nilai_Sub_Bidang_PROPER")
+  // =========================
+  // COMMON (SEMUA JENIS)
+  // =========================
+  noInduk      String  @id @map("0NO_INDUK") @db.VarChar(50)
+  company      String? @map("1COMPANY") @db.VarChar(255)
+  alamat       String? @map("2ALAMAT") @db.VarChar(255)
+  telp         String? @map("5TELP") @db.VarChar(255)
+  fax          String? @map("6FAX") @db.VarChar(255)
+  email        String? @map("7EMAIL") @db.VarChar(255)
+  ket          String? @map("24KET")
+  fasilitas    String? @db.VarChar(255)
+  butuhTraining String @map("ButuhTraining") @db.VarChar(255)
+  prioritasMa  String? @map("PRIORITAS_MA") @db.VarChar(50)
+  prioritasAe  String? @map("PRIORITAS_AE") @db.VarChar(50)
+  group        String? @map("21GROUP") @db.VarChar(255)
 
-  idSimpel           String?   @map("ID_SIMPEL")           @db.VarChar(50)
-  lineBisnisSub      String?   @map("LINE_BISNIS_SUB")     @db.VarChar(255)
-  batasEmas          Int?      @map("BATAS_EMAS")
-  batasHijau         Int?      @map("BATAS_HIJAU")
-  cabangSite         String?   @map("CABANG_SITE")         @db.VarChar(255)
-  pesaing            String?   @map("PESAING")             @db.VarChar(255)
-  prosedurPelatihan  String?   @map("PROSEDUR_PELATIHAN")  @db.VarChar(255)
+  jenisInstansi String @default("PERUSAHAAN") @db.VarChar(50)
+
+  // =========================
+  // LOKASI (SHARED PERUSAHAAN / RS)
+  // =========================
+  alamatWaktu          String @map("2ALAMAT_WAKTU") @db.VarChar(4)
+  alamatFactory        String? @map("4ALAMATFACTORY") @db.VarChar(255)
+  alamatFactoryWaktu   String @map("4ALAMATFACTORY_WAKTU") @db.VarChar(4)
+
+  kotaKabupaten String? @db.VarChar(100)
+  provinsi      String? @db.VarChar(100)
+
+  // =========================
+  // SERTIFIKASI (PERUSAHAAN / RS)
+  // =========================
+  iso9000        String? @map("17ISO9000") @db.VarChar(255)
+  iso14000       String? @map("19ISO14000") @db.VarChar(255)
+  ohsas18001smk3 String? @map("20OHSAS18001SMK3") @db.VarChar(255)
+
+  // =========================
+  // KLASIFIKASI (PERUSAHAAN / RS / PEMDA / SEKOLAH)
+  // =========================
+  kategoriCpn    String? @map("3KATEGORICPN") @db.VarChar(255)
+  lineOfBusiness  String? @map("8LINEOFBUSINESS") @db.VarChar(255)
+  lineBisnisSub   String? @map("LINE_BISNIS_SUB") @db.VarChar(255)
+  permodalan      String? @db.VarChar(255)
+
+  // =========================
+  // FINANSIAL / PROPERTI (PERUSAHAAN / RS)
+  // =========================
+  nilaiSubBidangProper Int @map("Nilai_Sub_Bidang_PROPER")
+  batasEmas            Int?
+  batasHijau           Int?
+  infoKeu              String @map("27InfoKEU") @db.VarChar(255)
+
+  bdoAction String @map("BDO_action") @db.VarChar(50)
+  vendor    String @map("Vendor") @db.VarChar(15)
+
+  // =========================
+  // OPSIONAL BUSINESS INFO
+  // =========================
+  cabangSite         String? @db.VarChar(255)
+  pesaing            String? @db.VarChar(255)
+  prosedurPelatihan  String? @db.VarChar(255)
+
+  // =========================
+  // INSTANSI PEMDA
+  // =========================
+  instansi    String? @db.VarChar(255)
+  sekilasLh   String? @db.Text
+
+  rsud                Int? @default(0)
+  indPengolahan       Int? @default(0)
+  pertambangan        Int? @default(0)
+  listrikGasAirBersih Int? @default(0)
+  hotelResto          Int? @default(0)
+  angkutTrans         Int? @default(0)
+  bangunan            Int? @default(0)
+  pertanian           Int? @default(0)
+  keuangan            Int? @default(0)
+  laut                Int? @default(0)
+  jasa                Int? @default(0)
+
+  // =========================
+  // INSTANSI DAERAH
+  // =========================
+  kode            String? @db.VarChar(100)
+  tender1         String? @db.VarChar(255)
+  tender2         String? @db.VarChar(255)
+  tender3         String? @db.VarChar(255)
+  pelatihanDiikuti String? @db.Text
+
+  // =========================
+  // SEKOLAH
+  // =========================
+  pemilik     String? @db.VarChar(255)
+  yayasan     String? @db.VarChar(255)
+  subKategori String? @db.VarChar(255)
+  cpSekolah   String? @db.VarChar(255)
+
+  // =========================
+  // UNUSED / LEGACY (JANGAN DIPAKAI FRONTEND BARU)
+  // =========================
+  produksi
+  csrPr
+  proper
+  tglRecord
+  tglInfoKeu
+  tglRecordEnv
+  tglRecordCsr
+  tglRecordTsm
+  tglRecordEpm
+  acc
+  accCsr
+  accTsm
+  accEpm
+  kd2
+  kd3
+  kd4
+  kd5
+  ims
+  khusus
+  region
+  noGroup
+  groupInduk
+  pesertaTot
+  pesertaInh
+  kirimPos
+  expiredVendor
+  indukKab
+  indukProv
 
 
-
-  contactPersons    ContactPersonPerusahaan[]
-  dailyActivities   DailyActivity[] 
-  hakAksesKaryawan     HakAksesKaryawan[]
-  logs LogPerubahanPerusahaan[]
-  posPerusahaan TabPosPerusahaan[]
-  permohonanHakAkses PermohonanHakAkses[]
-
-  @@map("tabperusahaan")
+  contactPersons            ContactPersonPerusahaan[]
+  dailyActivities           DailyActivity[] 
+  hakAksesKaryawan          HakAksesKaryawan[]
+  logs                      LogPerubahanPerusahaan[]
+  posPerusahaan             TabPosPerusahaan[]
+  permohonanHakAkses        PermohonanHakAkses[]
 }
 
 model ContactPersonPerusahaan {
