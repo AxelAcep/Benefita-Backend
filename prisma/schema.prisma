@@ -80,16 +80,13 @@ model OtpCode {
 
 model TabPerusahaan {
   // =========================
-  // CORE (WAJIB MINIMAL)
+  // CORE + COMMON (SEMUA JENIS)
   // =========================
   noInduk       String  @id @map("0NO_INDUK") @db.VarChar(50)
   jenisInstansi String  @default("PERUSAHAAN") @db.VarChar(50)
 
   company       String? @map("1COMPANY") @db.VarChar(255)
 
-  // =========================
-  // COMMON INFO
-  // =========================
   alamat        String? @map("2ALAMAT") @db.VarChar(255)
   telp          String? @map("5TELP") @db.VarChar(255)
   fax           String? @map("6FAX") @db.VarChar(255)
@@ -97,49 +94,36 @@ model TabPerusahaan {
   ket           String? @map("24KET")
   fasilitas     String? @db.VarChar(255)
   butuhTraining String? @map("ButuhTraining") @db.VarChar(255)
-  prioritasMa   String? @map("PRIORITAS_MA") @db.VarChar(50)
-  prioritasAe   String? @map("PRIORITAS_AE") @db.VarChar(50)
+  prioritasMa   String? @db.VarChar(50)
+  prioritasAe   String? @db.VarChar(50)
   group         String? @map("21GROUP") @db.VarChar(255)
+  akreditasi    String? @db.VarChar(50)
 
   // =========================
-  // LOKASI
+  // PERUSAHAAN + RUMAH_SAKIT
   // =========================
-  alamatWaktu        String? @map("2ALAMAT_WAKTU") @db.VarChar(4)
-  alamatFactory      String? @map("4ALAMATFACTORY") @db.VarChar(255)
-  alamatFactoryWaktu String? @map("4ALAMATFACTORY_WAKTU") @db.VarChar(4)
+  idSimpel String? @db.VarChar(100)
 
-  kotaKabupaten String? @db.VarChar(100)
-  provinsi      String? @db.VarChar(100)
+  alamatWaktu        String? @db.VarChar(4)
+  alamatFactory      String? @db.VarChar(255)
+  alamatFactoryWaktu String? @db.VarChar(4)
 
-  // =========================
-  // SERTIFIKASI
-  // =========================
-  iso9000        String? @map("17ISO9000") @db.VarChar(255)
-  iso14000       String? @map("19ISO14000") @db.VarChar(255)
-  ohsas18001smk3 String? @map("20OHSAS18001SMK3") @db.VarChar(255)
+  iso9000        String? @db.VarChar(255)
+  iso14000       String? @db.VarChar(255)
+  ohsas18001smk3 String? @db.VarChar(255)
 
-  // =========================
-  // KLASIFIKASI
-  // =========================
-  kategoriCpn    String? @map("3KATEGORICPN") @db.VarChar(255)
-  lineOfBusiness String? @map("8LINEOFBUSINESS") @db.VarChar(255)
-  lineBisnisSub  String? @map("LINE_BISNIS_SUB") @db.VarChar(255)
+  kategoriCpn    String? @db.VarChar(255)
+  lineOfBusiness String? @db.VarChar(255)
+  lineBisnisSub  String? @db.VarChar(255)
   permodalan     String? @db.VarChar(255)
 
-  // =========================
-  // FINANSIAL
-  // =========================
-  nilaiSubBidangProper Int? @map("Nilai_Sub_Bidang_PROPER")
+  nilaiSubBidangProper Int?
   batasEmas            Int?
   batasHijau           Int?
-  infoKeu              String? @map("27InfoKEU") @db.VarChar(255)
+  infoKeu              String? @db.VarChar(255)
+  bdoAction            String? @db.VarChar(50)
+  vendor               String? @db.VarChar(15)
 
-  bdoAction String? @map("BDO_action") @db.VarChar(50)
-  vendor    String? @map("Vendor") @db.VarChar(15)
-
-  // =========================
-  // BUSINESS INFO
-  // =========================
   cabangSite        String? @db.VarChar(255)
   pesaing           String? @db.VarChar(255)
   prosedurPelatihan String? @db.VarChar(255)
@@ -147,8 +131,10 @@ model TabPerusahaan {
   // =========================
   // PEMDA
   // =========================
-  instansi  String? @db.VarChar(255)
-  sekilasLh String? @db.Text
+  kotaKabupaten String? @db.VarChar(100)
+  provinsi      String? @db.VarChar(100)
+  instansi      String? @db.VarChar(255)
+  sekilasLh     String? @db.Text
 
   rsud                Int? @default(0)
   indPengolahan       Int? @default(0)
@@ -165,10 +151,12 @@ model TabPerusahaan {
   // =========================
   // INSTANSI DAERAH
   // =========================
-  kode             String? @db.VarChar(100)
-  tender1          String? @db.VarChar(255)
-  tender2          String? @db.VarChar(255)
-  tender3          String? @db.VarChar(255)
+  kode String? @db.VarChar(100)
+
+  tender1 String? @db.VarChar(255)
+  tender2 String? @db.VarChar(255)
+  tender3 String? @db.VarChar(255)
+
   pelatihanDiikuti String? @db.Text
 
   // =========================
@@ -179,11 +167,18 @@ model TabPerusahaan {
   subKategori String? @db.VarChar(255)
   cpSekolah   String? @db.VarChar(255)
 
+  inputter   String?
+  updatter   String?
+  dateInput  DateTime?
+  dateUpdate DateTime?
+
   // =========================
   // RELATION
   // =========================
   contactPersons     ContactPersonPerusahaan[]
   dailyActivities    DailyActivity[]
+  sertifikasiBnsp SertifikasiBnsp[]
+  proper          Proper[]
   hakAksesKaryawan   HakAksesKaryawan[]
   logs               LogPerubahanPerusahaan[]
   posPerusahaan      TabPosPerusahaan[]
@@ -304,4 +299,38 @@ model PermohonanHakAkses {
   pegawai    Pegawai       @relation(fields: [pegawaiId], references: [id])
 
   @@map("permohonan_hak_akses")
+}
+
+model SertifikasiBnsp {
+  id          Int     @id @default(autoincrement())
+  perusahaanId String @db.VarChar(50)
+
+  pppa    String? @db.VarChar(255)
+  popal   String? @db.VarChar(255)
+  pppu    String? @db.VarChar(255)
+  poippu  String? @db.VarChar(255)
+  limbahB3 String? @db.VarChar(255)
+  tpsLb3  String? @db.VarChar(255)
+  sampah3R String? @db.VarChar(255)
+  pSampah  String? @db.VarChar(255)
+  aEnergi  String? @db.VarChar(255)
+  mEnergi  String? @db.VarChar(255)
+  pcua    String? @db.VarChar(255)
+  lca     String? @db.VarChar(255)
+
+  perusahaan TabPerusahaan @relation(fields: [perusahaanId], references: [noInduk])
+}
+
+model Proper {
+  id          Int     @id @default(autoincrement())
+  perusahaanId String @db.VarChar(50)
+  tahun       Int
+
+  emas  Int @default(0)
+  hijau Int @default(0)
+  biru  Int @default(0)
+  merah Int @default(0)
+  hitam Int @default(0)
+
+  perusahaan TabPerusahaan @relation(fields: [perusahaanId], references: [noInduk])
 }

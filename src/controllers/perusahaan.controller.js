@@ -73,41 +73,46 @@ const createTabPerusahaan = async (req, res) => {
       idSimpel,
       jenisInstansi = "PERUSAHAAN",
 
-      // shared (dipakai semua / sebagian)
+      // COMMON
       alamat,
       alamatWaktu,
       alamatFactory,
       alamatFactoryWaktu,
 
-      iso9000,
-      iso14000,
-      ohsas18001smk3,
+      telp,
+      fax,
+      email,
 
+      ket,
+      fasilitas,
+      butuhTraining,
+      prioritasMa,
+      prioritasAe,
+      group,
+
+      // CLASSIFICATION
       kategoriCpn,
       lineOfBusiness,
       lineBisnisSub,
       permodalan,
 
+      // CERTIFICATION
+      iso9000,
+      iso14000,
+      ohsas18001smk3,
+
+      // FINANCIAL
       nilaiSubBidangProper,
       batasEmas,
       batasHijau,
-      fasilitas,
       infoKeu,
-      ket,
-      group,
       bdoAction,
-      prioritasMa,
-      prioritasAe,
       vendor,
 
+      // EXTRA
       cabangSite,
       pesaing,
-      butuhTraining,
       prosedurPelatihan,
-
-      telp,
-      fax,
-      email,
 
       // PEMDA
       kotaKabupaten,
@@ -138,11 +143,22 @@ const createTabPerusahaan = async (req, res) => {
       yayasan,
       subKategori,
       cpSekolah,
+      akreditasi,
     } = req.body;
 
-    // validasi basic
-    if (!noInduk || !company) {
-      return res.status(400).json({ message: "noInduk & company wajib" });
+    // ================= VALIDASI
+    if (!noInduk) {
+      return res.status(400).json({ message: "noInduk wajib diisi" });
+    }
+
+    const butuhCompany = ["PERUSAHAAN", "RUMAH_SAKIT", "SEKOLAH"];
+    if (butuhCompany.includes(jenisInstansi) && !company) {
+      return res.status(400).json({ message: "company wajib diisi" });
+    }
+
+    const butuhInstansi = ["PEMDA", "INSTANSI_DAERAH"];
+    if (butuhInstansi.includes(jenisInstansi) && !instansi) {
+      return res.status(400).json({ message: "instansi wajib diisi" });
     }
 
     const allowed = [
@@ -154,7 +170,9 @@ const createTabPerusahaan = async (req, res) => {
     ];
 
     if (!allowed.includes(jenisInstansi)) {
-      return res.status(400).json({ message: "jenisInstansi tidak valid" });
+      return res.status(400).json({
+        message: "jenisInstansi tidak valid",
+      });
     }
 
     const exist = await prisma.tabPerusahaan.findUnique({
@@ -162,9 +180,12 @@ const createTabPerusahaan = async (req, res) => {
     });
 
     if (exist) {
-      return res.status(409).json({ message: "noInduk sudah ada" });
+      return res.status(409).json({
+        message: "noInduk sudah ada",
+      });
     }
 
+    // ================= SYSTEM
     const now = new Date();
     const userId = req.user?.userId ?? "system";
 
@@ -176,9 +197,10 @@ const createTabPerusahaan = async (req, res) => {
         select: { pegawai: { select: { nama: true } } },
       });
 
-      if (u?.pegawai) userName = u.pegawai.nama;
+      if (u?.pegawai?.nama) userName = u.pegawai.nama;
     }
 
+    // ================= BUILD DATA (CLEAN + SAFE NULL)
     const data = {
       // CORE
       noInduk,
@@ -188,20 +210,20 @@ const createTabPerusahaan = async (req, res) => {
 
       // COMMON
       alamat: alamat ?? null,
-      alamatWaktu: alamatWaktu ?? "WIB",
+      alamatWaktu: alamatWaktu ?? null,
       alamatFactory: alamatFactory ?? null,
-      alamatFactoryWaktu: alamatFactoryWaktu ?? "-",
+      alamatFactoryWaktu: alamatFactoryWaktu ?? null,
 
       telp: telp ?? null,
       fax: fax ?? null,
       email: email ?? null,
 
-      fasilitas: fasilitas ?? null,
       ket: ket ?? null,
-      group: group ?? null,
-      butuhTraining: butuhTraining ?? "",
+      fasilitas: fasilitas ?? null,
+      butuhTraining: butuhTraining ?? null,
       prioritasMa: prioritasMa ?? null,
       prioritasAe: prioritasAe ?? null,
+      group: group ?? null,
 
       // CLASSIFICATION
       kategoriCpn: kategoriCpn ?? null,
@@ -214,13 +236,13 @@ const createTabPerusahaan = async (req, res) => {
       iso14000: iso14000 ?? null,
       ohsas18001smk3: ohsas18001smk3 ?? null,
 
-      // FINANCE
-      nilaiSubBidangProper: nilaiSubBidangProper ?? 0,
-      batasEmas: batasEmas ?? 0,
-      batasHijau: batasHijau ?? 0,
-      infoKeu: infoKeu ?? "",
-      bdoAction: bdoAction ?? "",
-      vendor: vendor ?? "",
+      // FINANCIAL
+      nilaiSubBidangProper: nilaiSubBidangProper ?? null,
+      batasEmas: batasEmas ?? null,
+      batasHijau: batasHijau ?? null,
+      infoKeu: infoKeu ?? null,
+      bdoAction: bdoAction ?? null,
+      vendor: vendor ?? null,
 
       // EXTRA
       cabangSite: cabangSite ?? null,
@@ -228,66 +250,54 @@ const createTabPerusahaan = async (req, res) => {
       prosedurPelatihan: prosedurPelatihan ?? null,
 
       // PEMDA
-      kotaKabupaten,
-      provinsi,
-      instansi,
-      sekilasLh,
-      rsud,
-      indPengolahan,
-      pertambangan,
-      listrikGasAirBersih,
-      hotelResto,
-      angkutTrans,
-      bangunan,
-      pertanian,
-      keuangan,
-      laut,
-      jasa,
+      kotaKabupaten: kotaKabupaten ?? null,
+      provinsi: provinsi ?? null,
+      instansi: instansi ?? null,
+      sekilasLh: sekilasLh ?? null,
+
+      rsud: rsud ?? 0,
+      indPengolahan: indPengolahan ?? 0,
+      pertambangan: pertambangan ?? 0,
+      listrikGasAirBersih: listrikGasAirBersih ?? 0,
+      hotelResto: hotelResto ?? 0,
+      angkutTrans: angkutTrans ?? 0,
+      bangunan: bangunan ?? 0,
+      pertanian: pertanian ?? 0,
+      keuangan: keuangan ?? 0,
+      laut: laut ?? 0,
+      jasa: jasa ?? 0,
 
       // INSTANSI DAERAH
-      kode,
-      tender1,
-      tender2,
-      tender3,
-      pelatihanDiikuti,
+      kode: kode ?? null,
+      tender1: tender1 ?? null,
+      tender2: tender2 ?? null,
+      tender3: tender3 ?? null,
+      pelatihanDiikuti: pelatihanDiikuti ?? null,
 
       // SEKOLAH
-      pemilik,
-      yayasan,
-      subKategori,
-      cpSekolah,
+      pemilik: pemilik ?? null,
+      yayasan: yayasan ?? null,
+      subKategori: subKategori ?? null,
+      cpSekolah: cpSekolah ?? null,
+      akreditasi: akreditasi ?? null,
 
       // SYSTEM
       inputter: userName,
       updatter: userName,
       dateInput: now,
       dateUpdate: now,
-
-      accCsr: "",
-      accTsm: "",
-      accEpm: "",
-
-      tglRecordCsr: "",
-      tglRecordTsm: "",
-      tglRecordEpm: "",
-
-      recquestAcount: "",
-      dateRecquestAcount: now,
-
-      pesertaTot: 0,
-      pesertaInh: 0,
-
-      expiredVendor: now,
-      indukKab: "",
-      indukProv: "",
     };
 
-    const result = await prisma.tabPerusahaan.create({ data });
+    // ================= INSERT
+    const result = await prisma.tabPerusahaan.create({
+      data,
+    });
 
+    // ================= AUTO ACCESS INIT
     await prisma.hakAksesKaryawan.createMany({
-      data: ["ENV", "CSR", "TSM", "EPM"].map((j) => ({
+      data: ["ENV", "CSR", "TSM", "EPM"].map((jenisAkses) => ({
         perusahaanId: result.noInduk,
-        jenisAkses: j,
+        jenisAkses,
         status: null,
         tanggalDibuat: now,
       })),
@@ -299,7 +309,9 @@ const createTabPerusahaan = async (req, res) => {
     });
   } catch (err) {
     console.error(err);
-    return res.status(500).json({ message: "server error" });
+    return res.status(500).json({
+      message: "server error",
+    });
   }
 };
 
@@ -309,113 +321,130 @@ const getOnePerusahaan = async (req, res) => {
 
     const data = await prisma.tabPerusahaan.findUnique({
       where: { noInduk },
+      include: {
+        sertifikasiBnsp: true,
+        proper: true,
+      },
     });
 
     if (!data) {
-      return res.status(404).json({
-        message: `Data ${noInduk} tidak ditemukan.`,
+      return res.status(404).json({ message: "not found" });
+    }
+
+    // ================= BASE (ALL TYPES)
+    const response = {
+      noInduk: data.noInduk,
+      jenisInstansi: data.jenisInstansi,
+      company: data.company,
+
+      alamat: data.alamat,
+      telp: data.telp,
+      fax: data.fax,
+      email: data.email,
+      ket: data.ket,
+      fasilitas: data.fasilitas,
+      butuhTraining: data.butuhTraining,
+      prioritasMa: data.prioritasMa,
+      prioritasAe: data.prioritasAe,
+      group: data.group,
+
+      inputter: data.inputter,
+      updatter: data.updatter,
+      dateInput: data.dateInput,
+      dateUpdate: data.dateUpdate,
+    };
+
+    // ================= PERUSAHAAN / RS
+    if (["PERUSAHAAN", "RUMAH_SAKIT"].includes(data.jenisInstansi)) {
+      Object.assign(response, {
+        idSimpel: data.idSimpel,
+
+        alamatWaktu: data.alamatWaktu,
+        alamatFactory: data.alamatFactory,
+        alamatFactoryWaktu: data.alamatFactoryWaktu,
+
+        iso9000: data.iso9000,
+        iso14000: data.iso14000,
+        ohsas18001smk3: data.ohsas18001smk3,
+
+        kategoriCpn: data.kategoriCpn,
+        lineOfBusiness: data.lineOfBusiness,
+        lineBisnisSub: data.lineBisnisSub,
+        permodalan: data.permodalan,
+
+        nilaiSubBidangProper: data.nilaiSubBidangProper,
+        batasEmas: data.batasEmas,
+        batasHijau: data.batasHijau,
+        infoKeu: data.infoKeu,
+        bdoAction: data.bdoAction,
+        vendor: data.vendor,
+
+        cabangSite: data.cabangSite,
+        pesaing: data.pesaing,
+        prosedurPelatihan: data.prosedurPelatihan,
+
+        akreditasi: data.akreditasi,
       });
     }
 
-    const sertifikasiBnsp = {
-      pppa: 1,
-      popal: 2,
-      pppu: 3,
-      poippu: 4,
-      limbahB3: 0,
-      tpsLb3: 1,
-      sampah3R: 0,
-      pSampah: 0,
-      aEnergi: 0,
-      mEnergi: 0,
-      pcua: 0,
-      lca: 0,
-    };
+    // ================= PEMDA
+    if (data.jenisInstansi === "PEMDA") {
+      Object.assign(response, {
+        kode: data.kode,
+        kotaKabupaten: data.kotaKabupaten,
+        provinsi: data.provinsi,
+        instansi: data.instansi,
+        sekilasLh: data.sekilasLh,
 
-    // split response by type
-    const base = {
-      noInduk: data.noInduk,
-      company: data.company,
-      jenisInstansi: data.jenisInstansi,
-    };
-
-    let detail = {};
-
-    switch (data.jenisInstansi) {
-      case "PEMDA":
-        detail = {
-          kotaKabupaten: data.kotaKabupaten,
-          provinsi: data.provinsi,
-          instansi: data.instansi,
-          sekilasLh: data.sekilasLh,
-          sektor: {
-            rsud: data.rsud,
-            indPengolahan: data.indPengolahan,
-            pertambangan: data.pertambangan,
-            listrikGasAirBersih: data.listrikGasAirBersih,
-            hotelResto: data.hotelResto,
-            angkutTrans: data.angkutTrans,
-            bangunan: data.bangunan,
-            pertanian: data.pertanian,
-            keuangan: data.keuangan,
-            laut: data.laut,
-            jasa: data.jasa,
-          },
-        };
-        break;
-
-      case "INSTANSI_DAERAH":
-        detail = {
-          kode: data.kode,
-          kotaKabupaten: data.kotaKabupaten,
-          provinsi: data.provinsi,
-          instansi: data.instansi,
-          tender: [data.tender1, data.tender2, data.tender3],
-          pelatihanDiikuti: data.pelatihanDiikuti,
-        };
-        break;
-
-      case "SEKOLAH":
-        detail = {
-          pemilik: data.pemilik,
-          yayasan: data.yayasan,
-          subKategori: data.subKategori,
-          cpSekolah: data.cpSekolah,
-        };
-        break;
-
-      default:
-        detail = {
-          alamat: data.alamat,
-          telp: data.telp,
-          email: data.email,
-          fasilitas: data.fasilitas,
-          kategoriCpn: data.kategoriCpn,
-          lineOfBusiness: data.lineOfBusiness,
-          lineBisnisSub: data.lineBisnisSub,
-          permodalan: data.permodalan,
-          nilaiSubBidangProper: data.nilaiSubBidangProper,
-          batasEmas: data.batasEmas,
-          batasHijau: data.batasHijau,
-          infoKeu: data.infoKeu,
-          bdoAction: data.bdoAction,
-          vendor: data.vendor,
-        };
+        rsud: data.rsud,
+        indPengolahan: data.indPengolahan,
+        pertambangan: data.pertambangan,
+        listrikGasAirBersih: data.listrikGasAirBersih,
+        hotelResto: data.hotelResto,
+        angkutTrans: data.angkutTrans,
+        bangunan: data.bangunan,
+        pertanian: data.pertanian,
+        keuangan: data.keuangan,
+        laut: data.laut,
+        jasa: data.jasa,
+      });
     }
 
-    return res.status(200).json({
-      message: "success",
-      data: {
-        ...base,
-        detail,
-        sertifikasiBnsp,
-      },
-    });
+    // ================= INSTANSI DAERAH
+    if (data.jenisInstansi === "INSTANSI_DAERAH") {
+      Object.assign(response, {
+        kode: data.kode,
+        kotaKabupaten: data.kotaKabupaten,
+        provinsi: data.provinsi,
+        instansi: data.instansi,
+
+        tender1: data.tender1,
+        tender2: data.tender2,
+        tender3: data.tender3,
+
+        pelatihanDiikuti: data.pelatihanDiikuti,
+      });
+    }
+
+    // ================= SEKOLAH
+    if (data.jenisInstansi === "SEKOLAH") {
+      Object.assign(response, {
+        kategoriCpn: data.kategoriCpn,
+        lineOfBusiness: data.lineOfBusiness,
+        lineBisnisSub: data.lineBisnisSub,
+        permodalan: data.permodalan,
+
+        pemilik: data.pemilik,
+        yayasan: data.yayasan,
+        subKategori: data.subKategori,
+        cpSekolah: data.cpSekolah,
+        akreditasi: data.akreditasi,
+      });
+    }
+
+    return res.json(response);
   } catch (err) {
-    console.error("[getOnePerusahaan]", err);
-    return res.status(500).json({
-      message: "server error",
-    });
+    return res.status(500).json({ message: "server error" });
   }
 };
 
@@ -474,6 +503,9 @@ const updatePerusahaan = async (req, res) => {
 
       PERUSAHAAN: [
         "idSimpel",
+        "iso9000",
+        "iso14000",
+        "ohsas18001smk3",
         "kategoriCpn",
         "lineOfBusiness",
         "lineBisnisSub",
@@ -487,12 +519,32 @@ const updatePerusahaan = async (req, res) => {
         "cabangSite",
         "pesaing",
         "prosedurPelatihan",
+        "akreditasi",
+      ],
+
+      RUMAH_SAKIT: [
+        "idSimpel",
         "iso9000",
         "iso14000",
         "ohsas18001smk3",
+        "kategoriCpn",
+        "lineOfBusiness",
+        "lineBisnisSub",
+        "permodalan",
+        "nilaiSubBidangProper",
+        "batasEmas",
+        "batasHijau",
+        "infoKeu",
+        "bdoAction",
+        "vendor",
+        "cabangSite",
+        "pesaing",
+        "prosedurPelatihan",
+        "akreditasi",
       ],
 
       PEMDA: [
+        "kode",
         "kotaKabupaten",
         "provinsi",
         "instansi",
@@ -512,13 +564,26 @@ const updatePerusahaan = async (req, res) => {
 
       INSTANSI_DAERAH: [
         "kode",
+        "kotaKabupaten",
+        "provinsi",
+        "instansi",
         "tender1",
         "tender2",
         "tender3",
         "pelatihanDiikuti",
       ],
 
-      SEKOLAH: ["pemilik", "yayasan", "subKategori", "cpSekolah"],
+      SEKOLAH: [
+        "kategoriCpn",
+        "lineOfBusiness",
+        "lineBisnisSub",
+        "permodalan",
+        "pemilik",
+        "yayasan",
+        "subKategori",
+        "cpSekolah",
+        "akreditasi",
+      ],
     };
 
     const validFields = new Set([
@@ -528,11 +593,14 @@ const updatePerusahaan = async (req, res) => {
 
     const ignoredFields = ["updatter", "dateUpdate", "dateInput", "inputter"];
 
+    const filteredData = {};
     const logs = [];
 
     for (const key in body) {
       if (ignoredFields.includes(key)) continue;
       if (!validFields.has(key)) continue;
+
+      filteredData[key] = body[key];
 
       if (body[key] !== undefined && body[key] !== existing[key]) {
         logs.push({
@@ -550,7 +618,7 @@ const updatePerusahaan = async (req, res) => {
       const updated = await tx.tabPerusahaan.update({
         where: { noInduk },
         data: {
-          ...body,
+          ...filteredData,
           updatter: userName,
           dateUpdate: now,
         },
@@ -940,8 +1008,9 @@ const getOneDailyActivity = async (req, res) => {
 const createDailyActivity = async (req, res) => {
   try {
     const { noInduk } = req.params;
+
     const {
-      pegawaiId,
+      pegawaiId, // ini USER ID dari FE
       kontak,
       jenisTraining,
       keterangan,
@@ -952,17 +1021,24 @@ const createDailyActivity = async (req, res) => {
       dateTarget,
     } = req.body;
 
-    // Validasi minimal
+    // LOG TEST
+    console.log("REQ BODY:", req.body);
+    console.log("USER ID (pegawaiId):", pegawaiId);
+
+    // VALIDASI
     if (!pegawaiId) {
-      return res
-        .status(400)
-        .json({ message: "Field 'pegawaiId' wajib diisi." });
-    }
-    if (!kontak) {
-      return res.status(400).json({ message: "Field 'kontak' wajib diisi." });
+      return res.status(400).json({
+        message: "Field 'pegawaiId' (userId) wajib diisi.",
+      });
     }
 
-    // Cek perusahaan ada
+    if (!kontak) {
+      return res.status(400).json({
+        message: "Field 'kontak' wajib diisi.",
+      });
+    }
+
+    // CEK PERUSAHAAN
     const perusahaanExist = await prisma.tabPerusahaan.findUnique({
       where: { noInduk },
     });
@@ -973,21 +1049,43 @@ const createDailyActivity = async (req, res) => {
       });
     }
 
-    // Cek pegawai ada
-    const pegawaiExist = await prisma.pegawai.findUnique({
+    // AMBIL USER + PEGAWAI
+    const user = await prisma.user.findUnique({
       where: { id: pegawaiId },
+      select: {
+        id: true,
+        pegawaiId: true,
+        pegawai: {
+          select: {
+            id: true,
+            nama: true,
+            jabatan: true,
+          },
+        },
+      },
     });
 
-    if (!pegawaiExist) {
+    console.log("USER FOUND:", user);
+
+    if (!user) {
       return res.status(404).json({
-        message: `Pegawai dengan id ${pegawaiId} tidak ditemukan.`,
+        message: `User dengan id ${pegawaiId} tidak ditemukan.`,
       });
     }
 
+    if (!user.pegawaiId) {
+      return res.status(404).json({
+        message: `User ini tidak terhubung ke pegawai.`,
+      });
+    }
+
+    console.log("PEGAWAI ID YANG DIPAKAI:", user.pegawaiId);
+
+    // CREATE
     const result = await prisma.dailyActivity.create({
       data: {
         perusahaanId: noInduk,
-        pegawaiId,
+        pegawaiId: user.pegawaiId,
         kontak: kontak || "",
         jenisTraining: jenisTraining || "",
         keterangan: keterangan || "",
@@ -1008,13 +1106,18 @@ const createDailyActivity = async (req, res) => {
       },
     });
 
+    console.log("RESULT CREATED:", result);
+
     return res.status(201).json({
       message: "Daily activity berhasil ditambahkan.",
       data: result,
     });
   } catch (err) {
     console.error("[createDailyActivity error]", err);
-    return res.status(500).json({ message: "Terjadi kesalahan server." });
+
+    return res.status(500).json({
+      message: "Terjadi kesalahan server.",
+    });
   }
 };
 
@@ -1293,7 +1396,7 @@ const editHakAksesPerusahaan = async (req, res) => {
         });
         const namaLama =
           oldAkses
-            .map((a) => a.pegawai.nama)
+            .map((p) => p?.nama)
             .sort()
             .join(", ") || "KOSONG";
 
