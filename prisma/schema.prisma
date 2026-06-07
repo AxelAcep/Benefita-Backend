@@ -26,6 +26,7 @@ model Pegawai {
   hakAksesKaryawan   HakAksesKaryawan[]
   permohonanHakAkses PermohonanHakAkses[]
   pengajuanJudulTraining PengajuanJudulTraining[]
+  jadwalDiupdate JadwalTraining[]
 
   user User?
 }
@@ -379,6 +380,8 @@ model Trainer {
   createdAt      DateTime @default(now())
   updatedAt      DateTime @updatedAt
 
+  jadwalTraining TrainerOnJadwal[]
+
   @@map("kontak")
 }
 
@@ -420,5 +423,48 @@ model JudulTraining {
   createdAt     DateTime @default(now())
   updatedAt     DateTime @updatedAt
 
+  jadwalTraining JadwalTraining[]
+
   @@map("judul_training")
+}
+
+model JadwalTraining {
+  id            Int      @id @default(autoincrement())
+  noJadwal      String   @unique
+  kodePelatihan String
+  tglMulai      DateTime?
+  tglSelesai    DateTime?
+  judulLengkap  String
+  judulPendek   String
+  metode        String
+  kota          String
+  lokasiDetail  String?
+  biaya         Int
+  jenisTraining String
+  status        String
+  catatan       String?
+  fileAgenda    String?
+  lastUpdate    DateTime  @updatedAt
+  
+  // Relations
+  updateOleh    String
+  pegawai       Pegawai   @relation(fields: [updateOleh], references: [id])
+
+  judulTraining JudulTraining @relation(fields: [kodePelatihan], references: [kode])
+
+  trainers      TrainerOnJadwal[]
+
+  @@map("jadwal_training")
+}
+
+// Pivot table Trainer <-> JadwalTraining
+model TrainerOnJadwal {
+  jadwalId  Int
+  trainerKode String
+
+  jadwal    JadwalTraining @relation(fields: [jadwalId], references: [id])
+  trainer   Trainer        @relation(fields: [trainerKode], references: [kode])
+
+  @@id([jadwalId, trainerKode])
+  @@map("trainer_on_jadwal")
 }

@@ -400,14 +400,15 @@ const createPengajuan = async (req, res) => {
       jumlahPeserta,
     } = req.body;
 
-    const userId = req.user?.userId;
-    if (!userId) {
-      return res.status(401).json({ success: false, message: "Unauthorized" });
+    const updateOleh = req.user?.userId; // dari JWT middleware
+
+    if (!updateOleh) {
+      return res.status(401).json({ message: "Unauthorized." });
     }
 
     // Ambil pegawaiId dari userId
     const user = await prisma.user.findUnique({
-      where: { id: userId },
+      where: { id: updateOleh },
       select: { pegawaiId: true },
     });
 
@@ -810,6 +811,385 @@ const getJudulTraining = async (req, res) => {
   }
 };
 
+const createJadwalTraining = async (req, res) => {
+  try {
+    const {
+      noJadwal,
+      kodePelatihan,
+      tglMulai,
+      tglSelesai,
+      judulLengkap,
+      judulPendek,
+      metode,
+      jenisTraining,
+      kota,
+      lokasiDetail,
+      biaya,
+      catatan,
+      status,
+      trainerKodes, // trainerKodes: string[]
+    } = req.body;
+
+    // di createJadwalTraining controller
+    const updateOleh = req.user?.userId; // dari JWT middleware
+
+    if (!updateOleh) {
+      return res.status(401).json({ message: "Unauthorized." });
+    }
+
+    const user = await prisma.user.findUnique({
+      where: { id: updateOleh },
+      select: { pegawaiId: true },
+    });
+
+    if (!user) {
+      return res
+        .status(401)
+        .json({ success: false, message: "User tidak ditemukan." });
+    }
+
+    const existing = await prisma.jadwalTraining.findUnique({
+      where: { noJadwal },
+    });
+    if (existing) {
+      return res.status(400).json({ message: "No Jadwal sudah digunakan." });
+    }
+
+    const fileAgenda = req.file ? req.file.path : null;
+
+    const data = await prisma.jadwalTraining.create({
+      data: {
+        noJadwal,
+        kodePelatihan,
+        tglMulai: tglMulai ? new Date(tglMulai) : null,
+        tglSelesai: tglSelesai ? new Date(tglSelesai) : null,
+        judulLengkap,
+        judulPendek,
+        metode,
+        jenisTraining,
+        kota,
+        lokasiDetail,
+        biaya: parseInt(biaya),
+        catatan,
+        status: status ?? "AKTIF",
+        fileAgenda,
+        updateOleh: user.pegawaiId,
+        trainers: {
+          create: trainerKodes?.map((kode) => ({ trainerKode: kode })) ?? [],
+        },
+      },
+      include: {
+        trainers: {
+          include: { trainer: { select: { kode: true, nama: true } } },
+        },
+        pegawai: { select: { id: true, nama: true } },
+        judulTraining: { select: { kode: true, judulTraining: true } },
+      },
+    });
+
+    res.status(201).json({ message: "Jadwal Training berhasil dibuat.", data });
+  } catch (error) {
+    res
+      .status(500)
+      .json({ message: "Internal server error.", error: error.message });
+  }
+};
+
+// ─────────────────────────────────────────────
+// EDIT
+// ─────────────────────────────────────────────
+
+const updateJadwalTraining = async (req, res) => {
+  try {
+    const { noJadwal } = req.params; // ambil dari params URL
+
+    const {
+      kodePelatihan,
+      tglMulai,
+      tglSelesai,
+      judulLengkap,
+      judulPendek,
+      metode,
+      jenisTraining,
+      kota,
+      lokasiDetail,
+      biaya,
+      catatan,
+      status,
+      trainerKodes,
+    } = req.body;
+
+    const updateOleh = req.user?.userId;
+
+    if (!updateOleh) {
+      return res.status(401).json({ message: "Unauthorized." });
+    }
+
+    const user = await prisma.user.findUnique({
+      where: { id: updateOleh },
+      select: { pegawaiId: true },
+    });
+
+    if (!user) {
+      return res
+        .status(401)
+        .json({ success: false, message: "User tidak ditemukan." });
+    }
+
+    const existing = await prisma.jadwalTraining.findUnique({
+      where: { noJadwal },
+    });
+
+    if (!existing) {
+      return res
+        .status(404)
+        .json({ message: "Jadwal Training tidak ditemukan." });
+    }
+
+    const fileAgenda = req.file ? req.file.path : existing.fileAgenda;
+
+    const updateData = await prisma.$transaction([
+      prisma.trainerOnJadwal.deleteMany({
+        where: { jadwalId: existing.id },
+      }),
+      prisma.jadwalTraining.update({
+        where: { noJadwal },
+        data: {
+          kodePelatihan: kodePelatihan ?? existing.kodePelatihan,
+          tglMulai: tglMulai ? new Date(tglMulai) : existing.tglMulai,
+          tglSelesai: tglSelesai ? new Date(tglSelesai) : existing.tglSelesai,
+          judulLengkap: judulLengkap ?? existing.judulLengkap,
+          judulPendek: judulPendek ?? existing.judulPendek,
+          metode: metode ?? existing.metode,
+          jenisTraining: jenisTraining ?? existing.jenisTraining,
+          kota: kota ?? existing.kota,
+          lokasiDetail: lokasiDetail ?? existing.lokasiDetail,
+          biaya: biaya ? parseInt(biaya) : existing.biaya,
+          catatan: catatan ?? existing.catatan,
+          status: status ?? existing.status,
+          fileAgenda,
+          updateOleh: user.pegawaiId ?? existing.updateOleh,
+          trainers: {
+            create: trainerKodes?.map((kode) => ({ trainerKode: kode })) ?? [],
+          },
+        },
+        include: {
+          trainers: {
+            include: { trainer: { select: { kode: true, nama: true } } },
+          },
+          pegawai: { select: { id: true, nama: true } },
+          judulTraining: { select: { kode: true, judulTraining: true } },
+        },
+      }),
+    ]);
+
+    res.status(200).json({
+      message: "Jadwal Training berhasil diupdate.",
+      data: updateData[1],
+    });
+  } catch (error) {
+    res
+      .status(500)
+      .json({ message: "Internal server error.", error: error.message });
+  }
+};
+
+// ─────────────────────────────────────────────
+// GET PAGINATION
+// ─────────────────────────────────────────────
+
+const getJadwalTraining = async (req, res) => {
+  try {
+    const {
+      page = 1,
+      limit = 10,
+      search = "",
+      status,
+      jenisTraining,
+      metode,
+    } = req.query;
+
+    const pageNum = parseInt(page);
+    const limitNum = parseInt(limit);
+    const skip = (pageNum - 1) * limitNum;
+
+    const where = {
+      AND: [
+        ...(status
+          ? [{ status: { equals: status, mode: "insensitive" } }]
+          : []),
+        ...(jenisTraining
+          ? [{ jenisTraining: { equals: jenisTraining, mode: "insensitive" } }]
+          : []),
+        ...(metode
+          ? [{ metode: { equals: metode, mode: "insensitive" } }]
+          : []),
+        ...(search
+          ? [
+              {
+                OR: [
+                  { noJadwal: { contains: search, mode: "insensitive" } },
+                  { judulLengkap: { contains: search, mode: "insensitive" } },
+                  { judulPendek: { contains: search, mode: "insensitive" } },
+                  { kota: { contains: search, mode: "insensitive" } },
+                  { kodePelatihan: { contains: search, mode: "insensitive" } },
+                ],
+              },
+            ]
+          : []),
+      ],
+    };
+
+    const [total, data] = await Promise.all([
+      prisma.jadwalTraining.count({ where }),
+      prisma.jadwalTraining.findMany({
+        where,
+        skip,
+        take: limitNum,
+        orderBy: { lastUpdate: "desc" },
+        select: {
+          id: true,
+          noJadwal: true,
+          tglMulai: true,
+          kodePelatihan: true,
+          jenisTraining: true,
+          judulLengkap: true,
+          biaya: true,
+          lokasiDetail: true,
+          status: true,
+          catatan: true,
+          lastUpdate: true,
+          trainers: {
+            select: {
+              trainer: { select: { kode: true, nama: true } },
+            },
+          },
+          pegawai: { select: { id: true, nama: true } },
+        },
+      }),
+    ]);
+
+    res.status(200).json({
+      data,
+      meta: {
+        total,
+        page: pageNum,
+        limit: limitNum,
+        totalPages: Math.ceil(total / limitNum),
+      },
+    });
+  } catch (error) {
+    res
+      .status(500)
+      .json({ message: "Internal server error.", error: error.message });
+  }
+};
+
+// ─────────────────────────────────────────────
+// GET ONE
+// ─────────────────────────────────────────────
+
+const getJadwalTrainingById = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    const data = await prisma.jadwalTraining.findUnique({
+      where: { noJadwal: id },
+      include: {
+        trainers: {
+          include: { trainer: { select: { kode: true, nama: true } } },
+        },
+        pegawai: { select: { id: true, nama: true } },
+        judulTraining: { select: { kode: true, judulTraining: true } },
+      },
+    });
+
+    if (!data) {
+      return res
+        .status(404)
+        .json({ success: false, message: "Jadwal Training tidak ditemukan." });
+    }
+
+    res.status(200).json({ success: true, data });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: "Internal server error.",
+      error: error.message,
+    });
+  }
+};
+
+// ─────────────────────────────────────────────
+// DELETE
+// ─────────────────────────────────────────────
+
+const deleteJadwalTraining = async (req, res) => {
+  try {
+    const { noJadwal } = req.params;
+
+    if (!noJadwal) {
+      return res.status(400).json({ message: "noJadwal wajib diisi." });
+    }
+
+    const existing = await prisma.jadwalTraining.findUnique({
+      where: { noJadwal },
+    });
+
+    if (!existing) {
+      return res
+        .status(404)
+        .json({ message: "Jadwal Training tidak ditemukan." });
+    }
+
+    await prisma.$transaction([
+      prisma.trainerOnJadwal.deleteMany({ where: { jadwalId: existing.id } }),
+      prisma.jadwalTraining.delete({ where: { noJadwal } }),
+    ]);
+
+    res.status(200).json({ message: "Jadwal Training berhasil dihapus." });
+  } catch (error) {
+    res
+      .status(500)
+      .json({ message: "Internal server error.", error: error.message });
+  }
+};
+
+const getJudulTrainingOptions = async (req, res) => {
+  try {
+    const data = await prisma.judulTraining.findMany({
+      orderBy: { kode: "asc" },
+      select: {
+        kode: true,
+        judulTraining: true,
+        tipe: true,
+      },
+    });
+    res.status(200).json({ data });
+  } catch (error) {
+    res
+      .status(500)
+      .json({ message: "Internal server error.", error: error.message });
+  }
+};
+
+const getTrainerOptions = async (req, res) => {
+  try {
+    const data = await prisma.trainer.findMany({
+      orderBy: { kode: "asc" },
+      select: {
+        kode: true,
+        nama: true,
+      },
+    });
+    res.status(200).json({ data });
+  } catch (error) {
+    res
+      .status(500)
+      .json({ message: "Internal server error.", error: error.message });
+  }
+};
+
 module.exports = {
   createHotel,
   getAllHotels,
@@ -838,4 +1218,13 @@ module.exports = {
   getJudulTrainingById,
   updateJudulTraining,
   getJudulTraining,
+
+  createJadwalTraining,
+  updateJadwalTraining,
+  getJadwalTraining,
+  getJadwalTrainingById,
+  deleteJadwalTraining,
+
+  getTrainerOptions,
+  getJudulTrainingOptions,
 };

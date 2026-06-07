@@ -22,9 +22,21 @@ const {
   getJudulTrainingById,
   updateJudulTraining,
   getJudulTraining,
+
+  createJadwalTraining,
+  updateJadwalTraining,
+  getJadwalTraining,
+  getJadwalTrainingById,
+  deleteJadwalTraining,
+
+  getJudulTrainingOptions,
+  getTrainerOptions,
 } = require("../controllers");
 const { authMiddleware } = require("../middlewares/auth.middleware");
 const upload = require("../middlewares/upload.middleware");
+
+router.get("/judul-training/list", getJudulTrainingOptions);
+router.get("/trainer/list", getTrainerOptions); // ⚠️ harus di atas /:id
 
 // Existing routes — tidak berubah
 router.post("/hotel", authMiddleware, createHotel);
@@ -58,5 +70,25 @@ router.put(
 );
 router.get("/judul-training", authMiddleware, getJudulTraining);
 router.get("/judul-training/:id", authMiddleware, getJudulTrainingById);
+
+router.get("/jadwal-training", authMiddleware, getJadwalTraining);
+router.get("/jadwal-training/:id", authMiddleware, getJadwalTrainingById);
+router.post(
+  "/jadwal-training",
+  authMiddleware,
+  upload.single("fileAgenda"),
+  createJadwalTraining,
+);
+router.put(
+  "/jadwal-training/:noJadwal",
+  authMiddleware,
+  upload.single("fileAgenda"),
+  updateJadwalTraining,
+);
+router.delete(
+  "/jadwal-training/:noJadwal",
+  authMiddleware,
+  deleteJadwalTraining,
+);
 
 module.exports = router;
