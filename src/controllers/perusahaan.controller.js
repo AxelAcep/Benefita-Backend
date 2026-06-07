@@ -429,6 +429,8 @@ const getOnePerusahaan = async (req, res) => {
     // ================= SEKOLAH
     if (data.jenisInstansi === "SEKOLAH") {
       Object.assign(response, {
+        instansi: data.company,
+        kode: data.kode,
         kategoriCpn: data.kategoriCpn,
         lineOfBusiness: data.lineOfBusiness,
         lineBisnisSub: data.lineBisnisSub,
