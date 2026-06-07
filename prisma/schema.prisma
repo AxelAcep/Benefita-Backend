@@ -358,3 +358,24 @@ model Hotel {
 
   @@map("hotel")
 }
+
+model Kontak {
+  id             Int      @id @default(autoincrement())
+  kode           String   @unique
+  nama           String
+  referensi      String?
+  alamat         String?
+  subjekKhusus   String?
+  telp           String?
+  keterangan     String?
+  email          String?
+  tugas          DateTime?
+  kantor         String?
+  alamatKantor   String?
+  noTelpKantor   String?
+
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  @@map("kontak")
+}
