@@ -458,6 +458,7 @@ const updatePengajuan = async (req, res) => {
       namaKontak,
       kontak,
       jumlahPeserta,
+      responMA,
     } = req.body;
 
     const pengajuan = await prisma.pengajuanJudulTraining.update({
@@ -469,6 +470,7 @@ const updatePengajuan = async (req, res) => {
         namaKontak,
         kontak,
         jumlahPeserta: jumlahPeserta ? Number(jumlahPeserta) : undefined,
+        responMA: responMA ?? "PENDING",
       },
       include: {
         perusahaan: { select: { noInduk: true } },

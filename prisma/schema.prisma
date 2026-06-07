@@ -389,7 +389,7 @@ model PengajuanJudulTraining {
   namaKontak      String?
   kontak          String?
   jumlahPeserta   Int?
-  responMA        ResponMA @default(PENDING)
+  responMA  String?  @default("PENDING")
   tanggalPengajuan  DateTime @default(now())
 
   // Relasi ke TabPerusahaan
@@ -406,8 +406,3 @@ model PengajuanJudulTraining {
   @@map("pengajuan_judul_training")
 }
 
-enum ResponMA {
-  PENDING
-  DISETUJUI
-  DITOLAK
-}
