@@ -1709,7 +1709,7 @@ const deletePosPerusahaan = async (req, res) => {
 
 const createPenawaran = async (req, res) => {
   try {
-    const { kodePelatihan, perusahaanNoInduk } = req.body;
+    const { kodePelatihan, perusahaanId } = req.body;
 
     if (!kodePelatihan) {
       return res.status(400).json({
@@ -1717,7 +1717,7 @@ const createPenawaran = async (req, res) => {
       });
     }
 
-    if (!perusahaanNoInduk) {
+    if (!perusahaanId) {
       return res.status(400).json({
         message: "perusahaanNoInduk wajib diisi.",
       });
@@ -1732,7 +1732,7 @@ const createPenawaran = async (req, res) => {
         kodePelatihan: kodeArray,
         perusahaan: {
           connect: {
-            noInduk: perusahaanNoInduk,
+            noInduk: perusahaanId,
           },
         },
       },
