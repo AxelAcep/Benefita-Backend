@@ -11,7 +11,7 @@ const { authMiddleware } = require("../middlewares/auth.middleware");
 
 // Existing routes — tidak berubah
 router.post("/hotel", authMiddleware, createHotel);
-router.put("/hotel", authMiddleware, updateHotel);
+router.put("/hotel/:id", authMiddleware, updateHotel);
 router.get("/hotel", authMiddleware, getAllHotels);
 router.get("/hotel/:id", authMiddleware, getHotelById);
 

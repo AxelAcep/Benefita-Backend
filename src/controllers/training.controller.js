@@ -161,7 +161,7 @@ const updateHotel = async (req, res) => {
       req.body;
 
     const hotel = await prisma.hotel.update({
-      where: { id },
+      where: { kodeHotel: id },
       data: {
         namaHotel,
         alamat,

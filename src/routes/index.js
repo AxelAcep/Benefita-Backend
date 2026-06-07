@@ -7,7 +7,7 @@ const trainingRoutes = require("./training.routes");
 const router = express.Router();
 
 router.use("/user", userRoutes);
-router.use("/training", databaseRoutes);
-router.use("/database", trainingRoutes);
+router.use("/training", trainingRoutes);
+router.use("/database", databaseRoutes);
 
 module.exports = router;

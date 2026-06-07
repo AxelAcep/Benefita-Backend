@@ -338,3 +338,23 @@ model Proper {
 
   perusahaan TabPerusahaan @relation(fields: [perusahaanId], references: [noInduk])
 }
+
+model Hotel {
+  id        String  @id @default(cuid())
+
+  kodeHotel String  @unique @map("kode_hotel") // PM
+  namaHotel String  @map("nama_hotel")
+  alamat    String
+  kota      String
+  telepon   String
+
+  fax       String? // optional
+
+  pubRate   Int?    @map("pub_rate") // optional integer
+  corRate   Int?    @map("cor_rate") // optional integer
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@map("hotel")
+}
