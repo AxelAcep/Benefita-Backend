@@ -183,6 +183,7 @@ model TabPerusahaan {
   logs               LogPerubahanPerusahaan[]
   posPerusahaan      TabPosPerusahaan[]
   permohonanHakAkses PermohonanHakAkses[]
+  penawaran  Penawaran[]
 }
 
 model ContactPersonPerusahaan {
@@ -283,6 +284,9 @@ model Penawaran {
   kodePelatihan String[]
   tanggal       DateTime @default(now())
   filePath      String?  @db.VarChar(500)
+
+  perusahaanId  String
+  perusahaan    TabPerusahaan @relation(fields: [perusahaanId], references: [noInduk])
 
   @@map("penawaran")
 }

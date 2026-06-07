@@ -118,7 +118,7 @@ router.post(
   upload.single("file"),
   createPenawaran,
 );
-router.get("/penawaran", authMiddleware, getPenawaran);
+router.get("/penawaran/:perusahaanId", authMiddleware, getPenawaran);
 router.get("/penawaran/:id", authMiddleware, getPenawaranById);
 router.put(
   "/penawaran/:id",

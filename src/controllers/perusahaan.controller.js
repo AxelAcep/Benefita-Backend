@@ -1709,10 +1709,18 @@ const deletePosPerusahaan = async (req, res) => {
 
 const createPenawaran = async (req, res) => {
   try {
-    const { kodePelatihan } = req.body;
+    const { kodePelatihan, perusahaanNoInduk } = req.body;
 
     if (!kodePelatihan) {
-      return res.status(400).json({ message: "kodePelatihan wajib diisi." });
+      return res.status(400).json({
+        message: "kodePelatihan wajib diisi.",
+      });
+    }
+
+    if (!perusahaanNoInduk) {
+      return res.status(400).json({
+        message: "perusahaanNoInduk wajib diisi.",
+      });
     }
 
     const kodeArray = Array.isArray(kodePelatihan)
@@ -1720,26 +1728,48 @@ const createPenawaran = async (req, res) => {
       : JSON.parse(kodePelatihan);
 
     const penawaran = await prisma.penawaran.create({
-      data: { kodePelatihan: kodeArray },
+      data: {
+        kodePelatihan: kodeArray,
+        perusahaan: {
+          connect: {
+            noInduk: perusahaanNoInduk,
+          },
+        },
+      },
+      include: {
+        perusahaan: true,
+      },
     });
 
     return res.status(201).json(penawaran);
   } catch (err) {
     console.error("[createPenawaran error]", err);
-    return res.status(500).json({ message: "Terjadi kesalahan server." });
+    return res.status(500).json({
+      message: "Terjadi kesalahan server.",
+    });
   }
 };
 
 // ── GET ALL ──
 const getPenawaran = async (req, res) => {
   try {
+    const { perusahaanId } = req.params;
+
     const penawaran = await prisma.penawaran.findMany({
-      orderBy: { tanggal: "desc" },
+      where: {
+        perusahaanId,
+      },
+      orderBy: {
+        tanggal: "desc",
+      },
     });
+
     return res.status(200).json(penawaran);
   } catch (err) {
     console.error("[getPenawaran error]", err);
-    return res.status(500).json({ message: "Terjadi kesalahan server." });
+    return res.status(500).json({
+      message: "Terjadi kesalahan server.",
+    });
   }
 };
 
