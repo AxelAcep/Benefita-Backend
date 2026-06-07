@@ -389,6 +389,231 @@ const getTrainers = async (req, res) => {
   }
 };
 
+const createPengajuan = async (req, res) => {
+  try {
+    const {
+      judulTraining,
+      jumlahHari,
+      perusahaanId,
+      namaKontak,
+      kontak,
+      jumlahPeserta,
+    } = req.body;
+
+    const userId = req.user?.userId;
+    if (!userId) {
+      return res.status(401).json({ success: false, message: "Unauthorized" });
+    }
+
+    // Ambil pegawaiId dari userId
+    const user = await prisma.user.findUnique({
+      where: { id: userId },
+      select: { pegawaiId: true },
+    });
+
+    if (!user) {
+      return res
+        .status(401)
+        .json({ success: false, message: "User tidak ditemukan." });
+    }
+
+    const pengajuan = await prisma.pengajuanJudulTraining.create({
+      data: {
+        judulTraining,
+        jumlahHari: Number(jumlahHari),
+        namaKontak,
+        kontak,
+        jumlahPeserta: jumlahPeserta ? Number(jumlahPeserta) : null,
+        perusahaanId,
+        inputOlehId: user.pegawaiId, // ← pakai pegawaiId
+      },
+      include: {
+        perusahaan: { select: { noInduk: true, company: true } },
+        inputOleh: { select: { id: true, nama: true } },
+      },
+    });
+
+    return res.status(201).json({ success: true, data: pengajuan });
+  } catch (error) {
+    if (error.code === "P2003") {
+      return res
+        .status(400)
+        .json({ success: false, message: "Perusahaan tidak ditemukan." });
+    }
+    return res.status(500).json({ success: false, message: error.message });
+  }
+};
+
+// ─────────────────────────────────────────────
+// UPDATE
+// ─────────────────────────────────────────────
+
+const updatePengajuan = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const {
+      judulTraining,
+      jumlahHari,
+      perusahaanId,
+      namaKontak,
+      kontak,
+      jumlahPeserta,
+    } = req.body;
+
+    const pengajuan = await prisma.pengajuanJudulTraining.update({
+      where: { id },
+      data: {
+        judulTraining,
+        jumlahHari: jumlahHari ? Number(jumlahHari) : undefined,
+        perusahaanId,
+        namaKontak,
+        kontak,
+        jumlahPeserta: jumlahPeserta ? Number(jumlahPeserta) : undefined,
+      },
+      include: {
+        perusahaan: { select: { noInduk: true } },
+        inputOleh: { select: { id: true, nama: true } },
+      },
+    });
+
+    return res.status(200).json({ success: true, data: pengajuan });
+  } catch (error) {
+    if (error.code === "P2025") {
+      return res
+        .status(404)
+        .json({ success: false, message: "Pengajuan tidak ditemukan." });
+    }
+    return res.status(500).json({ success: false, message: error.message });
+  }
+};
+
+// ─────────────────────────────────────────────
+// GET ONE
+// ─────────────────────────────────────────────
+
+const getPengajuanById = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    const pengajuan = await prisma.pengajuanJudulTraining.findUnique({
+      where: { id },
+      include: {
+        perusahaan: true,
+        inputOleh: { select: { id: true, nama: true, jabatan: true } },
+      },
+    });
+
+    if (!pengajuan) {
+      return res
+        .status(404)
+        .json({ success: false, message: "Pengajuan tidak ditemukan." });
+    }
+
+    return res.status(200).json({ success: true, data: pengajuan });
+  } catch (error) {
+    return res.status(500).json({ success: false, message: error.message });
+  }
+};
+
+// ─────────────────────────────────────────────
+// GET LIST + PAGINATION + SEARCH
+// ─────────────────────────────────────────────
+
+const getPengajuan = async (req, res) => {
+  try {
+    const { page = 1, limit = 10, search = "" } = req.query;
+
+    const pageNum = Math.max(1, Number(page));
+    const limitNum = Math.max(1, Number(limit));
+    const skip = (pageNum - 1) * limitNum;
+
+    const whereClause = search
+      ? {
+          OR: [
+            { judulTraining: { contains: search, mode: "insensitive" } },
+            {
+              perusahaan: {
+                // sesuaikan field nama perusahaan di TabPerusahaan
+                company: { contains: search, mode: "insensitive" },
+              },
+            },
+            {
+              inputOleh: {
+                nama: { contains: search, mode: "insensitive" },
+              },
+            },
+          ],
+        }
+      : {};
+
+    const [total, data] = await prisma.$transaction([
+      prisma.pengajuanJudulTraining.count({ where: whereClause }),
+      prisma.pengajuanJudulTraining.findMany({
+        where: whereClause,
+        skip,
+        take: limitNum,
+        orderBy: { tanggalPengajuan: "desc" },
+        select: {
+          id: true,
+          judulTraining: true,
+          jumlahHari: true,
+          jumlahPeserta: true,
+          namaKontak: true,
+          kontak: true,
+          responMA: true,
+          tanggalPengajuan: true,
+          perusahaan: {
+            select: { noInduk: true, company: true },
+          },
+          inputOleh: {
+            select: { id: true, nama: true },
+          },
+        },
+      }),
+    ]);
+
+    return res.status(200).json({
+      success: true,
+      data,
+      pagination: {
+        total,
+        page: pageNum,
+        limit: limitNum,
+        totalPages: Math.ceil(total / limitNum),
+      },
+    });
+  } catch (error) {
+    return res.status(500).json({ success: false, message: error.message });
+  }
+};
+
+const getListPerusahaan = async (req, res) => {
+  try {
+    const { search = "" } = req.query;
+
+    const data = await prisma.tabPerusahaan.findMany({
+      where: search
+        ? {
+            OR: [
+              { company: { contains: search, mode: "insensitive" } },
+              { noInduk: { contains: search, mode: "insensitive" } },
+            ],
+          }
+        : {},
+      select: {
+        noInduk: true,
+        company: true,
+      },
+      orderBy: { company: "asc" },
+      take: 50, // batasi biar ga berat
+    });
+
+    return res.status(200).json({ success: true, data });
+  } catch (error) {
+    return res.status(500).json({ success: false, message: error.message });
+  }
+};
+
 module.exports = {
   createHotel,
   getAllHotels,
@@ -400,4 +625,11 @@ module.exports = {
   updateTrainer,
   getTrainerById,
   getTrainers,
+
+  createPengajuan,
+  updatePengajuan,
+  getPengajuanById,
+  getPengajuan,
+
+  getListPerusahaan,
 };

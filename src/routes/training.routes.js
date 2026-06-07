@@ -11,6 +11,12 @@ const {
   updateTrainer,
   getTrainerById,
   getTrainers,
+
+  createPengajuan,
+  updatePengajuan,
+  getPengajuanById,
+  getPengajuan,
+  getListPerusahaan,
 } = require("../controllers");
 const { authMiddleware } = require("../middlewares/auth.middleware");
 
@@ -24,5 +30,12 @@ router.post("/trainer", authMiddleware, createTrainer);
 router.put("/trainer/:id", authMiddleware, updateTrainer);
 router.get("/trainer", authMiddleware, getTrainers);
 router.get("/trainer/:id", authMiddleware, getTrainerById);
+
+router.post("/pengajuan-judul", authMiddleware, createPengajuan);
+router.put("/pengajuan-judul/:id", authMiddleware, updatePengajuan);
+router.get("/pengajuan-judul", authMiddleware, getPengajuan);
+router.get("/pengajuan-judul/:id", authMiddleware, getPengajuanById);
+
+router.get("/perusahaan", authMiddleware, getListPerusahaan);
 
 module.exports = router;

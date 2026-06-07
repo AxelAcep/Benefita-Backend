@@ -25,6 +25,7 @@ model Pegawai {
   dailyActivities    DailyActivity[]
   hakAksesKaryawan   HakAksesKaryawan[]
   permohonanHakAkses PermohonanHakAkses[]
+  pengajuanJudulTraining PengajuanJudulTraining[]
 
   user User?
 }
@@ -184,6 +185,7 @@ model TabPerusahaan {
   posPerusahaan      TabPosPerusahaan[]
   permohonanHakAkses PermohonanHakAkses[]
   penawaran  Penawaran[]
+  pengajuanJudulTraining PengajuanJudulTraining[]
 }
 
 model ContactPersonPerusahaan {
@@ -378,4 +380,34 @@ model Trainer {
   updatedAt      DateTime @updatedAt
 
   @@map("kontak")
+}
+
+model PengajuanJudulTraining {
+  id              String   @id @default(cuid())
+  judulTraining   String
+  jumlahHari      Int
+  namaKontak      String?
+  kontak          String?
+  jumlahPeserta   Int?
+  responMA        ResponMA @default(PENDING)
+  tanggalPengajuan  DateTime @default(now())
+
+  // Relasi ke TabPerusahaan
+  perusahaanId    String
+  perusahaan      TabPerusahaan @relation(fields: [perusahaanId], references: [noInduk])
+
+  // Relasi ke Pegawai
+  inputOlehId     String
+  inputOleh       Pegawai  @relation(fields: [inputOlehId], references: [id])
+
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  @@map("pengajuan_judul_training")
+}
+
+enum ResponMA {
+  PENDING
+  DISETUJUI
+  DITOLAK
 }
