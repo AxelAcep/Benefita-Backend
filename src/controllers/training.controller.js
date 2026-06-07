@@ -616,6 +616,200 @@ const getListPerusahaan = async (req, res) => {
   }
 };
 
+const createJudulTraining = async (req, res) => {
+  try {
+    const {
+      kode,
+      judulTraining,
+      tipe,
+      hari,
+      biayaOffline,
+      biayaOnline,
+      batch,
+    } = req.body;
+
+    const existing = await prisma.judulTraining.findUnique({ where: { kode } });
+    if (existing) {
+      return res
+        .status(400)
+        .json({ message: "Kode training sudah digunakan." });
+    }
+
+    const brosur = req.file ? req.file.path : null;
+
+    const data = await prisma.judulTraining.create({
+      data: {
+        kode,
+        judulTraining,
+        tipe,
+        hari: parseInt(hari),
+        biayaOffline: parseInt(biayaOffline),
+        biayaOnline: parseInt(biayaOnline),
+        batch: parseInt(batch),
+        brosur,
+      },
+    });
+
+    res.status(201).json({ message: "Judul Training berhasil dibuat.", data });
+  } catch (error) {
+    res
+      .status(500)
+      .json({ message: "Internal server error.", error: error.message });
+  }
+};
+
+// GET ONE
+const getJudulTrainingById = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    const data = await prisma.judulTraining.findUnique({
+      where: { id: parseInt(id) },
+    });
+
+    if (!data) {
+      return res
+        .status(404)
+        .json({ message: "Judul Training tidak ditemukan." });
+    }
+
+    res.status(200).json({ data });
+  } catch (error) {
+    res
+      .status(500)
+      .json({ message: "Internal server error.", error: error.message });
+  }
+};
+
+// EDIT
+const updateJudulTraining = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const {
+      kode,
+      judulTraining,
+      tipe,
+      hari,
+      biayaOffline,
+      biayaOnline,
+      batch,
+    } = req.body;
+
+    const existing = await prisma.judulTraining.findUnique({
+      where: { id: parseInt(id) },
+    });
+    if (!existing) {
+      return res
+        .status(404)
+        .json({ message: "Judul Training tidak ditemukan." });
+    }
+
+    // Cek kode duplikat jika kode diganti
+    if (kode && kode !== existing.kode) {
+      const kodeTaken = await prisma.judulTraining.findUnique({
+        where: { kode },
+      });
+      if (kodeTaken) {
+        return res
+          .status(400)
+          .json({ message: "Kode training sudah digunakan." });
+      }
+    }
+
+    const brosur = req.file ? req.file.path : existing.brosur;
+
+    const data = await prisma.judulTraining.update({
+      where: { id: parseInt(id) },
+      data: {
+        kode: kode ?? existing.kode,
+        judulTraining: judulTraining ?? existing.judulTraining,
+        tipe: tipe ?? existing.tipe,
+        hari: hari ? parseInt(hari) : existing.hari,
+        biayaOffline: biayaOffline
+          ? parseInt(biayaOffline)
+          : existing.biayaOffline,
+        biayaOnline: biayaOnline ? parseInt(biayaOnline) : existing.biayaOnline,
+        batch: batch ? parseInt(batch) : existing.batch,
+        brosur,
+      },
+    });
+
+    res
+      .status(200)
+      .json({ message: "Judul Training berhasil diupdate.", data });
+  } catch (error) {
+    res
+      .status(500)
+      .json({ message: "Internal server error.", error: error.message });
+  }
+};
+
+// GET PAGINATION
+const getJudulTraining = async (req, res) => {
+  try {
+    const { page = 1, limit = 10, search = "", tipe, kode } = req.query;
+
+    const pageNum = parseInt(page);
+    const limitNum = parseInt(limit);
+    const skip = (pageNum - 1) * limitNum;
+
+    const where = {
+      AND: [
+        // Filter
+        ...(tipe ? [{ tipe: { equals: tipe, mode: "insensitive" } }] : []),
+        ...(kode ? [{ kode: { equals: kode, mode: "insensitive" } }] : []),
+        // Search
+        ...(search
+          ? [
+              {
+                OR: [
+                  { judulTraining: { contains: search, mode: "insensitive" } },
+                  { kode: { contains: search, mode: "insensitive" } },
+                  { tipe: { contains: search, mode: "insensitive" } },
+                ],
+              },
+            ]
+          : []),
+      ],
+    };
+
+    const [total, data] = await Promise.all([
+      prisma.judulTraining.count({ where }),
+      prisma.judulTraining.findMany({
+        where,
+        skip,
+        take: limitNum,
+        orderBy: { createdAt: "desc" },
+        select: {
+          id: true,
+          kode: true,
+          judulTraining: true,
+          tipe: true,
+          hari: true,
+          biayaOnline: true,
+          biayaOffline: true,
+          batch: true,
+          brosur: true,
+        },
+      }),
+    ]);
+
+    res.status(200).json({
+      data,
+      meta: {
+        total,
+        page: pageNum,
+        limit: limitNum,
+        totalPages: Math.ceil(total / limitNum),
+      },
+    });
+  } catch (error) {
+    res
+      .status(500)
+      .json({ message: "Internal server error.", error: error.message });
+  }
+};
+
 module.exports = {
   createHotel,
   getAllHotels,
@@ -633,5 +827,15 @@ module.exports = {
   getPengajuanById,
   getPengajuan,
 
+  createJudulTraining,
+  getJudulTrainingById,
+  updateJudulTraining,
+  getJudulTraining,
+
   getListPerusahaan,
+
+  createJudulTraining,
+  getJudulTrainingById,
+  updateJudulTraining,
+  getJudulTraining,
 };

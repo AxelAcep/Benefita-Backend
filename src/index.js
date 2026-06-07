@@ -8,6 +8,8 @@ dotenv.config();
 
 const app = express();
 
+app.use("/uploads", express.static("uploads"));
+
 const allowedOrigins = [
   "http://localhost:3000",
   "https://yourdomain.com", // ganti saat production

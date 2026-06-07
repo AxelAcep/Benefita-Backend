@@ -406,3 +406,19 @@ model PengajuanJudulTraining {
   @@map("pengajuan_judul_training")
 }
 
+model JudulTraining {
+  id            Int      @id @default(autoincrement())
+  kode          String   @unique
+  judulTraining String
+  tipe          String
+  hari          Int
+  biayaOffline  Int
+  biayaOnline   Int
+  batch         Int
+  brosur        String?  // path/url file brosur
+
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  @@map("judul_training")
+}

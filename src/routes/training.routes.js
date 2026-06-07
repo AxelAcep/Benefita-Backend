@@ -17,8 +17,14 @@ const {
   getPengajuanById,
   getPengajuan,
   getListPerusahaan,
+
+  createJudulTraining,
+  getJudulTrainingById,
+  updateJudulTraining,
+  getJudulTraining,
 } = require("../controllers");
 const { authMiddleware } = require("../middlewares/auth.middleware");
+const upload = require("../middlewares/upload.middleware");
 
 // Existing routes — tidak berubah
 router.post("/hotel", authMiddleware, createHotel);
@@ -37,5 +43,20 @@ router.get("/pengajuan-judul", authMiddleware, getPengajuan);
 router.get("/pengajuan-judul/:id", authMiddleware, getPengajuanById);
 
 router.get("/perusahaan", authMiddleware, getListPerusahaan);
+
+router.post(
+  "/judul-training",
+  authMiddleware,
+  upload.single("brosur"),
+  createJudulTraining,
+);
+router.put(
+  "/judul-training/:id",
+  authMiddleware,
+  upload.single("brosur"),
+  updateJudulTraining,
+);
+router.get("/judul-training", authMiddleware, getJudulTraining);
+router.get("/judul-training/:id", authMiddleware, getJudulTrainingById);
 
 module.exports = router;
