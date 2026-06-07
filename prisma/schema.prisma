@@ -27,6 +27,9 @@ model Pegawai {
   permohonanHakAkses PermohonanHakAkses[]
   pengajuanJudulTraining PengajuanJudulTraining[]
   jadwalDiupdate JadwalTraining[]
+  pesertaDiinput      PesertaTraining[] @relation("PesertaInputOleh")
+  pesertaDiupdate     PesertaTraining[] @relation("PesertaUpdateOleh")
+  pesertaDikonfirmasi PesertaTraining[] @relation("PesertaKonfirmasiOleh")
 
   user User?
 }
@@ -187,6 +190,7 @@ model TabPerusahaan {
   permohonanHakAkses PermohonanHakAkses[]
   penawaran  Penawaran[]
   pengajuanJudulTraining PengajuanJudulTraining[]
+  pesertaTraining PesertaTraining[]
 }
 
 model ContactPersonPerusahaan {
@@ -453,6 +457,7 @@ model JadwalTraining {
   judulTraining JudulTraining @relation(fields: [kodePelatihan], references: [kode])
 
   trainers      TrainerOnJadwal[]
+  peserta PesertaTraining[]
 
   @@map("jadwal_training")
 }
@@ -467,4 +472,68 @@ model TrainerOnJadwal {
 
   @@id([jadwalId, trainerKode])
   @@map("trainer_on_jadwal")
+}
+
+model PesertaTraining {
+  id                    Int       @id @default(autoincrement())
+
+  // Data Peserta
+  nama                  String
+  jabatan               String?
+  alamat                String?
+  noTelp                String?
+  noFax                 String?
+  email                 String?
+  alamatPengirimanSertifikat String?
+  catatan               String?
+  industri              String?
+  status                String?
+  ownEnv                String?
+  metode                String?
+  fileBuktiPembayaran   String?
+  filePendaftaran       String?
+
+  // Relasi ke TabPerusahaan
+  noIndukPerusahaan     String
+  perusahaan            TabPerusahaan @relation(fields: [noIndukPerusahaan], references: [noInduk])
+
+  // Relasi ke JadwalTraining
+  noJadwal              String
+  jadwalTraining        JadwalTraining @relation(fields: [noJadwal], references: [noJadwal])
+
+  // AE (Account Executive) - string
+  accExecutive          String?
+
+  // Ujian
+  ujian                 String?  
+  noInvUjian            String?
+  noKwtUjian            String?
+
+  // Keuangan
+  diskon                Int?
+  ppn                   Int?
+  cashback              Int?
+  hargaTotal            Int?
+  bayar                 Int?
+  infoPembayaran        String?
+  infoPenagihan         String?
+  tglBayar              DateTime?
+  noInvoice             String?
+  noKwitansi            String?
+
+  // Relasi ke Pegawai
+  inputOleh             String
+  pegawaiInput          Pegawai   @relation("PesertaInputOleh", fields: [inputOleh], references: [id])
+
+  updateOleh            String?
+  pegawaiUpdate         Pegawai?  @relation("PesertaUpdateOleh", fields: [updateOleh], references: [id])
+
+  konfirmasiOleh        String?
+  pegawaiKonfirmasi     Pegawai?  @relation("PesertaKonfirmasiOleh", fields: [konfirmasiOleh], references: [id])
+
+  // Timestamps
+  tglInput              DateTime  @default(now())
+  tglUpdate             DateTime  @updatedAt
+
+  @@map("peserta_training")
 }
