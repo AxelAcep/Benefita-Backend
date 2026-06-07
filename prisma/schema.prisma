@@ -359,7 +359,7 @@ model Hotel {
   @@map("hotel")
 }
 
-model Kontak {
+model Trainer {
   id             Int      @id @default(autoincrement())
   kode           String   @unique
   nama           String
