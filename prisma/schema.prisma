@@ -18,20 +18,40 @@ enum RoleStatus {
 model Pegawai {
   id                 String               @id @default(cuid())
   nama               String
+  nip                String?              @unique
   prefix             String?
   kode               String?
   jabatan            String?
-  Departemen         String?
+  departemen         String?
+
+  // Foto profil
+  fotoUrl            String?
+  fotoKey            String?              // key di storage (S3/R2/dll)
+
+  // Dokumen (relasi ke model terpisah)
+  dokumen            DokumenPegawai[]
+
   dailyActivities    DailyActivity[]
   hakAksesKaryawan   HakAksesKaryawan[]
   permohonanHakAkses PermohonanHakAkses[]
   pengajuanJudulTraining PengajuanJudulTraining[]
-  jadwalDiupdate JadwalTraining[]
-  pesertaDiinput      PesertaTraining[] @relation("PesertaInputOleh")
-  pesertaDiupdate     PesertaTraining[] @relation("PesertaUpdateOleh")
-  pesertaDikonfirmasi PesertaTraining[] @relation("PesertaKonfirmasiOleh")
+  jadwalDiupdate     JadwalTraining[]
+  pesertaDiinput     PesertaTraining[]    @relation("PesertaInputOleh")
+  pesertaDiupdate    PesertaTraining[]    @relation("PesertaUpdateOleh")
+  pesertaDikonfirmasi PesertaTraining[]  @relation("PesertaKonfirmasiOleh")
+  user               User?
+}
 
-  user User?
+model DokumenPegawai {
+  id         String   @id @default(cuid())
+  pegawaiId  String
+  nama       String                // nama file asli, misal "KTP.pdf"
+  url        String                // URL akses file
+  key        String                // key di storage untuk delete/update
+  tipe       String?               // opsional: "KTP", "NPWP", "Ijazah", dll
+  createdAt  DateTime @default(now())
+
+  pegawai    Pegawai  @relation(fields: [pegawaiId], references: [id], onDelete: Cascade)
 }
 
 model User {

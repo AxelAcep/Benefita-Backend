@@ -33,7 +33,7 @@ const {
   getTrainerOptions,
 } = require("../controllers");
 const { authMiddleware } = require("../middlewares/auth.middleware");
-const upload = require("../middlewares/upload.middleware");
+const { upload } = require("../middlewares/upload.middleware");
 
 router.get("/judul-training/list", getJudulTrainingOptions);
 router.get("/trainer/list", getTrainerOptions); // ⚠️ harus di atas /:id

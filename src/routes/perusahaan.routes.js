@@ -32,7 +32,7 @@ const {
   getPermohonanHakAkses,
 } = require("../controllers");
 const { authMiddleware } = require("../middlewares/auth.middleware");
-const upload = require("../middlewares/upload.middleware");
+const { upload } = require("../middlewares/upload.middleware");
 
 // Route tanpa parameter
 router.get("/perusahaan", authMiddleware, getTabPerusahaanList);

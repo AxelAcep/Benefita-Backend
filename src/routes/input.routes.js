@@ -7,7 +7,7 @@ const {
   getPesertaTrainingById,
 } = require("../controllers");
 const { authMiddleware } = require("../middlewares/auth.middleware");
-const upload = require("../middlewares/upload.middleware");
+const { upload } = require("../middlewares/upload.middleware");
 
 router.get("/jadwal/:noJadwal/peserta", authMiddleware, getPesertaTraining);
 router.get("/peserta/:id", authMiddleware, getPesertaTrainingById);
