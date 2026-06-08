@@ -62,6 +62,8 @@ model User {
   email         String          @unique
   password      String
   role          RoleStatus
+  lastOnlineAt  DateTime?
+  lastIpAddress String?
   createdAt     DateTime        @default(now())
   devices       DeviceTrusted[]
   otps          OtpCode[]

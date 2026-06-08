@@ -8,6 +8,7 @@ const {
   logout,
   getPegawaiDropdown,
   getUser,
+  getPegawaiLogin,
 } = require("../controllers/user.controller");
 const { authMiddleware } = require("../middlewares/auth.middleware");
 
@@ -22,5 +23,7 @@ router.post("/logout", logout); // hapus cookie + DB
 
 router.get("/dropdown/sales", getPegawaiDropdown); // hapus cookie + DB
 router.get("/detail/:id", getUser);
+
+router.get("/pegawai-login", getPegawaiLogin);
 
 module.exports = router;

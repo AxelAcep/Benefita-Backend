@@ -158,6 +158,14 @@ const login = async (req, res) => {
     });
 
     if (trustedDevice) {
+      await prisma.user.update({
+        where: { id: user.id },
+        data: {
+          lastOnlineAt: new Date(),
+          lastIpAddress: req.ip ?? req.headers["x-forwarded-for"]?.toString(),
+        },
+      });
+
       const accessToken = createAccessToken(user.id, user.role);
       const refreshToken = await createRefreshToken(user.id, deviceHash);
       setRefreshCookie(res, refreshToken);
@@ -426,6 +434,60 @@ const getUser = async (req, res) => {
   }
 };
 
+const getPegawaiLogin = async (req, res) => {
+  try {
+    const { page = 1, limit = 10, search = "" } = req.query;
+
+    const skip = (Number(page) - 1) * Number(limit);
+    const take = Number(limit);
+
+    const where = {
+      nama: {
+        contains: search,
+        mode: "insensitive",
+      },
+    };
+
+    const [data, total] = await prisma.$transaction([
+      prisma.pegawai.findMany({
+        where,
+        skip,
+        take,
+        select: {
+          id: true,
+          nama: true,
+          user: {
+            select: {
+              lastOnlineAt: true,
+              lastIpAddress: true,
+            },
+          },
+        },
+        orderBy: {
+          user: {
+            lastOnlineAt: "desc",
+          },
+        },
+      }),
+      prisma.pegawai.count({ where }),
+    ]);
+
+    return res.status(200).json({
+      message: "Berhasil mendapatkan data pegawai.",
+      data,
+      meta: {
+        total,
+        page: Number(page),
+        limit: take,
+        totalPages: Math.ceil(total / take),
+      },
+    });
+  } catch (error) {
+    console.error("[getAllPegawai error]", error);
+    return res.status(500).json({ message: "Terjadi kesalahan server." });
+  }
+};
+
 module.exports = {
   createUser,
   login,
@@ -434,4 +496,5 @@ module.exports = {
   logout,
   getPegawaiDropdown,
   getUser,
+  getPegawaiLogin,
 };
