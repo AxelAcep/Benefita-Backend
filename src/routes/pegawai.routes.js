@@ -22,9 +22,9 @@ router.get("/", getListPegawai);
 router.get("/:id", getPegawai);
 router.post("/", multiUpload, createPegawai);
 router.put("/:id", multiUpload, updatePegawai);
-router.delete("/:id", deletePegawai);
+router.delete("/dokumen/:dokumenId", deleteDokumen); // ✅ duluan
 router.patch("/:id/reset-password", resetPassword);
 router.patch("/:id/reset-device", resetDevice);
-router.delete("/dokumen/:dokumenId", deleteDokumen);
+router.delete("/:id", deletePegawai);
 
 module.exports = router;
