@@ -30,6 +30,7 @@ const {
   createPermohonanHakAkses,
   updateStatusPermohonan,
   getPermohonanHakAkses,
+  getLogPerubahanSummary,
 } = require("../controllers");
 const { authMiddleware } = require("../middlewares/auth.middleware");
 const { upload } = require("../middlewares/upload.middleware");
@@ -135,5 +136,7 @@ router.patch(
   authMiddleware,
   updateStatusPermohonan,
 );
+
+router.get("/perubahan-summary", authMiddleware, getLogPerubahanSummary);
 
 module.exports = router;

@@ -2104,6 +2104,71 @@ const updateStatusPermohonan = async (req, res) => {
 
 const validJenisAkses = ["ENV", "CSR", "TSM", "EPM"];
 
+const getLogPerubahanSummary = async (req, res) => {
+  try {
+    const { page = 1, limit = 10, search = "" } = req.query;
+
+    const skip = (Number(page) - 1) * Number(limit);
+    const take = Number(limit);
+
+    const where = search
+      ? {
+          OR: [
+            {
+              diubahOleh: {
+                contains: search,
+                mode: "insensitive",
+              },
+            },
+            {
+              perusahaan: {
+                company: {
+                  contains: search,
+                  mode: "insensitive",
+                },
+              },
+            },
+          ],
+        }
+      : {};
+
+    const [data, total] = await prisma.$transaction([
+      prisma.logPerubahanPerusahaan.findMany({
+        where,
+        skip,
+        take,
+        select: {
+          id: true,
+          diubahOleh: true,
+          tanggal: true,
+          field: true,
+          perusahaan: {
+            select: {
+              company: true,
+            },
+          },
+        },
+        orderBy: { tanggal: "desc" },
+      }),
+      prisma.logPerubahanPerusahaan.count({ where }),
+    ]);
+
+    return res.status(200).json({
+      message: "Berhasil mendapatkan log perubahan.",
+      data,
+      meta: {
+        total,
+        page: Number(page),
+        limit: take,
+        totalPages: Math.ceil(total / take),
+      },
+    });
+  } catch (error) {
+    console.error("[getLogPerubahan error]", error);
+    return res.status(500).json({ message: "Terjadi kesalahan server." });
+  }
+};
+
 module.exports = {
   getTabPerusahaanList,
   createTabPerusahaan,
@@ -2134,6 +2199,7 @@ module.exports = {
   createPermohonanHakAkses,
   getPermohonanHakAkses,
   updateStatusPermohonan,
+  getLogPerubahanSummary,
 };
 
 // Taruh ini di bagian atas file controller lo
