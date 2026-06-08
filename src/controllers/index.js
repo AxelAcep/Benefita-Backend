@@ -4,6 +4,7 @@ const trainingControllers = require("./training.controller");
 const inputControllers = require("./input.controller");
 const pegawaiControllers = require("./pegawai.controller");
 const cutiControllers = require("./cuti.controller");
+const beritaControllers = require("./berita.controller");
 
 module.exports = {
   ...userControllers,
@@ -12,4 +13,5 @@ module.exports = {
   ...inputControllers,
   ...pegawaiControllers,
   ...cutiControllers,
+  ...beritaControllers,
 };

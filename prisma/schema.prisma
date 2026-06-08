@@ -600,3 +600,13 @@ model BuktiIzin {
 
   pengajuanIzin   PengajuanIzin @relation(fields: [pengajuanIzinId], references: [id], onDelete: Cascade)
 }
+
+model Berita {
+  id        String   @id @default(cuid())
+  periode   DateTime
+  isi       String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("berita")
+}
