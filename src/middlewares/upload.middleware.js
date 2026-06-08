@@ -53,4 +53,16 @@ const uploadPegawai = createUpload("uploads/pegawai", [
   ".xlsx",
 ]);
 
-module.exports = { upload, uploadPegawai };
+const uploadIzin = createUpload("uploads/izin", [
+  ".jpg",
+  ".jpeg",
+  ".png",
+  ".webp",
+  ".pdf",
+  ".doc",
+  ".docx",
+  ".xls",
+  ".xlsx",
+]);
+
+module.exports = { upload, uploadPegawai, uploadIzin };

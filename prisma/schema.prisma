@@ -39,6 +39,7 @@ model Pegawai {
   pesertaDiinput     PesertaTraining[]    @relation("PesertaInputOleh")
   pesertaDiupdate    PesertaTraining[]    @relation("PesertaUpdateOleh")
   pesertaDikonfirmasi PesertaTraining[]  @relation("PesertaKonfirmasiOleh")
+  pengajuanIzin  PengajuanIzin[]
   user               User?
 }
 
@@ -556,4 +557,44 @@ model PesertaTraining {
   tglUpdate             DateTime  @updatedAt
 
   @@map("peserta_training")
+}
+
+enum JenisIzin {
+  CUTI
+  SAKIT
+  IZIN
+}
+
+enum StatusIzin {
+  PENDING
+  DISETUJUI
+  DITOLAK
+}
+
+model PengajuanIzin {
+  id             String         @id @default(cuid())
+  pegawaiId      String
+  jenisIzin      JenisIzin
+  tanggalMulai   DateTime
+  tanggalSelesai DateTime
+  alasan         String
+  alasanTolak    String?
+  tanggalKonfirmasi DateTime?
+  status         StatusIzin     @default(PENDING)
+  createdAt      DateTime       @default(now())
+  updatedAt      DateTime       @updatedAt
+
+  pegawai        Pegawai        @relation(fields: [pegawaiId], references: [id], onDelete: Cascade)
+  bukti          BuktiIzin[]
+}
+
+model BuktiIzin {
+  id              String        @id @default(cuid())
+  pengajuanIzinId String
+  nama            String
+  url             String
+  key             String
+  createdAt       DateTime      @default(now())
+
+  pengajuanIzin   PengajuanIzin @relation(fields: [pengajuanIzinId], references: [id], onDelete: Cascade)
 }
