@@ -58,7 +58,10 @@ const getListPengajuan = async (req, res) => {
 
     const [data, total] = await Promise.all([
       prisma.pengajuanIzin.findMany({
-        where,
+        where: {
+          ...where,
+          status: "PENDING",
+        },
         skip,
         take: parseInt(limit),
         orderBy: { createdAt: "desc" },
@@ -130,12 +133,10 @@ const konfirmasiPengajuan = async (req, res) => {
       include: { pegawai: { select: { nama: true } } },
     });
 
-    return res
-      .status(200)
-      .json({
-        message: `Pengajuan berhasil ${status === "DISETUJUI" ? "disetujui" : "ditolak"}`,
-        data: updated,
-      });
+    return res.status(200).json({
+      message: `Pengajuan berhasil ${status === "DISETUJUI" ? "disetujui" : "ditolak"}`,
+      data: updated,
+    });
   } catch (error) {
     return res.status(500).json({ message: error.message });
   }
@@ -313,7 +314,10 @@ const getRiwayatAll = async (req, res) => {
 
     const [data, total, summary] = await Promise.all([
       prisma.pengajuanIzin.findMany({
-        where,
+        where: {
+          ...where,
+          status: "DISETUJUI" || "DITOLAK",
+        },
         skip,
         take: parseInt(limit),
         orderBy: { createdAt: "desc" },

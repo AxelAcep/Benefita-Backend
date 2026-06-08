@@ -387,6 +387,45 @@ const getPegawaiDropdown = async (req, res) => {
   }
 };
 
+const getUser = async (req, res) => {
+  try {
+    // Mengambil id User dari req.params (sesuaikan dengan routing lu, misal: /user/:id)
+    const { id } = req.params;
+
+    // Query ke database untuk mendapatkan data User beserta relasi Pegawai
+    const user = await prisma.user.findUnique({
+      where: {
+        id: id,
+      },
+      include: {
+        pegawai: true, // Menarik semua data dari model Pegawai yang berelasi
+      },
+    });
+
+    // Jika user tidak ditemukan, kembalikan response 404
+    if (!user) {
+      return res.status(404).json({
+        message: "User tidak ditemukan.",
+        data: null,
+      });
+    }
+
+    // Demi keamanan, kita pisahkan password agar tidak ikut terkirim ke frontend
+    const { password, ...userWithoutPassword } = user;
+
+    // Kembalikan data user dan pegawai
+    return res.status(200).json({
+      message: "Berhasil mendapatkan data user dan pegawai.",
+      data: userWithoutPassword,
+    });
+  } catch (error) {
+    console.error("[getUser error]", error);
+    return res.status(500).json({
+      message: "Terjadi kesalahan saat mengambil data user.",
+    });
+  }
+};
+
 module.exports = {
   createUser,
   login,
@@ -394,4 +433,5 @@ module.exports = {
   refresh,
   logout,
   getPegawaiDropdown,
+  getUser,
 };

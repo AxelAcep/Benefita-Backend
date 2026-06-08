@@ -7,6 +7,7 @@ const {
   refresh,
   logout,
   getPegawaiDropdown,
+  getUser,
 } = require("../controllers/user.controller");
 const { authMiddleware } = require("../middlewares/auth.middleware");
 
@@ -20,5 +21,6 @@ router.post("/refresh", refresh); // baca httpOnly cookie
 router.post("/logout", logout); // hapus cookie + DB
 
 router.get("/dropdown/sales", getPegawaiDropdown); // hapus cookie + DB
+router.get("/detail/:id", getUser);
 
 module.exports = router;
