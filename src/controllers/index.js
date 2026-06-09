@@ -6,6 +6,7 @@ const pegawaiControllers = require("./pegawai.controller");
 const cutiControllers = require("./cuti.controller");
 const beritaControllers = require("./berita.controller");
 const suratControllers = require("./surat.controller");
+const dashboardControllers = require("./dashboard.controller");
 
 module.exports = {
   ...userControllers,
@@ -16,4 +17,5 @@ module.exports = {
   ...cutiControllers,
   ...beritaControllers,
   ...suratControllers,
+  ...dashboardControllers,
 };
