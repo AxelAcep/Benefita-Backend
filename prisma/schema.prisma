@@ -40,6 +40,7 @@ model Pegawai {
   pesertaDiupdate    PesertaTraining[]    @relation("PesertaUpdateOleh")
   pesertaDikonfirmasi PesertaTraining[]  @relation("PesertaKonfirmasiOleh")
   pengajuanIzin  PengajuanIzin[]
+  permintaanSurat     PermintaanNomorSurat[]  // Pengirim
   user               User?
 }
 
@@ -214,6 +215,7 @@ model TabPerusahaan {
   penawaran  Penawaran[]
   pengajuanJudulTraining PengajuanJudulTraining[]
   pesertaTraining PesertaTraining[]
+   permintaanSurat PermintaanNomorSurat[]
 }
 
 model ContactPersonPerusahaan {
@@ -609,4 +611,32 @@ model Berita {
   updatedAt DateTime @updatedAt
 
   @@map("berita")
+}
+
+model PermintaanNomorSurat {
+  id             Int      @id @default(autoincrement())
+  noSurat        String   @unique @db.VarChar(100)
+  keterangan     String?  @db.Text
+  tanggalKirim   DateTime @default(now()) @map("tanggal_kirim")
+  tipe           TipeSurat @default(umum)
+  
+  // Foreign Keys
+  tujuanNoInduk  String   @map("tujuan_no_induk") @db.VarChar(50)
+  pengirimId     String   @map("pengirim_id")
+  
+  // Relations
+  tujuan         TabPerusahaan @relation(fields: [tujuanNoInduk], references: [noInduk])
+  pengirim       Pegawai       @relation(fields: [pengirimId], references: [id])
+  
+  createdAt      DateTime @default(now()) @map("created_at")
+  updatedAt      DateTime @updatedAt @map("updated_at")
+  
+  @@unique([tujuanNoInduk, pengirimId, tanggalKirim])
+  @@map("permintaan_nomor_surat")
+}
+
+enum TipeSurat {
+  umum
+  marketing
+  lsp
 }

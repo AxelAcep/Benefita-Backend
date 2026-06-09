@@ -7,6 +7,7 @@ const inputRoutes = require("./input.routes");
 const pegawaiRoutes = require("./pegawai.routes");
 const cutiRoutes = require("./cuti.routes");
 const beritaRoutes = require("./berita.routes");
+const suratRoutes = require("./surat.routes");
 
 const router = express.Router();
 
@@ -17,5 +18,6 @@ router.use("/input", inputRoutes);
 router.use("/pegawai", pegawaiRoutes);
 router.use("/cuti", cutiRoutes);
 router.use("/berita", beritaRoutes);
+router.use("/permintaan-surat", suratRoutes);
 
 module.exports = router;
