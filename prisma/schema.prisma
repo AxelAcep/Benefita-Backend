@@ -9,10 +9,12 @@ generator client {
 
 enum RoleStatus {
   SUPER_ADMIN
+  ADMIN
   FINANCE
   DAILY_ADMIN
   MARKETING_STAFF
   MARKETING_SEMENTARA
+  TEKNIS
 }
 
 model Pegawai {
