@@ -180,7 +180,100 @@ const getKehadiran = async (req, res) => {
   }
 };
 
+const getJadwalFix = async (req, res) => {
+  try {
+    const { quarter } = req.query; // "Q1" | "Q2" | "Q3" | "Q4"
+
+    const quarterMonths = {
+      Q1: [1, 2, 3],
+      Q2: [4, 5, 6],
+      Q3: [7, 8, 9],
+      Q4: [10, 11, 12],
+    };
+
+    const months = quarterMonths[quarter] ?? quarterMonths["Q1"];
+    const year = new Date().getFullYear();
+
+    // Ambil semua jadwal TERKONFIRMASI di quarter ini
+    const startDate = new Date(year, months[0] - 1, 1);
+    const endDate = new Date(
+      year,
+      months[months.length - 1],
+      0,
+      23,
+      59,
+      59,
+      999,
+    );
+
+    const jadwalList = await prisma.jadwalTraining.findMany({
+      where: {
+        status: "TERKONFIRMASI",
+        tglMulai: { gte: startDate, lte: endDate },
+      },
+      select: { tglMulai: true },
+    });
+
+    // Rakit data per bulan
+    const monthNames = [
+      "",
+      "Januari",
+      "Februari",
+      "Maret",
+      "April",
+      "Mei",
+      "Juni",
+      "Juli",
+      "Agustus",
+      "September",
+      "Oktober",
+      "November",
+      "Desember",
+    ];
+
+    const data = months.map((m) => {
+      // Isi 28 slot (4 minggu x 7 hari), null kalau tanggal > hari terakhir bulan
+      const daysInMonth = new Date(year, m, 0).getDate();
+      const values = Array.from({ length: 28 }, (_, i) => {
+        const tanggal = i + 1;
+        if (tanggal > daysInMonth) return null;
+
+        // Hitung jadwal yang tglMulai = tanggal ini
+        const count = jadwalList.filter((j) => {
+          const d = new Date(j.tglMulai);
+          return (
+            d.getFullYear() === year &&
+            d.getMonth() + 1 === m &&
+            d.getDate() === tanggal
+          );
+        }).length;
+
+        return count;
+      });
+
+      const totalFix = jadwalList.filter((j) => {
+        const d = new Date(j.tglMulai);
+        return d.getFullYear() === year && d.getMonth() + 1 === m;
+      }).length;
+
+      return {
+        bulan: monthNames[m],
+        values,
+        totalFix,
+      };
+    });
+
+    res.json({ success: true, data });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ success: false, message: err.message });
+  }
+};
+
 module.exports = {
   getMarketingActivity,
   getKehadiran,
+  getMarketingActivity,
+  getKehadiran,
+  getJadwalFix,
 };
