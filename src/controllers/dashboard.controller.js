@@ -270,10 +270,120 @@ const getJadwalFix = async (req, res) => {
   }
 };
 
+const getKalenderTraining = async (req, res) => {
+  try {
+    const { bulan, tahun, search } = req.query;
+
+    const now = new Date();
+    const targetMonth = bulan ? parseInt(bulan) : now.getMonth() + 1;
+    const targetYear = tahun ? parseInt(tahun) : now.getFullYear();
+
+    const startDate = new Date(targetYear, targetMonth - 1, 1);
+    const endDate = new Date(targetYear, targetMonth, 0, 23, 59, 59, 999);
+
+    const jadwalList = await prisma.jadwalTraining.findMany({
+      where: {
+        tglMulai: { gte: startDate, lte: endDate },
+        ...(search && {
+          OR: [
+            { judulLengkap: { contains: search, mode: "insensitive" } },
+            { judulPendek: { contains: search, mode: "insensitive" } },
+            { noJadwal: { contains: search, mode: "insensitive" } },
+            { jenisTraining: { contains: search, mode: "insensitive" } },
+            { kota: { contains: search, mode: "insensitive" } },
+            { lokasiDetail: { contains: search, mode: "insensitive" } },
+            { kodePelatihan: { contains: search, mode: "insensitive" } },
+          ],
+        }),
+      },
+      include: {
+        peserta: { select: { id: true } },
+        trainers: { include: { trainer: { select: { nama: true } } } },
+      },
+      orderBy: { tglMulai: "asc" },
+    });
+
+    const data = jadwalList.map((j) => {
+      // Tentukan hari apa tglMulai & tglSelesai
+      const dayKeys = [
+        "minggu",
+        "senin",
+        "selasa",
+        "rabu",
+        "kamis",
+        "jumat",
+        "sabtu",
+      ];
+      const days = [];
+
+      if (j.tglMulai && j.tglSelesai) {
+        const cur = new Date(j.tglMulai);
+        const end = new Date(j.tglSelesai);
+        while (cur <= end) {
+          const dayKey = dayKeys[cur.getDay()];
+          if (["senin", "selasa", "rabu", "kamis", "jumat"].includes(dayKey)) {
+            days.push({
+              day: dayKey,
+              code: j.kodePelatihan,
+              category: mapKategori(j.kodePelatihan),
+            });
+          }
+          cur.setDate(cur.getDate() + 1);
+        }
+      }
+
+      // Tentukan lokasiType
+      const metodeLower = j.metode?.toLowerCase() ?? "";
+      const lokasiType = metodeLower.includes("online")
+        ? "online"
+        : metodeLower.includes("hybrid")
+          ? "hybrid"
+          : "hotel";
+
+      // TEN & FIX dari peserta (bisa disesuaikan nanti)
+      const totalPeserta = j.peserta.length;
+      const trainers = j.trainers.map((t) => t.trainer.nama);
+
+      return {
+        judul: j.judulLengkap,
+        noJadwal: j.noJadwal,
+        jenis: j.jenisTraining,
+        status: j.status,
+        isHot: totalPeserta >= 20,
+        metode: j.metode,
+        lokasi: j.kota,
+        lokasiType,
+        lokasiDetail: j.lokasiDetail ?? j.kota,
+        biaya: j.biaya,
+        ten: 0, // bisa diisi dari PesertaTraining nanti
+        fix: totalPeserta,
+        peserta: totalPeserta,
+        trainers,
+        tglMulai: j.tglMulai,
+        tglSelesai: j.tglSelesai,
+        days,
+      };
+    });
+
+    res.json({ success: true, data, total: data.length });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ success: false, message: err.message });
+  }
+};
+
+// Helper: map kode pelatihan ke kategori
+function mapKategori(kode = "") {
+  const k = kode.toUpperCase();
+  if (k.startsWith("CSR")) return "CSR";
+  if (k.startsWith("TSM")) return "TSM";
+  if (k.startsWith("EPM")) return "EPM";
+  return "WM";
+}
+
 module.exports = {
   getMarketingActivity,
   getKehadiran,
-  getMarketingActivity,
-  getKehadiran,
   getJadwalFix,
+  getKalenderTraining,
 };
