@@ -40,7 +40,7 @@ const setRefreshCookie = (res, token) => {
   res.cookie("refresh_token", token, {
     httpOnly: true,
     secure: process.env.NODE_ENV === "production",
-    sameSite: "strict",
+    sameSite: "none",
     maxAge: 7 * 24 * 60 * 60 * 1000, // 7 hari dalam ms
     path: "/api/user/refresh", // cookie hanya dikirim ke endpoint ini saja
   });
@@ -348,7 +348,7 @@ const logout = async (req, res) => {
     res.clearCookie("refresh_token", {
       httpOnly: true,
       secure: process.env.NODE_ENV === "production",
-      sameSite: "strict",
+      sameSite: "none",
       path: "/api/user/refresh",
     });
 
