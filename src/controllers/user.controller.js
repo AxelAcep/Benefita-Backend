@@ -42,7 +42,7 @@ const setRefreshCookie = (res, token) => {
     secure: process.env.NODE_ENV === "production",
     sameSite: "none",
     maxAge: 7 * 24 * 60 * 60 * 1000, // 7 hari dalam ms
-    path: "/api/user/refresh", // cookie hanya dikirim ke endpoint ini saja
+    path: "/", // cookie hanya dikirim ke endpoint ini saja
   });
 };
 
@@ -301,7 +301,7 @@ const refresh = async (req, res) => {
     if (stored.expiresAt < new Date()) {
       // Sudah expired, hapus dari DB + clear cookie
       await prisma.refreshToken.delete({ where: { token } });
-      res.clearCookie("refresh_token", { path: "/api/user/refresh" });
+      res.clearCookie("refresh_token", { path: "/" });
       return res.status(401).json({
         message: "Refresh token sudah kadaluarsa. Silakan login ulang.",
       });
@@ -349,7 +349,7 @@ const logout = async (req, res) => {
       httpOnly: true,
       secure: process.env.NODE_ENV === "production",
       sameSite: "none",
-      path: "/api/user/refresh",
+      path: "/",
     });
 
     return res.status(200).json({ message: "Logout berhasil." });
