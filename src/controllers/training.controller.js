@@ -833,6 +833,11 @@ const createJadwalTraining = async (req, res) => {
     // di createJadwalTraining controller
     const updateOleh = req.user?.userId; // dari JWT middleware
 
+    let parsedTrainerKodes = trainerKodes;
+    if (!Array.isArray(parsedTrainerKodes)) {
+      parsedTrainerKodes = parsedTrainerKodes ? [parsedTrainerKodes] : [];
+    }
+
     if (!updateOleh) {
       return res.status(401).json({ message: "Unauthorized." });
     }
@@ -875,7 +880,8 @@ const createJadwalTraining = async (req, res) => {
         fileAgenda,
         updateOleh: user.pegawaiId,
         trainers: {
-          create: trainerKodes?.map((kode) => ({ trainerKode: kode })) ?? [],
+          create:
+            parsedTrainerKodes?.map((kode) => ({ trainerKode: kode })) ?? [],
         },
       },
       include: {
@@ -918,6 +924,11 @@ const updateJadwalTraining = async (req, res) => {
       status,
       trainerKodes,
     } = req.body;
+
+    let parsedTrainerKodes = trainerKodes;
+    if (!Array.isArray(parsedTrainerKodes)) {
+      parsedTrainerKodes = parsedTrainerKodes ? [parsedTrainerKodes] : [];
+    }
 
     const updateOleh = req.user?.userId;
 
@@ -970,7 +981,8 @@ const updateJadwalTraining = async (req, res) => {
           fileAgenda,
           updateOleh: user.pegawaiId ?? existing.updateOleh,
           trainers: {
-            create: trainerKodes?.map((kode) => ({ trainerKode: kode })) ?? [],
+            create:
+              parsedTrainerKodes?.map((kode) => ({ trainerKode: kode })) ?? [],
           },
         },
         include: {
