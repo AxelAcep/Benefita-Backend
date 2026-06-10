@@ -12,7 +12,7 @@ const {
   getTrainerById,
   getTrainers,
 
-  createPengajuan,
+  createPengajuanJudulTraining,
   updatePengajuan,
   getPengajuanById,
   getPengajuan,
@@ -49,7 +49,7 @@ router.put("/trainer/:id", authMiddleware, updateTrainer);
 router.get("/trainer", authMiddleware, getTrainers);
 router.get("/trainer/:id", authMiddleware, getTrainerById);
 
-router.post("/pengajuan-judul", authMiddleware, createPengajuan);
+router.post("/pengajuan-judul", authMiddleware, createPengajuanJudulTraining);
 router.put("/pengajuan-judul/:id", authMiddleware, updatePengajuan);
 router.get("/pengajuan-judul", authMiddleware, getPengajuan);
 router.get("/pengajuan-judul/:id", authMiddleware, getPengajuanById);

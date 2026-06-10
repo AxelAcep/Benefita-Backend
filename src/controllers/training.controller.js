@@ -389,7 +389,7 @@ const getTrainers = async (req, res) => {
   }
 };
 
-const createPengajuan = async (req, res) => {
+const createPengajuanJudulTraining = async (req, res) => {
   try {
     const {
       judulTraining,
@@ -1202,7 +1202,7 @@ module.exports = {
   getTrainerById,
   getTrainers,
 
-  createPengajuan,
+  createPengajuanJudulTraining,
   updatePengajuan,
   getPengajuanById,
   getPengajuan,
