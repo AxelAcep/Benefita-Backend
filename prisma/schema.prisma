@@ -28,22 +28,41 @@ model Pegawai {
 
   // Foto profil
   fotoUrl            String?
-  fotoKey            String?              // key di storage (S3/R2/dll)
+  fotoKey            String?
+
+  // Field migrasi
+  nik                String?
+  tempatTanggalLahir String?
+  alamat             String?
+  pendidikanTerakhir String?
+  jenisKelamin       String?
+  statusPerkawinan   String?
+  statusKaryawan     String?
+  tanggalMasuk       DateTime?
+  remark             String?
+  sisaCuti           Int?
+  statusHarian       String?
+  userStatus         String?
+  kodeDepartemen     String?
+  instansi           String?
+  userData           String?
+  updatedBy          String?
+  statusDate         DateTime?
+  akunInfo           String?
 
   // Dokumen (relasi ke model terpisah)
-  dokumen            DokumenPegawai[]
-
-  dailyActivities    DailyActivity[]
-  hakAksesKaryawan   HakAksesKaryawan[]
-  permohonanHakAkses PermohonanHakAkses[]
+  dokumen                DokumenPegawai[]
+  dailyActivities        DailyActivity[]
+  hakAksesKaryawan       HakAksesKaryawan[]
+  permohonanHakAkses     PermohonanHakAkses[]
   pengajuanJudulTraining PengajuanJudulTraining[]
-  jadwalDiupdate     JadwalTraining[]
-  pesertaDiinput     PesertaTraining[]    @relation("PesertaInputOleh")
-  pesertaDiupdate    PesertaTraining[]    @relation("PesertaUpdateOleh")
-  pesertaDikonfirmasi PesertaTraining[]  @relation("PesertaKonfirmasiOleh")
-  pengajuanIzin  PengajuanIzin[]
-  permintaanSurat     PermintaanNomorSurat[]  // Pengirim
-  user               User?
+  jadwalDiupdate         JadwalTraining[]
+  pesertaDiinput         PesertaTraining[]        @relation("PesertaInputOleh")
+  pesertaDiupdate        PesertaTraining[]        @relation("PesertaUpdateOleh")
+  pesertaDikonfirmasi    PesertaTraining[]        @relation("PesertaKonfirmasiOleh")
+  pengajuanIzin          PengajuanIzin[]
+  permintaanSurat        PermintaanNomorSurat[]
+  user                   User?
 }
 
 model DokumenPegawai {
@@ -63,6 +82,7 @@ model User {
   pegawaiId     String          @unique
   phone         String          @unique
   email         String          @unique
+  emailGmail    String?
   password      String
   role          RoleStatus
   lastOnlineAt  DateTime?
@@ -70,7 +90,7 @@ model User {
   createdAt     DateTime        @default(now())
   devices       DeviceTrusted[]
   otps          OtpCode[]
-  refreshTokens RefreshToken[] //
+  refreshTokens RefreshToken[]
 
   pegawai Pegawai @relation(fields: [pegawaiId], references: [id])
 }
@@ -202,6 +222,58 @@ model TabPerusahaan {
   updatter   String?
   dateInput  DateTime?
   dateUpdate DateTime?
+
+  // =========================
+  // UNUSED FIELD
+  // =========================
+  produksi         String?   @db.VarChar(255)
+  tglRecord        String?   @db.VarChar(255)
+  tglRecordCsr     String?   @db.VarChar(20)
+  tglRecordEnv     String?   @db.VarChar(20)
+  tglRecordEpm     String?   @db.VarChar(20)
+  tglRecordTsm     String?   @db.VarChar(20)
+  acc              String?   @db.VarChar(225)
+  accCsr           String?   @db.VarChar(50)
+  accEpm           String?   @db.VarChar(50)
+  accTsm           String?   @db.VarChar(50)
+  noGroup          String?   @db.VarChar(25)
+  groupInduk       String?   @db.VarChar(255)
+  actionPareto     String?   @db.VarChar(255)
+  dateRequestAcount DateTime?
+  requestAcount    String?   @db.VarChar(10)
+  expiredVendor    DateTime?
+  ims              String?   @db.VarChar(255)
+  indukKab         String?   @db.VarChar(10)
+  indukProv        String?   @db.VarChar(10)
+  kd2              String?   @db.VarChar(50)
+  kd3              String?   @db.VarChar(50)
+  kd4              String?   @db.VarChar(50)
+  kd5              String?   @db.VarChar(50)
+  khusus           String?   @db.VarChar(255)
+  kirimPos         String?   @db.VarChar(5)
+  pesertaInh       Int?
+  pesertaTot       Int?
+  region           String?   @db.VarChar(50)
+  subBidangProper  String?   @db.VarChar(100)
+  tglInfoKeu       String?   @db.VarChar(10)
+  prioritasMaLama  String?   @db.VarChar(50)
+
+  status          String? @db.VarChar(255)
+  statusDaerah    String? @db.VarChar(100)
+  golkar          String? @db.VarChar(255)
+  pdip            String? @db.VarChar(255)
+  ppp             String? @db.VarChar(255)
+  pan             String? @db.VarChar(255)
+  lain            String? @db.VarChar(255)
+  humasDanHukum   String? @db.VarChar(255)
+  costomer        String? @db.VarChar(50)
+  tglRecordAdm    String? @db.VarChar(50)
+
+  noIndukProv   String?  @db.VarChar(10)
+  prioritas     Int?
+  pelanggan     Boolean?
+  sertifikasi String? @db.VarChar(255)
+  contakPerson String? @db.VarChar(255)
 
   // =========================
   // RELATION
