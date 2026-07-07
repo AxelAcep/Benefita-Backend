@@ -480,6 +480,8 @@ model Trainer {
   alamatKantor   String?
   noTelpKantor   String?
 
+  CV_Trainer     String?
+
   createdAt      DateTime @default(now())
   updatedAt      DateTime @updatedAt
 
@@ -532,8 +534,8 @@ model JudulTraining {
 }
 
 model JadwalTraining {
-  id            Int      @id @default(autoincrement())
-  noJadwal      String   @unique
+  id            Int       @id @default(autoincrement())
+  noJadwal      String    @unique
   kodePelatihan String
   tglMulai      DateTime?
   tglSelesai    DateTime?
@@ -548,15 +550,25 @@ model JadwalTraining {
   catatan       String?
   fileAgenda    String?
   lastUpdate    DateTime  @updatedAt
-  
+
+  // Field tambahan dari MySQL
+  durasi        Int?
+  tglRencana    DateTime?
+  periode       String?
+  tipe          String?
+  penawaran     String?
+  statusPrio    String?
+  trainer       String?
+  statusTr      String?
+  updTgl        DateTime?
+  batch         Int?
+
   // Relations
   updateOleh    String
-  pegawai       Pegawai   @relation(fields: [updateOleh], references: [id])
-
-  judulTraining JudulTraining @relation(fields: [kodePelatihan], references: [kode])
-
+  pegawai       Pegawai        @relation(fields: [updateOleh], references: [id])
+  judulTraining JudulTraining  @relation(fields: [kodePelatihan], references: [kode])
   trainers      TrainerOnJadwal[]
-  peserta PesertaTraining[]
+  peserta       PesertaTraining[]
 
   @@map("jadwal_training")
 }
@@ -574,68 +586,94 @@ model TrainerOnJadwal {
 }
 
 model PesertaTraining {
-  id                    Int       @id @default(autoincrement())
+  id                         Int       @id @default(autoincrement())
 
   // Data Peserta
-  nama                  String
-  jabatan               String?
-  alamat                String?
-  noTelp                String?
-  noFax                 String?
-  email                 String?
+  nama                       String
+  jabatan                    String?
+  alamat                     String?
+  noTelp                     String?
+  noFax                      String?
+  email                      String?
   alamatPengirimanSertifikat String?
-  catatan               String?
-  industri              String?
-  status                String?
-  ownEnv                String?
-  metode                String?
-  fileBuktiPembayaran   String?
-  filePendaftaran       String?
+  catatan                    String?
+  industri                   String?
+  status                     String?
+  ownEnv                     String?
+  metode                     String?
+  fileBuktiPembayaran        String?
+  filePendaftaran            String?
+
+  // Field tambahan dari MySQL
+  noUrut        String?
+  tglMulai      DateTime?
+  tempatLahir   String?
+  tanggalLahir  DateTime?
+  jenisKelamin  String?
+  bidang        String?
+  noCust        String?
+  instansi      String?
+  namaPerusahaan String?
+  noHp          String?
+  konTgl        DateTime?
+  konOleh       String?
+  dep           String?
+  gender        String?
+  religi        String?
+  partisipan    String?
+  biaya         Int?
+  periode       String?
+  noRegUji      String?
+  idDok         String?
+  noJadOld      String?
+  idPesPel      String?
+  fee           String?
 
   // Relasi ke TabPerusahaan
-  noIndukPerusahaan     String
-  perusahaan            TabPerusahaan @relation(fields: [noIndukPerusahaan], references: [noInduk])
+  noIndukPerusahaan          String?
+  perusahaan                 TabPerusahaan? @relation(fields: [noIndukPerusahaan], references: [noInduk])
 
   // Relasi ke JadwalTraining
-  noJadwal              String
-  jadwalTraining        JadwalTraining @relation(fields: [noJadwal], references: [noJadwal])
+  noJadwal                   String
+  jadwalTraining             JadwalTraining @relation(fields: [noJadwal], references: [noJadwal])
 
   // AE (Account Executive) - string
-  accExecutive          String?
+  accExecutive               String?
 
   // Ujian
-  ujian                 String?  
-  noInvUjian            String?
-  noKwtUjian            String?
+  ujian                      String?
+  noInvUjian                 String?
+  noKwtUjian                 String?
 
   // Keuangan
-  diskon                Int?
-  ppn                   Int?
-  cashback              Int?
-  hargaTotal            Int?
-  bayar                 Int?
-  infoPembayaran        String?
-  infoPenagihan         String?
-  tglBayar              DateTime?
-  noInvoice             String?
-  noKwitansi            String?
+  diskon                     Int?
+  ppn                        Int?
+  cashback                   Int?
+  hargaTotal                 Int?
+  bayar                      Int?
+  infoPembayaran             String?
+  infoPenagihan              String?
+  tglBayar                   DateTime?
+  noInvoice                  String?
+  noKwitansi                 String?
 
   // Relasi ke Pegawai
-  inputOleh             String
-  pegawaiInput          Pegawai   @relation("PesertaInputOleh", fields: [inputOleh], references: [id])
+  inputOleh                  String
+  pegawaiInput               Pegawai   @relation("PesertaInputOleh", fields: [inputOleh], references: [id])
 
-  updateOleh            String?
-  pegawaiUpdate         Pegawai?  @relation("PesertaUpdateOleh", fields: [updateOleh], references: [id])
+  updateOleh                 String?
+  pegawaiUpdate              Pegawai?  @relation("PesertaUpdateOleh", fields: [updateOleh], references: [id])
 
-  konfirmasiOleh        String?
-  pegawaiKonfirmasi     Pegawai?  @relation("PesertaKonfirmasiOleh", fields: [konfirmasiOleh], references: [id])
+  konfirmasiOleh             String?
+  pegawaiKonfirmasi          Pegawai?  @relation("PesertaKonfirmasiOleh", fields: [konfirmasiOleh], references: [id])
 
   // Timestamps
-  tglInput              DateTime  @default(now())
-  tglUpdate             DateTime  @updatedAt
+  tglInput                   DateTime  @default(now())
+  tglUpdate                  DateTime  @updatedAt
 
   @@map("peserta_training")
 }
+
 
 enum JenisIzin {
   CUTI
