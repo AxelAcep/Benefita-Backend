@@ -7,6 +7,7 @@ const cutiControllers = require("./cuti.controller");
 const beritaControllers = require("./berita.controller");
 const suratControllers = require("./surat.controller");
 const dashboardControllers = require("./dashboard.controller");
+const accountingControllers = require("./accounting.controller");
 
 module.exports = {
   ...userControllers,
@@ -18,4 +19,5 @@ module.exports = {
   ...beritaControllers,
   ...suratControllers,
   ...dashboardControllers,
+  ...accountingControllers,
 };

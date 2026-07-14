@@ -9,6 +9,7 @@ const cutiRoutes = require("./cuti.routes");
 const beritaRoutes = require("./berita.routes");
 const suratRoutes = require("./surat.routes");
 const dashboardRoutes = require("./dashboard.routes");
+const accountingRoutes = require("./accounting.routes");
 
 const router = express.Router();
 
@@ -21,5 +22,6 @@ router.use("/cuti", cutiRoutes);
 router.use("/berita", beritaRoutes);
 router.use("/permintaan-surat", suratRoutes);
 router.use("/dashboard", dashboardRoutes);
+router.use("/accounting", accountingRoutes);
 
 module.exports = router;

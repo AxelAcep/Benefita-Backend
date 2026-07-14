@@ -17,7 +17,7 @@ const generateOTP = () =>
  * Buat access token — short-lived (15 menit)
  */
 const createAccessToken = (userId, role) =>
-  jwt.sign({ userId, role }, process.env.JWT_SECRET, { expiresIn: "15m" });
+  jwt.sign({ userId, role }, process.env.JWT_SECRET, { expiresIn: "72h" });
 
 /**
  * Buat refresh token — random string, simpan ke DB
