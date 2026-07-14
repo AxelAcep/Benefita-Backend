@@ -768,6 +768,273 @@ const getLaporanHasilUsaha = async (req, res) => {
   }
 };
 
+// ─── Helper ──────────────────────────────────────────────────────
+// ─── Helper ──────────────────────────────────────────────────────
+function parseDateCustom(str) {
+  if (!str) return null;
+  let parts = str.split(".");
+  if (parts.length !== 3) parts = str.split("-");
+  if (parts.length === 3) {
+    const day = parseInt(parts[0]);
+    const month = parseInt(parts[1]) - 1;
+    const year = parseInt(parts[2]);
+    if (!isNaN(day) && !isNaN(month) && !isNaN(year)) {
+      return new Date(year, month, day);
+    }
+  }
+  const d = new Date(str);
+  return isNaN(d) ? null : d;
+}
+
+function formatPeriodFromDate(dateObj) {
+  if (!dateObj) return null;
+  const year = dateObj.getFullYear();
+  const month = String(dateObj.getMonth() + 1).padStart(2, "0");
+  return `${year}${month}`;
+}
+
+// ─── GET UMK ──────────────────────────────────────────────────────
+const getUmk = async (req, res) => {
+  try {
+    const page = parseInt(req.query.page) || 1;
+    const limit = parseInt(req.query.limit) || 10;
+    const sortBy = req.query.sortBy || "tglInput";
+    const order = req.query.order === "asc" ? "asc" : "desc";
+    const picId = req.query.picId;
+    const search = req.query.search || "";
+
+    const startMonth = parseInt(req.query.startMonth);
+    const startYear = parseInt(req.query.startYear);
+    const endMonth = req.query.endMonth
+      ? parseInt(req.query.endMonth)
+      : undefined;
+    const endYear = req.query.endYear ? parseInt(req.query.endYear) : undefined;
+
+    let dateFilter = {};
+    if (startMonth && startYear) {
+      const startDate = new Date(startYear, startMonth - 1, 1);
+      let endDate;
+      if (endMonth && endYear) {
+        const nextMonth = new Date(endYear, endMonth, 1);
+        endDate = new Date(nextMonth.getTime() - 1);
+      } else {
+        const nextMonth = new Date(startYear, startMonth, 1);
+        endDate = new Date(nextMonth.getTime() - 1);
+      }
+      dateFilter = {
+        tglInput: {
+          gte: startDate,
+          lte: endDate,
+        },
+      };
+    }
+
+    const where = { ...dateFilter };
+    if (picId) where.picId = picId;
+    if (search) {
+      where.OR = [
+        { noUmk: { contains: search } },
+        { tujuanUmk: { contains: search } },
+        { pic: { is: { nama: { contains: search } } } },
+        { inputter: { is: { nama: { contains: search } } } },
+      ];
+    }
+
+    const total = await prisma.umk.count({ where });
+    const totalPages = Math.ceil(total / limit) || 1;
+    const skip = (page - 1) * limit;
+
+    const data = await prisma.umk.findMany({
+      where,
+      include: {
+        pic: { select: { id: true, nama: true } },
+        inputter: { select: { id: true, nama: true } },
+      },
+      orderBy: { [sortBy]: order },
+      skip,
+      take: limit,
+    });
+
+    const grandTotal = await prisma.umk.aggregate({
+      where,
+      _sum: {
+        jumlahUmk: true,
+        realisasiUmk: true,
+        sisaUangUmk: true,
+      },
+    });
+
+    return res.status(200).json({
+      data,
+      pagination: { page, limit, total, totalPages },
+      grandTotal: {
+        totalJumlah: grandTotal._sum.jumlahUmk || 0,
+        totalRealisasi: grandTotal._sum.realisasiUmk || 0,
+        totalSisa: grandTotal._sum.sisaUangUmk || 0,
+      },
+    });
+  } catch (error) {
+    console.error("[getUmk error]", error);
+    return res.status(500).json({ message: "Terjadi kesalahan server." });
+  }
+};
+
+// ─── CREATE UMK ──────────────────────────────────────────────────
+const createUmk = async (req, res) => {
+  try {
+    const {
+      noUmk,
+      tujuanUmk,
+      picId,
+      jumlahUmk,
+      tglPenyerahanUang,
+      realisasiUmk,
+      ketUmk,
+    } = req.body;
+
+    if (!noUmk) return res.status(400).json({ message: "No. UMK wajib diisi" });
+    if (!tujuanUmk)
+      return res.status(400).json({ message: "Tujuan UMK wajib diisi" });
+    if (!picId) return res.status(400).json({ message: "PIC wajib dipilih" });
+    if (!jumlahUmk)
+      return res.status(400).json({ message: "Jumlah UMK wajib diisi" });
+
+    const existing = await prisma.umk.findUnique({ where: { noUmk } });
+    if (existing) {
+      return res
+        .status(400)
+        .json({ message: `No. UMK "${noUmk}" sudah terdaftar` });
+    }
+
+    const tglDate = parseDateCustom(tglPenyerahanUang);
+    const periode = tglDate ? formatPeriodFromDate(tglDate) : "";
+
+    const realisasi = realisasiUmk || 0;
+    const sisa = jumlahUmk - realisasi;
+
+    const data = await prisma.umk.create({
+      data: {
+        noUmk,
+        tujuanUmk,
+        picId,
+        jumlahUmk,
+        tglPenyerahanUang: tglPenyerahanUang || null,
+        realisasiUmk: realisasi,
+        sisaUangUmk: sisa,
+        ketUmk: ketUmk || null,
+        periodeUmk: periode,
+        inputterId: req.user.id,
+      },
+      include: {
+        pic: { select: { id: true, nama: true } },
+        inputter: { select: { id: true, nama: true } },
+      },
+    });
+
+    return res.status(201).json({ message: "UMK berhasil dibuat", data });
+  } catch (error) {
+    console.error("[createUmk error]", error);
+    return res.status(500).json({ message: "Terjadi kesalahan server." });
+  }
+};
+
+// ─── UPDATE UMK ──────────────────────────────────────────────────
+const updateUmk = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const {
+      tujuanUmk,
+      picId,
+      jumlahUmk,
+      tglPenyerahanUang,
+      realisasiUmk,
+      ketUmk,
+    } = req.body;
+
+    const existing = await prisma.umk.findUnique({
+      where: { id: parseInt(id) },
+    });
+    if (!existing) {
+      return res.status(404).json({ message: "UMK tidak ditemukan" });
+    }
+
+    const tglDate = parseDateCustom(tglPenyerahanUang);
+    const periode = tglDate
+      ? formatPeriodFromDate(tglDate)
+      : existing.periodeUmk;
+
+    const realisasi =
+      realisasiUmk !== undefined ? realisasiUmk : existing.realisasiUmk;
+    const jumlah = jumlahUmk || existing.jumlahUmk;
+    const sisa = jumlah - realisasi;
+
+    const data = await prisma.umk.update({
+      where: { id: parseInt(id) },
+      data: {
+        tujuanUmk: tujuanUmk || existing.tujuanUmk,
+        picId: picId || existing.picId,
+        jumlahUmk: jumlah,
+        tglPenyerahanUang:
+          tglPenyerahanUang !== undefined
+            ? tglPenyerahanUang
+            : existing.tglPenyerahanUang,
+        realisasiUmk: realisasi,
+        sisaUangUmk: sisa,
+        ketUmk: ketUmk !== undefined ? ketUmk : existing.ketUmk,
+        periodeUmk: periode,
+      },
+      include: {
+        pic: { select: { id: true, nama: true } },
+        inputter: { select: { id: true, nama: true } },
+      },
+    });
+
+    return res.status(200).json({ message: "UMK berhasil diperbarui", data });
+  } catch (error) {
+    console.error("[updateUmk error]", error);
+    return res.status(500).json({ message: "Terjadi kesalahan server." });
+  }
+};
+
+// ─── GET UMK BY ID ──────────────────────────────────────────────
+const getUmkById = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const data = await prisma.umk.findUnique({
+      where: { id: parseInt(id) },
+      include: {
+        pic: { select: { id: true, nama: true } },
+        inputter: { select: { id: true, nama: true } },
+      },
+    });
+    if (!data) {
+      return res.status(404).json({ message: "UMK tidak ditemukan" });
+    }
+    return res.status(200).json({ data });
+  } catch (error) {
+    console.error("[getUmkById error]", error);
+    return res.status(500).json({ message: "Terjadi kesalahan server." });
+  }
+};
+
+const getPegawaiUmk = async (req, res) => {
+  try {
+    const data = await prisma.pegawai.findMany({
+      select: {
+        id: true,
+        nama: true,
+        nip: true,
+      },
+      orderBy: { nama: "asc" },
+    });
+
+    return res.status(200).json({ data });
+  } catch (error) {
+    console.error("[getPegawaiUmk error]", error);
+    return res.status(500).json({ message: "Terjadi kesalahan server." });
+  }
+};
+
 module.exports = {
   getPendapatan,
   getPiutang,
@@ -780,4 +1047,10 @@ module.exports = {
   updateNeraca,
   deleteNeraca,
   getJenisBiaya,
+
+  getUmk,
+  createUmk,
+  updateUmk,
+  getUmkById,
+  getPegawaiUmk,
 };

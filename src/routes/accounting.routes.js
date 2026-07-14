@@ -13,6 +13,11 @@ const {
   deleteNeraca,
   getJenisBiaya,
   getLaporanHasilUsaha,
+  getUmk,
+  createUmk,
+  updateUmk,
+  getUmkById,
+  getPegawaiUmk,
 } = require("../controllers");
 
 router.get("/pendapatan", authMiddleware, getPendapatan);
@@ -28,5 +33,11 @@ router.delete("/neraca/:id", authMiddleware, deleteNeraca);
 router.get("/jenis-biaya", authMiddleware, getJenisBiaya);
 
 router.get("/laporan-hasil", authMiddleware, getLaporanHasilUsaha);
+
+router.get("/umk", authMiddleware, getUmk);
+router.post("/umk", authMiddleware, createUmk);
+router.put("/umk/:id", authMiddleware, updateUmk);
+router.get("/umk/:id", authMiddleware, getUmkById);
+router.get("/pegawai", authMiddleware, getPegawaiUmk);
 
 module.exports = router;
