@@ -370,8 +370,286 @@ const getDetailPiutang = async (req, res) => {
   }
 };
 
+// ─────────────────────────────────────────────
+// HELPER: Hitung saldo terakhir sebelum tanggal tertentu
+// ─────────────────────────────────────────────
+
+// ─── GET JENIS BIAYA ──────────────────────────────────────
+const getJenisBiaya = async (req, res) => {
+  try {
+    const data = await prisma.tableJenisBiaya.findMany({
+      orderBy: { kode: "asc" },
+    });
+    res.json({ data });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
+// helpers/convertBigInt.js
+function convertBigInt(obj) {
+  if (obj === null || obj === undefined) return obj;
+  if (typeof obj === "bigint") return Number(obj);
+  if (obj instanceof Date) return obj.toISOString(); // <-- ini penting
+  if (Array.isArray(obj)) return obj.map((item) => convertBigInt(item));
+  if (typeof obj === "object") {
+    const newObj = {};
+    for (const [key, value] of Object.entries(obj)) {
+      newObj[key] = convertBigInt(value);
+    }
+    return newObj;
+  }
+  return obj;
+}
+
+// ─── GET NERACA ────────────────────────────────────────────
+const getNeracaPagination = async (req, res) => {
+  try {
+    const {
+      page = 1,
+      limit = 10,
+      // Filter bulan/tahun
+      startMonth,
+      startYear,
+      endMonth,
+      endYear,
+      month,
+      year,
+      jenisBiayaKode,
+      search,
+    } = req.query;
+
+    const skip = (parseInt(page) - 1) * parseInt(limit);
+    const where = {};
+
+    // Filter periode (bulan/tahun)
+    if (startMonth && startYear && endMonth && endYear) {
+      const startPeriode = `${startYear}${String(startMonth).padStart(2, "0")}`;
+      const endPeriode = `${endYear}${String(endMonth).padStart(2, "0")}`;
+      where.periode = { gte: startPeriode, lte: endPeriode };
+    } else if (month && year) {
+      where.periode = `${year}${String(month).padStart(2, "0")}`;
+    } else if (year) {
+      // jika hanya tahun, filter semua bulan di tahun itu
+      where.periode = { startsWith: String(year) };
+    }
+
+    // Filter jenis biaya
+    if (jenisBiayaKode) {
+      const jb = await prisma.tableJenisBiaya.findUnique({
+        where: { kode: jenisBiayaKode },
+        select: { id: true },
+      });
+      if (jb) where.jenisBiayaId = jb.id;
+      else {
+        return res.json({
+          data: [],
+          meta: { total: 0, page: 1, limit: 10, totalPage: 0 },
+        });
+      }
+    }
+
+    // Search
+    if (search) {
+      where.OR = [
+        { uraian: { contains: search, mode: "insensitive" } },
+        { bukti: { contains: search, mode: "insensitive" } },
+        { periode: { contains: search, mode: "insensitive" } },
+      ];
+    }
+
+    const [data, total] = await Promise.all([
+      prisma.tableNeraca.findMany({
+        where,
+        skip,
+        take: parseInt(limit),
+        orderBy: [{ tanggal: "asc" }, { id: "desc" }],
+        include: {
+          jenisBiaya: { select: { kode: true, ket: true } },
+          userInput: { select: { nama: true } },
+          userUpdate: { select: { nama: true } },
+        },
+      }),
+      prisma.tableNeraca.count({ where }),
+    ]);
+
+    // Konversi BigInt dan Date
+    const convertedData = convertBigInt(data);
+
+    res.json({
+      data: convertedData,
+      meta: {
+        total,
+        page: parseInt(page),
+        limit: parseInt(limit),
+        totalPage: Math.ceil(total / parseInt(limit)),
+      },
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: error.message });
+  }
+};
+
+// ─── CREATE ─────────────────────────────────────────────────
+const createNeraca = async (req, res) => {
+  try {
+    const { tanggal, kode, uraian, bukti, debit, kredit } = req.body;
+    const userInputId = req.user?.pegawaiId || null;
+
+    const jenisBiaya = await prisma.tableJenisBiaya.findUnique({
+      where: { kode },
+    });
+    if (!jenisBiaya) {
+      return res
+        .status(404)
+        .json({ message: "Kode jenis biaya tidak ditemukan" });
+    }
+
+    const debitVal = debit ? BigInt(debit) : 0n;
+    const kreditVal = kredit ? BigInt(kredit) : 0n;
+
+    // Cari saldo terakhir (tanpa pagination)
+    const last = await prisma.tableNeraca.findFirst({
+      where: { tanggal: { lt: new Date(tanggal) } },
+      orderBy: [{ tanggal: "desc" }, { id: "desc" }],
+      select: { saldo: true },
+    });
+    const saldoTerakhir = last?.saldo ?? 0n;
+    const saldoBaru = saldoTerakhir + debitVal - kreditVal;
+
+    const data = await prisma.tableNeraca.create({
+      data: {
+        tanggal: new Date(tanggal),
+        jenisBiayaId: jenisBiaya.id,
+        uraian: uraian || "",
+        bukti: bukti || "",
+        debit: debitVal,
+        kredit: kreditVal,
+        saldo: saldoBaru,
+        periode: new Date(tanggal).toISOString().slice(0, 7).replace("-", ""),
+        userInputId,
+        tanggalInput: new Date(),
+      },
+      include: {
+        jenisBiaya: true,
+        userInput: { select: { nama: true } },
+      },
+    });
+
+    const converted = convertBigInt(data);
+    res
+      .status(201)
+      .json({ message: "Neraca berhasil dibuat", data: converted });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: error.message });
+  }
+};
+
+// ─── UPDATE ─────────────────────────────────────────────────
+const updateNeraca = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { tanggal, kode, uraian, bukti, debit, kredit } = req.body;
+    const userUpdateId = req.user?.pegawaiId || null;
+
+    const existing = await prisma.tableNeraca.findUnique({
+      where: { id: parseInt(id) },
+      include: { jenisBiaya: true },
+    });
+    if (!existing) {
+      return res.status(404).json({ message: "Data neraca tidak ditemukan" });
+    }
+
+    let jenisBiayaId = existing.jenisBiayaId;
+    if (kode && kode !== existing.jenisBiaya.kode) {
+      const jb = await prisma.tableJenisBiaya.findUnique({ where: { kode } });
+      if (!jb) {
+        return res
+          .status(404)
+          .json({ message: "Kode jenis biaya tidak ditemukan" });
+      }
+      jenisBiayaId = jb.id;
+    }
+
+    let newTanggal = existing.tanggal;
+    let newDebit = existing.debit;
+    let newKredit = existing.kredit;
+
+    if (tanggal) newTanggal = new Date(tanggal);
+    if (debit !== undefined) newDebit = BigInt(debit);
+    if (kredit !== undefined) newKredit = BigInt(kredit);
+
+    let newSaldo = existing.saldo;
+    if (tanggal || debit !== undefined || kredit !== undefined) {
+      const last = await prisma.tableNeraca.findFirst({
+        where: {
+          tanggal: { lt: newTanggal },
+          id: { not: parseInt(id) },
+        },
+        orderBy: [{ tanggal: "desc" }, { id: "desc" }],
+        select: { saldo: true },
+      });
+      const saldoSebelumnya = last?.saldo ?? 0n;
+      newSaldo = saldoSebelumnya + newDebit - newKredit;
+    }
+
+    const updated = await prisma.tableNeraca.update({
+      where: { id: parseInt(id) },
+      data: {
+        tanggal: newTanggal,
+        jenisBiayaId,
+        uraian: uraian || existing.uraian,
+        bukti: bukti || existing.bukti,
+        debit: newDebit,
+        kredit: newKredit,
+        saldo: newSaldo,
+        periode: newTanggal.toISOString().slice(0, 7).replace("-", ""),
+        userUpdateId,
+        tanggalUpdate: new Date(),
+      },
+      include: {
+        jenisBiaya: true,
+        userInput: { select: { nama: true } },
+        userUpdate: { select: { nama: true } },
+      },
+    });
+
+    const converted = convertBigInt(updated);
+    res.json({ message: "Neraca berhasil diupdate", data: converted });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: error.message });
+  }
+};
+
+// ─── DELETE ─────────────────────────────────────────────────
+const deleteNeraca = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const existing = await prisma.tableNeraca.findUnique({
+      where: { id: parseInt(id) },
+    });
+    if (!existing) {
+      return res.status(404).json({ message: "Data neraca tidak ditemukan" });
+    }
+    await prisma.tableNeraca.delete({ where: { id: parseInt(id) } });
+    res.json({ message: "Neraca berhasil dihapus" });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: error.message });
+  }
+};
+
 module.exports = {
   getPendapatan,
   getPiutang,
   getDetailPiutang,
+
+  createNeraca,
+  getNeracaPagination,
+  updateNeraca,
+  deleteNeraca,
+  getJenisBiaya,
 };

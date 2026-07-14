@@ -7,10 +7,23 @@ const {
   getPendapatan,
   getPiutang,
   getDetailPiutang,
+  createNeraca,
+  getNeracaPagination,
+  updateNeraca,
+  deleteNeraca,
+  getJenisBiaya,
 } = require("../controllers");
 
 router.get("/pendapatan", authMiddleware, getPendapatan);
 router.get("/piutang", authMiddleware, getPiutang);
 router.get("/piutang/:noJadwal/detail", authMiddleware, getDetailPiutang);
+
+router.post("/neraca", authMiddleware, createNeraca);
+router.get("/neraca", authMiddleware, getNeracaPagination);
+router.put("/neraca/:id", authMiddleware, updateNeraca);
+router.delete("/neraca/:id", authMiddleware, deleteNeraca);
+
+// routes/jenisBiaya.js
+router.get("/jenis-biaya", authMiddleware, getJenisBiaya);
 
 module.exports = router;

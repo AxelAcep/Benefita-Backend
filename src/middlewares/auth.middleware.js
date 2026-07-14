@@ -1,10 +1,12 @@
 const jwt = require("jsonwebtoken");
-
+const { PrismaClient } = require("@prisma/client");
+const prisma = new PrismaClient();
 /**
  * Middleware verifikasi JWT
  * Taruh di route yang butuh autentikasi
  */
-const authMiddleware = (req, res, next) => {
+const authMiddleware = async (req, res, next) => {
+  // ← tambah async
   const authHeader = req.headers["authorization"];
 
   if (!authHeader || !authHeader.startsWith("Bearer ")) {
@@ -15,7 +17,15 @@ const authMiddleware = (req, res, next) => {
 
   try {
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
-    req.user = decoded; // { userId, role, iat, exp }
+    req.user = decoded;
+
+    const user = await prisma.user.findUnique({
+      // ← await sudah valid
+      where: { id: decoded.userId },
+      select: { pegawaiId: true },
+    });
+    req.user.pegawaiId = user?.pegawaiId || null;
+
     next();
   } catch (error) {
     if (error.name === "TokenExpiredError") {

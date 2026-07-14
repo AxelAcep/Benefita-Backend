@@ -62,6 +62,8 @@ model Pegawai {
   pesertaDikonfirmasi    PesertaTraining[]        @relation("PesertaKonfirmasiOleh")
   pengajuanIzin          PengajuanIzin[]
   permintaanSurat        PermintaanNomorSurat[]
+  inputNeraca  TableNeraca[] @relation("inputNeraca")
+  updateNeraca TableNeraca[] @relation("updateNeraca")
   user                   User?
 }
 
@@ -751,4 +753,35 @@ enum TipeSurat {
   umum
   marketing
   lsp
+}
+
+model TableJenisBiaya {
+  id      Int            @id @default(autoincrement())
+  kode    String         @unique
+  ket     String?
+  neraca  TableNeraca[]
+
+  @@map("TableJenisBiaya")
+}
+
+model TableNeraca {
+  id            Int       @id @default(autoincrement())
+  tanggal       DateTime
+  jenisBiayaId  Int
+  uraian        String?
+  bukti         String?
+  debit         BigInt?
+  kredit        BigInt?
+  saldo         BigInt?
+  periode       String?
+  userInputId   String?
+  tanggalInput  DateTime?
+  userUpdateId  String?
+  tanggalUpdate DateTime?
+
+  jenisBiaya   TableJenisBiaya @relation(fields: [jenisBiayaId], references: [id])
+  userInput    Pegawai?        @relation("inputNeraca", fields: [userInputId], references: [id])
+  userUpdate   Pegawai?        @relation("updateNeraca", fields: [userUpdateId], references: [id])
+
+  @@map("TableNeraca")
 }
