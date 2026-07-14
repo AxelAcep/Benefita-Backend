@@ -642,10 +642,138 @@ const deleteNeraca = async (req, res) => {
   }
 };
 
+const getLaporanHasilUsaha = async (req, res) => {
+  try {
+    // 1. Query params
+    const page = parseInt(req.query.page) || 1;
+    const limit = parseInt(req.query.limit) || 10;
+    const sortBy = req.query.sortBy || "realisasi"; // bisa 'kode', 'keterangan', 'realisasi', 'anggaran'
+    const order = req.query.order === "desc" ? "desc" : "asc";
+
+    const startMonth = parseInt(req.query.startMonth);
+    const startYear = parseInt(req.query.startYear);
+    const endMonth = req.query.endMonth
+      ? parseInt(req.query.endMonth)
+      : undefined;
+    const endYear = req.query.endYear ? parseInt(req.query.endYear) : undefined;
+
+    // 2. Filter tanggal (sama seperti sebelumnya)
+    const now = new Date();
+    let dateFilter = {
+      tglSelesai: { lt: now },
+    };
+    if (startMonth && startYear) {
+      const startDate = new Date(startYear, startMonth - 1, 1);
+      let endDate;
+      if (endMonth && endYear) {
+        const nextMonth = new Date(endYear, endMonth, 1);
+        endDate = new Date(nextMonth.getTime() - 1);
+      } else {
+        const nextMonth = new Date(startYear, startMonth, 1);
+        endDate = new Date(nextMonth.getTime() - 1);
+      }
+      dateFilter = {
+        tglSelesai: {
+          gte: startDate,
+          lte: endDate,
+          lt: now,
+        },
+      };
+    }
+
+    // 3. Ambil semua JudulTraining (master)
+    const semuaJudul = await prisma.judulTraining.findMany({
+      select: {
+        kode: true,
+        judulTraining: true,
+      },
+    });
+
+    // 4. Ambil semua JadwalTraining yang lolos filter tanggal, include peserta FIX
+    const jadwalList = await prisma.jadwalTraining.findMany({
+      where: dateFilter,
+      include: {
+        peserta: {
+          where: { status: "FIX" },
+        },
+      },
+    });
+
+    // 5. Kelompokkan realisasi per kodePelatihan
+    const realisasiMap = new Map();
+    jadwalList.forEach((jadwal) => {
+      const kode = jadwal.kodePelatihan;
+      let total = 0;
+      if (jadwal.peserta && jadwal.peserta.length > 0) {
+        total = jadwal.peserta.reduce((sum, p) => sum + (p.hargaTotal || 0), 0);
+      }
+      // Akumulasi per kode
+      if (realisasiMap.has(kode)) {
+        realisasiMap.set(kode, realisasiMap.get(kode) + total);
+      } else {
+        realisasiMap.set(kode, total);
+      }
+    });
+
+    // 6. Bentuk hasil array
+    let result = semuaJudul.map((item) => ({
+      kode: item.kode,
+      keterangan: item.judulTraining,
+      anggaran: 0, // nanti diisi
+      realisasi: realisasiMap.get(item.kode) || 0,
+    }));
+
+    // 7. Sorting
+    const sortOrder = order === "asc" ? 1 : -1;
+    result.sort((a, b) => {
+      let valA = a[sortBy];
+      let valB = b[sortBy];
+      if (typeof valA === "string") {
+        return valA.localeCompare(valB) * sortOrder;
+      } else {
+        return (valA - valB) * sortOrder;
+      }
+    });
+
+    // 8. Grand Total
+    const grandTotalRealisasi = result.reduce(
+      (sum, item) => sum + item.realisasi,
+      0,
+    );
+    const grandTotalAnggaran = 0; // karena anggaran 0 semua
+
+    // 9. Pagination
+    const total = result.length;
+    const startIndex = (page - 1) * limit;
+    const paginatedData = result.slice(startIndex, startIndex + limit);
+    const totalPages = Math.ceil(total / limit);
+
+    // 10. Response
+    return res.status(200).json({
+      data: paginatedData,
+      pagination: {
+        page,
+        limit,
+        total,
+        totalPages,
+      },
+      grandTotal: {
+        totalRealisasi: grandTotalRealisasi,
+        totalAnggaran: grandTotalAnggaran,
+      },
+    });
+  } catch (error) {
+    console.error("[getLaporanHasilUsaha error]", error);
+    return res.status(500).json({ message: "Terjadi kesalahan server." });
+  }
+};
+
 module.exports = {
   getPendapatan,
   getPiutang,
   getDetailPiutang,
+
+  getLaporanHasilUsaha,
 
   createNeraca,
   getNeracaPagination,

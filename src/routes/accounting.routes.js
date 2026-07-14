@@ -12,6 +12,7 @@ const {
   updateNeraca,
   deleteNeraca,
   getJenisBiaya,
+  getLaporanHasilUsaha,
 } = require("../controllers");
 
 router.get("/pendapatan", authMiddleware, getPendapatan);
@@ -25,5 +26,7 @@ router.delete("/neraca/:id", authMiddleware, deleteNeraca);
 
 // routes/jenisBiaya.js
 router.get("/jenis-biaya", authMiddleware, getJenisBiaya);
+
+router.get("/laporan-hasil", authMiddleware, getLaporanHasilUsaha);
 
 module.exports = router;

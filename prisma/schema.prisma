@@ -64,6 +64,8 @@ model Pegawai {
   permintaanSurat        PermintaanNomorSurat[]
   inputNeraca  TableNeraca[] @relation("inputNeraca")
   updateNeraca TableNeraca[] @relation("updateNeraca")
+  umkPic              Umk[]     @relation("UmkPic")
+  umkInputter         Umk[]     @relation("UmkInputter")
   user                   User?
 }
 
@@ -784,4 +786,26 @@ model TableNeraca {
   userUpdate   Pegawai?        @relation("updateNeraca", fields: [userUpdateId], references: [id])
 
   @@map("TableNeraca")
+}
+
+model Umk {
+  id                  Int      @id @default(autoincrement())
+  tglInput            DateTime @default(now()) @map("TglInput_umk")
+  noUmk               String   @unique @map("No_umk")
+  jumlahUmk           Int      @map("Jumlah_umk")
+  picId               String?  @map("PIC_umk")   // nullable
+  tujuanUmk           String   @map("Tujuan_umk")
+  tglPenyerahanUang   String?  @map("TglPeyerahanUang_umk")
+  realisasiUmk        Int      @map("Realisasi_umk")
+  tglPutmKmk          String?  @map("TglPutm_kmk")
+  sisaUangUmk         Int      @map("SisaUang_umk")
+  ketUmk              String?  @map("Ket_umk")
+  periodeUmk          String   @map("Periode_umk")
+  inputterId          String?  @map("inputter")   // nullable juga
+
+  // Relasi opsional
+  pic                 Pegawai? @relation("UmkPic", fields: [picId], references: [id])
+  inputter            Pegawai? @relation("UmkInputter", fields: [inputterId], references: [id])
+
+  @@map("umk")
 }
