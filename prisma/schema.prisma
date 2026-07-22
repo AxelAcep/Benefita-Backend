@@ -285,7 +285,7 @@ model TabPerusahaan {
   contactPersons     ContactPersonPerusahaan[]
   dailyActivities    DailyActivity[]
   sertifikasiBnsp SertifikasiBnsp[]
-  proper          Proper[]
+
   hakAksesKaryawan   HakAksesKaryawan[]
   logs               LogPerubahanPerusahaan[]
   posPerusahaan      TabPosPerusahaan[]
@@ -293,7 +293,7 @@ model TabPerusahaan {
   penawaran  Penawaran[]
   pengajuanJudulTraining PengajuanJudulTraining[]
   pesertaTraining PesertaTraining[]
-   permintaanSurat PermintaanNomorSurat[]
+  permintaanSurat PermintaanNomorSurat[]
 }
 
 model ContactPersonPerusahaan {
@@ -431,20 +431,6 @@ model SertifikasiBnsp {
   mEnergi  String? @db.VarChar(255)
   pcua    String? @db.VarChar(255)
   lca     String? @db.VarChar(255)
-
-  perusahaan TabPerusahaan @relation(fields: [perusahaanId], references: [noInduk])
-}
-
-model Proper {
-  id          Int     @id @default(autoincrement())
-  perusahaanId String @db.VarChar(50)
-  tahun       Int
-
-  emas  Int @default(0)
-  hijau Int @default(0)
-  biru  Int @default(0)
-  merah Int @default(0)
-  hitam Int @default(0)
 
   perusahaan TabPerusahaan @relation(fields: [perusahaanId], references: [noInduk])
 }
@@ -808,4 +794,31 @@ model Umk {
   inputter            Pegawai? @relation("UmkInputter", fields: [inputterId], references: [id])
 
   @@map("umk")
+}
+
+model Proper {
+  id                Int       @id @default(autoincrement())
+  namaPerusahaan    String    @db.VarChar(255)
+  bidangIndustri    String?   @db.VarChar(255)
+  jenisIndustris    String    @db.VarChar(255)
+  tahun             Int
+
+  noIndukProvinsi   String?
+  noIndukPemda      String?
+  noIndukPerusahaan String?
+
+  peringkat         Peringkat
+}
+
+enum Peringkat {
+  EMAS
+  HIJAU
+  BIRU
+  MERAH
+  HITAM
+  DITUNDA 
+  MASALAH
+  TUTUP
+  DITANGGUHKAN
+  MERAH_MUDA   
 }

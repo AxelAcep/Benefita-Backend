@@ -31,6 +31,7 @@ const {
   updateStatusPermohonan,
   getPermohonanHakAkses,
   getLogPerubahanSummary,
+  getProperByTahun,
 } = require("../controllers");
 const { authMiddleware } = require("../middlewares/auth.middleware");
 const { upload } = require("../middlewares/upload.middleware");
@@ -138,5 +139,7 @@ router.patch(
 );
 
 router.get("/perubahan-summary", authMiddleware, getLogPerubahanSummary);
+
+router.get("/proper-list", authMiddleware, getProperByTahun);
 
 module.exports = router;

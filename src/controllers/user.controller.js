@@ -110,7 +110,7 @@ const createUser = async (req, res) => {
           create: {
             nama,
             jabatan,
-            Departemen: departemen, // ← pindah ke sini
+            departemen: departemen, // ← pindah ke sini
           },
         },
       },
@@ -364,7 +364,7 @@ const getPegawaiDropdown = async (req, res) => {
     // Query ke database untuk mendapatkan pegawai dengan departemen "Marketing & Sales"
     const pegawai = await prisma.pegawai.findMany({
       where: {
-        Departemen: "Marketing & Sales",
+        departemen: "Marketing",
       },
       select: {
         id: true,

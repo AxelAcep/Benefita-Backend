@@ -323,7 +323,6 @@ const getOnePerusahaan = async (req, res) => {
       where: { noInduk },
       include: {
         sertifikasiBnsp: true,
-        proper: true,
       },
     });
 
@@ -2169,6 +2168,116 @@ const getLogPerubahanSummary = async (req, res) => {
   }
 };
 
+const getProperByTahun = async (req, res) => {
+  try {
+    // Ambil tahun dari query string (contoh: ?tahun=2023)
+    const tahun = parseInt(req.query.tahun);
+
+    if (isNaN(tahun)) {
+      return res.status(400).json({ message: "Tahun harus berupa angka" });
+    }
+
+    // 1. Ambil semua Proper dengan tahun tersebut
+    const properData = await prisma.proper.findMany({
+      where: { tahun },
+      select: {
+        noIndukProvinsi: true,
+        peringkat: true,
+      },
+    });
+
+    if (!properData.length) {
+      return res.status(404).json({
+        message: `Tidak ada data Proper untuk tahun ${tahun}`,
+      });
+    }
+
+    // 2. Kumpulkan semua noIndukProvinsi yang unik (filter null)
+    const kodeProvinsiSet = new Set();
+    properData.forEach((p) => {
+      if (p.noIndukProvinsi) kodeProvinsiSet.add(p.noIndukProvinsi);
+    });
+    const kodeProvinsiArray = Array.from(kodeProvinsiSet);
+
+    // 3. Ambil data TabPerusahaan untuk kode-kode tersebut (untuk mendapatkan nama provinsi)
+    let provinsiMap = new Map();
+    if (kodeProvinsiArray.length > 0) {
+      const perusahaanList = await prisma.tabPerusahaan.findMany({
+        where: {
+          noInduk: { in: kodeProvinsiArray },
+        },
+        select: {
+          noInduk: true,
+          company: true,
+        },
+      });
+
+      perusahaanList.forEach((item) => {
+        if (item.company) {
+          provinsiMap.set(item.noInduk, item.company);
+        }
+      });
+    }
+
+    // 4. Grouping berdasarkan nama provinsi (company)
+    const grouping = new Map(); // key: namaProvinsi, value: { counts: {}, total: 0 }
+
+    properData.forEach(({ noIndukProvinsi, peringkat }) => {
+      let namaProvinsi = "Tidak Diketahui";
+      let kodeProvinsi = null;
+      if (noIndukProvinsi && provinsiMap.has(noIndukProvinsi)) {
+        namaProvinsi = provinsiMap.get(noIndukProvinsi);
+        kodeProvinsi = noIndukProvinsi;
+      } else if (noIndukProvinsi) {
+        // jika ada kode tapi tidak ada di provinsiMap, tetap pakai kode sebagai id
+        kodeProvinsi = noIndukProvinsi;
+        // namaProvinsi tetap "Tidak Diketahui"
+      }
+
+      if (!grouping.has(namaProvinsi)) {
+        const counts = {};
+        ALL_PERINGKAT.forEach((p) => (counts[p] = 0));
+        grouping.set(namaProvinsi, {
+          counts,
+          total: 0,
+          noIndukProvinsi: kodeProvinsi,
+        });
+      } else {
+        // jika sudah ada, mungkin kita perlu memastikan noIndukProvinsi konsisten
+        // jika kodeProvinsi ada dan grouping punya noIndukProvinsi null, update
+        const existing = grouping.get(namaProvinsi);
+        if (kodeProvinsi && !existing.noIndukProvinsi) {
+          existing.noIndukProvinsi = kodeProvinsi;
+        }
+      }
+
+      const entry = grouping.get(namaProvinsi);
+      entry.counts[peringkat] = (entry.counts[peringkat] || 0) + 1;
+      entry.total += 1;
+    });
+
+    // 5. Bentuk array hasil
+    const result = Array.from(grouping.entries()).map(([provinsi, data]) => ({
+      id: data.noIndukProvinsi || null,
+      provinsi,
+      peringkat: data.counts,
+      total: data.total,
+    }));
+
+    // 6. Hitung total keseluruhan
+    const totalKeseluruhan = result.reduce((sum, item) => sum + item.total, 0);
+
+    return res.json({
+      tahun,
+      data: result,
+      total: totalKeseluruhan,
+    });
+  } catch (error) {
+    console.error("Error getProperByTahun:", error);
+    return res.status(500).json({ message: "Terjadi kesalahan server" });
+  }
+};
+
 module.exports = {
   getTabPerusahaanList,
   createTabPerusahaan,
@@ -2200,6 +2309,7 @@ module.exports = {
   getPermohonanHakAkses,
   updateStatusPermohonan,
   getLogPerubahanSummary,
+  getProperByTahun,
 };
 
 // Taruh ini di bagian atas file controller lo
@@ -2224,3 +2334,17 @@ const getEditorName = async (req) => {
     return "system";
   }
 };
+
+// Daftar semua enum Peringkat (sesuai schema)
+const ALL_PERINGKAT = [
+  "EMAS",
+  "HIJAU",
+  "BIRU",
+  "MERAH",
+  "HITAM",
+  "DITUNDA",
+  "MASALAH",
+  "TUTUP",
+  "DITANGGUHKAN",
+  "MERAH_MUDA",
+];
