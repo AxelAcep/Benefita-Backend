@@ -32,6 +32,7 @@ const {
   getPermohonanHakAkses,
   getLogPerubahanSummary,
   getProperByTahun,
+  getLiniBisnis,
 } = require("../controllers");
 const { authMiddleware } = require("../middlewares/auth.middleware");
 const { upload } = require("../middlewares/upload.middleware");
@@ -141,5 +142,7 @@ router.patch(
 router.get("/perubahan-summary", authMiddleware, getLogPerubahanSummary);
 
 router.get("/proper-list", authMiddleware, getProperByTahun);
+
+router.get("/lini-bisnis", authMiddleware, getLiniBisnis);
 
 module.exports = router;

@@ -348,7 +348,7 @@ const logout = async (req, res) => {
     res.clearCookie("refresh_token", {
       httpOnly: true,
       secure: process.env.NODE_ENV === "production",
-      sameSite: "none",
+      sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
       path: "/",
     });
 
@@ -364,7 +364,9 @@ const getPegawaiDropdown = async (req, res) => {
     // Query ke database untuk mendapatkan pegawai dengan departemen "Marketing & Sales"
     const pegawai = await prisma.pegawai.findMany({
       where: {
-        departemen: "Marketing",
+        user: {
+          role: { in: ["MARKETING_STAFF", "MARKETING_SEMENTARA"] },
+        },
       },
       select: {
         id: true,

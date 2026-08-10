@@ -1,0 +1,1963 @@
+[
+  {
+    "liniBisnis": "Mining",
+    "rawEntry": "EMS-02",
+    "extractedKode": "EMS-02",
+    "reason": "kode tidak ditemukan di judul_training"
+  },
+  {
+    "liniBisnis": "Mining",
+    "rawEntry": "EMS-04 (+)",
+    "extractedKode": "EMS-04",
+    "reason": "kode tidak ditemukan di judul_training"
+  },
+  {
+    "liniBisnis": "Mining",
+    "rawEntry": "EMS-01",
+    "extractedKode": "EMS-01",
+    "reason": "kode tidak ditemukan di judul_training"
+  },
+  {
+    "liniBisnis": "Mining",
+    "rawEntry": "EMS-05 (+)",
+    "extractedKode": "EMS-05",
+    "reason": "kode tidak ditemukan di judul_training"
+  },
+  {
+    "liniBisnis": "Mining",
+    "rawEntry": "EMS-06",
+    "extractedKode": "EMS-06",
+    "reason": "kode tidak ditemukan di judul_training"
+  },
+  {
+    "liniBisnis": "Mining",
+    "rawEntry": "EMS-03",
+    "extractedKode": "EMS-03",
+    "reason": "kode tidak ditemukan di judul_training"
+  },
+  {
+    "liniBisnis": "Mining",
+    "rawEntry": "tak terdeteksi",
+    "reason": "tidak ada kode terdeteksi (di-skip)"
+  },
+  {
+    "liniBisnis": "Mining",
+    "rawEntry": "CP-01",
+    "extractedKode": "CP-01",
+    "reason": "kode tidak ditemukan di judul_training"
+  },
+  {
+    "liniBisnis": "Mining",
+    "rawEntry": "KONVERSI",
+    "reason": "tidak ada kode terdeteksi (di-skip)"
+  },
+  {
+    "liniBisnis": "Mining",
+    "rawEntry": "EMA",
+    "reason": "tidak ada kode terdeteksi (di-skip)"
+  },
+  {
+    "liniBisnis": "Mining",
+    "rawEntry": "CP-03",
+    "extractedKode": "CP-03",
+    "reason": "kode tidak ditemukan di judul_training"
+  },
+  {
+    "liniBisnis": "Mining",
+    "rawEntry": "CP-04",
+    "extractedKode": "CP-04",
+    "reason": "kode tidak ditemukan di judul_training"
+  },
+  {
+    "liniBisnis": "Mining",
+    "rawEntry": "SW-01",
+    "extractedKode": "SW-01",
+    "reason": "kode tidak ditemukan di judul_training"
+  },
+  {
+    "liniBisnis": "Mining",
+    "rawEntry": "SW-03",
+    "extractedKode": "SW-03",
+    "reason": "kode tidak ditemukan di judul_training"
+  },
+  {
+    "liniBisnis": "Mining",
+    "rawEntry": "Cp-04",
+    "extractedKode": "CP-04",
+    "reason": "kode tidak ditemukan di judul_training"
+  },
+  {
+    "liniBisnis": "Mining",
+    "rawEntry": "EMS-05",
+    "extractedKode": "EMS-05",
+    "reason": "kode tidak ditemukan di judul_training"
+  },
+  {
+    "liniBisnis": "Mining",
+    "rawEntry": "Ems-03",
+    "extractedKode": "EMS-03",
+    "reason": "kode tidak ditemukan di judul_training"
+  },
+  {
+    "liniBisnis": "Mining",
+    "rawEntry": "Sw-03",
+    "extractedKode": "SW-03",
+    "reason": "kode tidak ditemukan di judul_training"
+  },
+  {
+    "liniBisnis": "Mining",
+    "rawEntry": "SW-02",
+    "extractedKode": "SW-02",
+    "reason": "kode tidak ditemukan di judul_training"
+  },
+  {
+    "liniBisnis": "Mining",
+    "rawEntry": "EM-02B",
+    "extractedKode": "EM-02B",
+    "reason": "kode tidak ditemukan di judul_training"
+  },
+  {
+    "liniBisnis": "Mining",
+    "rawEntry": "WMMJ",
+    "reason": "tidak ada kode terdeteksi (di-skip)"
+  },
+  {
+    "liniBisnis": "Mining",
+    "rawEntry": "ET-03",
+    "extractedKode": "ET-03",
+    "reason": "kode tidak ditemukan di judul_training"
+  },
+  {
+    "liniBisnis": "Mining",
+    "rawEntry": "ET-02",
+    "extractedKode": "ET-02",
+    "reason": "kode tidak ditemukan di judul_training"
+  },
+  {
+    "liniBisnis": "Listrik",
+    "rawEntry": "EMS-02",
+    "extractedKode": "EMS-02",
+    "reason": "kode tidak ditemukan di judul_training"
+  },
+  {
+    "liniBisnis": "Listrik",
+    "rawEntry": "EMS-03 (+)",
+    "extractedKode": "EMS-03",
+    "reason": "kode tidak ditemukan di judul_training"
+  },
+  {
+    "liniBisnis": "Listrik",
+    "rawEntry": "EMS-01",
+    "extractedKode": "EMS-01",
+    "reason": "kode tidak ditemukan di judul_training"
+  },
+  {
+    "liniBisnis": "Listrik",
+    "rawEntry": "EMS-03",
+    "extractedKode": "EMS-03",
+    "reason": "kode tidak ditemukan di judul_training"
+  },
+  {
+    "liniBisnis": "Listrik",
+    "rawEntry": "EMS-04",
+    "extractedKode": "EMS-04",
+    "reason": "kode tidak ditemukan di judul_training"
+  },
+  {
+    "liniBisnis": "Listrik",
+    "rawEntry": "EMS-05 (+)",
+    "extractedKode": "EMS-05",
+    "reason": "kode tidak ditemukan di judul_training"
+  },
+  {
+    "liniBisnis": "Listrik",
+    "rawEntry": "EMS-03(+)",
+    "extractedKode": "EMS-03",
+    "reason": "kode tidak ditemukan di judul_training"
+  },
+  {
+    "liniBisnis": "Listrik",
+    "rawEntry": "EMS-06",
+    "extractedKode": "EMS-06",
+    "reason": "kode tidak ditemukan di judul_training"
+  },
+  {
+    "liniBisnis": "Listrik",
+    "rawEntry": "CP-01",
+    "extractedKode": "CP-01",
+    "reason": "kode tidak ditemukan di judul_training"
+  },
+  {
+    "liniBisnis": "Listrik",
+    "rawEntry": "KONVERSI",
+    "reason": "tidak ada kode terdeteksi (di-skip)"
+  },
+  {
+    "liniBisnis": "Listrik",
+    "rawEntry": "EMS-03 (2-0-06)-KONVERSI",
+    "extractedKode": "EMS-03",
+    "reason": "kode tidak ditemukan di judul_training"
+  },
+  {
+    "liniBisnis": "Listrik",
+    "rawEntry": "EMA",
+    "reason": "tidak ada kode terdeteksi (di-skip)"
+  },
+  {
+    "liniBisnis": "Listrik",
+    "rawEntry": "CP-03",
+    "extractedKode": "CP-03",
+    "reason": "kode tidak ditemukan di judul_training"
+  },
+  {
+    "liniBisnis": "Listrik",
+    "rawEntry": "EMS-05",
+    "extractedKode": "EMS-05",
+    "reason": "kode tidak ditemukan di judul_training"
+  },
+  {
+    "liniBisnis": "Listrik",
+    "rawEntry": "CP-04",
+    "extractedKode": "CP-04",
+    "reason": "kode tidak ditemukan di judul_training"
+  },
+  {
+    "liniBisnis": "Listrik",
+    "rawEntry": "Cp-04",
+    "extractedKode": "CP-04",
+    "reason": "kode tidak ditemukan di judul_training"
+  },
+  {
+    "liniBisnis": "Listrik",
+    "rawEntry": "Ems-02",
+    "extractedKode": "EMS-02",
+    "reason": "kode tidak ditemukan di judul_training"
+  },
+  {
+    "liniBisnis": "Listrik",
+    "rawEntry": "SW-02",
+    "extractedKode": "SW-02",
+    "reason": "kode tidak ditemukan di judul_training"
+  },
+  {
+    "liniBisnis": "Listrik",
+    "rawEntry": "EM-02B",
+    "extractedKode": "EM-02B",
+    "reason": "kode tidak ditemukan di judul_training"
+  },
+  {
+    "liniBisnis": "Listrik",
+    "rawEntry": "ET-01",
+    "extractedKode": "ET-01",
+    "reason": "kode tidak ditemukan di judul_training"
+  },
+  {
+    "liniBisnis": "Listrik",
+    "rawEntry": "ET-02",
+    "extractedKode": "ET-02",
+    "reason": "kode tidak ditemukan di judul_training"
+  },
+  {
+    "liniBisnis": "Migas",
+    "rawEntry": "CP-01",
+    "extractedKode": "CP-01",
+    "reason": "kode tidak ditemukan di judul_training"
+  },
+  {
+    "liniBisnis": "Migas",
+    "rawEntry": "EMS-01",
+    "extractedKode": "EMS-01",
+    "reason": "kode tidak ditemukan di judul_training"
+  },
+  {
+    "liniBisnis": "Migas",
+    "rawEntry": "EMS-02",
+    "extractedKode": "EMS-02",
+    "reason": "kode tidak ditemukan di judul_training"
+  },
+  {
+    "liniBisnis": "Migas",
+    "rawEntry": "EMS-03",
+    "extractedKode": "EMS-03",
+    "reason": "kode tidak ditemukan di judul_training"
+  },
+  {
+    "liniBisnis": "Migas",
+    "rawEntry": "EMS-03 (+)",
+    "extractedKode": "EMS-03",
+    "reason": "kode tidak ditemukan di judul_training"
+  },
+  {
+    "liniBisnis": "Migas",
+    "rawEntry": "EMS-04 (+)",
+    "extractedKode": "EMS-04",
+    "reason": "kode tidak ditemukan di judul_training"
+  },
+  {
+    "liniBisnis": "Migas",
+    "rawEntry": "EMS-04",
+    "extractedKode": "EMS-04",
+    "reason": "kode tidak ditemukan di judul_training"
+  },
+  {
+    "liniBisnis": "Migas",
+    "rawEntry": "EMS-03(+)",
+    "extractedKode": "EMS-03",
+    "reason": "kode tidak ditemukan di judul_training"
+  },
+  {
+    "liniBisnis": "Migas",
+    "rawEntry": "EMS-03(+)",
+    "extractedKode": "EMS-03",
+    "reason": "kode tidak ditemukan di judul_training"
+  },
+  {
+    "liniBisnis": "Migas",
+    "rawEntry": "EMS-01",
+    "extractedKode": "EMS-01",
+    "reason": "kode tidak ditemukan di judul_training"
+  },
+  {
+    "liniBisnis": "Migas",
+    "rawEntry": "EMS-03(+)",
+    "extractedKode": "EMS-03",
+    "reason": "kode tidak ditemukan di judul_training"
+  },
+  {
+    "liniBisnis": "Migas",
+    "rawEntry": "EMS-01",
+    "extractedKode": "EMS-01",
+    "reason": "kode tidak ditemukan di judul_training"
+  },
+  {
+    "liniBisnis": "Migas",
+    "rawEntry": "EMS-03(+)",
+    "extractedKode": "EMS-03",
+    "reason": "kode tidak ditemukan di judul_training"
+  },
+  {
+    "liniBisnis": "Migas",
+    "rawEntry": "EMS-01",
+    "extractedKode": "EMS-01",
+    "reason": "kode tidak ditemukan di judul_training"
+  },
+  {
+    "liniBisnis": "Migas",
+    "rawEntry": "EMS-03(+)",
+    "extractedKode": "EMS-03",
+    "reason": "kode tidak ditemukan di judul_training"
+  },
+  {
+    "liniBisnis": "Migas",
+    "rawEntry": "EMS-01",
+    "extractedKode": "EMS-01",
+    "reason": "kode tidak ditemukan di judul_training"
+  },
+  {
+    "liniBisnis": "Migas",
+    "rawEntry": "EMS-03(+)",
+    "extractedKode": "EMS-03",
+    "reason": "kode tidak ditemukan di judul_training"
+  },
+  {
+    "liniBisnis": "Migas",
+    "rawEntry": "EMS-01",
+    "extractedKode": "EMS-01",
+    "reason": "kode tidak ditemukan di judul_training"
+  },
+  {
+    "liniBisnis": "Migas",
+    "rawEntry": "EMS-03(+)",
+    "extractedKode": "EMS-03",
+    "reason": "kode tidak ditemukan di judul_training"
+  },
+  {
+    "liniBisnis": "Migas",
+    "rawEntry": "EMS-01",
+    "extractedKode": "EMS-01",
+    "reason": "kode tidak ditemukan di judul_training"
+  },
+  {
+    "liniBisnis": "Migas",
+    "rawEntry": "EMS-03(+)",
+    "extractedKode": "EMS-03",
+    "reason": "kode tidak ditemukan di judul_training"
+  },
+  {
+    "liniBisnis": "Migas",
+    "rawEntry": "EMS-01",
+    "extractedKode": "EMS-01",
+    "reason": "kode tidak ditemukan di judul_training"
+  },
+  {
+    "liniBisnis": "Migas",
+    "rawEntry": "EMS-03(+)",
+    "extractedKode": "EMS-03",
+    "reason": "kode tidak ditemukan di judul_training"
+  },
+  {
+    "liniBisnis": "Migas",
+    "rawEntry": "EMS-01",
+    "extractedKode": "EMS-01",
+    "reason": "kode tidak ditemukan di judul_training"
+  },
+  {
+    "liniBisnis": "Migas",
+    "rawEntry": "EMS-03(+)",
+    "extractedKode": "EMS-03",
+    "reason": "kode tidak ditemukan di judul_training"
+  },
+  {
+    "liniBisnis": "Migas",
+    "rawEntry": "EMS-01",
+    "extractedKode": "EMS-01",
+    "reason": "kode tidak ditemukan di judul_training"
+  },
+  {
+    "liniBisnis": "Migas",
+    "rawEntry": "EMS-03(+)",
+    "extractedKode": "EMS-03",
+    "reason": "kode tidak ditemukan di judul_training"
+  },
+  {
+    "liniBisnis": "Migas",
+    "rawEntry": "EMS-01",
+    "extractedKode": "EMS-01",
+    "reason": "kode tidak ditemukan di judul_training"
+  },
+  {
+    "liniBisnis": "Migas",
+    "rawEntry": "EMS-03(+)",
+    "extractedKode": "EMS-03",
+    "reason": "kode tidak ditemukan di judul_training"
+  },
+  {
+    "liniBisnis": "Migas",
+    "rawEntry": "EMS-01",
+    "extractedKode": "EMS-01",
+    "reason": "kode tidak ditemukan di judul_training"
+  },
+  {
+    "liniBisnis": "Migas",
+    "rawEntry": "EMS-03(+)",
+    "extractedKode": "EMS-03",
+    "reason": "kode tidak ditemukan di judul_training"
+  },
+  {
+    "liniBisnis": "Migas",
+    "rawEntry": "EMS-01",
+    "extractedKode": "EMS-01",
+    "reason": "kode tidak ditemukan di judul_training"
+  },
+  {
+    "liniBisnis": "Migas",
+    "rawEntry": "EMS-03(+)",
+    "extractedKode": "EMS-03",
+    "reason": "kode tidak ditemukan di judul_training"
+  },
+  {
+    "liniBisnis": "Migas",
+    "rawEntry": "EMS-01",
+    "extractedKode": "EMS-01",
+    "reason": "kode tidak ditemukan di judul_training"
+  },
+  {
+    "liniBisnis": "Migas",
+    "rawEntry": "EMS-03(+)",
+    "extractedKode": "EMS-03",
+    "reason": "kode tidak ditemukan di judul_training"
+  },
+  {
+    "liniBisnis": "Migas",
+    "rawEntry": "EMS-01",
+    "extractedKode": "EMS-01",
+    "reason": "kode tidak ditemukan di judul_training"
+  },
+  {
+    "liniBisnis": "Migas",
+    "rawEntry": "EMS-03(+)",
+    "extractedKode": "EMS-03",
+    "reason": "kode tidak ditemukan di judul_training"
+  },
+  {
+    "liniBisnis": "Migas",
+    "rawEntry": "EMS-01",
+    "extractedKode": "EMS-01",
+    "reason": "kode tidak ditemukan di judul_training"
+  },
+  {
+    "liniBisnis": "Migas",
+    "rawEntry": "EMS-03(+)",
+    "extractedKode": "EMS-03",
+    "reason": "kode tidak ditemukan di judul_training"
+  },
+  {
+    "liniBisnis": "Migas",
+    "rawEntry": "EMS-01",
+    "extractedKode": "EMS-01",
+    "reason": "kode tidak ditemukan di judul_training"
+  },
+  {
+    "liniBisnis": "Migas",
+    "rawEntry": "EMS-03(+)",
+    "extractedKode": "EMS-03",
+    "reason": "kode tidak ditemukan di judul_training"
+  },
+  {
+    "liniBisnis": "Migas",
+    "rawEntry": "EMS-01",
+    "extractedKode": "EMS-01",
+    "reason": "kode tidak ditemukan di judul_training"
+  },
+  {
+    "liniBisnis": "Migas",
+    "rawEntry": "EMS-06",
+    "extractedKode": "EMS-06",
+    "reason": "kode tidak ditemukan di judul_training"
+  },
+  {
+    "liniBisnis": "Migas",
+    "rawEntry": "EMS-05 (+)",
+    "extractedKode": "EMS-05",
+    "reason": "kode tidak ditemukan di judul_training"
+  },
+  {
+    "liniBisnis": "Migas",
+    "rawEntry": "KONVERSI",
+    "reason": "tidak ada kode terdeteksi (di-skip)"
+  },
+  {
+    "liniBisnis": "Migas",
+    "rawEntry": "EMS-03 (2-0-06)-KONVERSI",
+    "extractedKode": "EMS-03",
+    "reason": "kode tidak ditemukan di judul_training"
+  },
+  {
+    "liniBisnis": "Migas",
+    "rawEntry": "CP-03",
+    "extractedKode": "CP-03",
+    "reason": "kode tidak ditemukan di judul_training"
+  },
+  {
+    "liniBisnis": "Migas",
+    "rawEntry": "CP-04",
+    "extractedKode": "CP-04",
+    "reason": "kode tidak ditemukan di judul_training"
+  },
+  {
+    "liniBisnis": "Migas",
+    "rawEntry": "SW-01",
+    "extractedKode": "SW-01",
+    "reason": "kode tidak ditemukan di judul_training"
+  },
+  {
+    "liniBisnis": "Migas",
+    "rawEntry": "EMS-05",
+    "extractedKode": "EMS-05",
+    "reason": "kode tidak ditemukan di judul_training"
+  },
+  {
+    "liniBisnis": "Migas",
+    "rawEntry": "SW-02",
+    "extractedKode": "SW-02",
+    "reason": "kode tidak ditemukan di judul_training"
+  },
+  {
+    "liniBisnis": "Migas",
+    "rawEntry": "Cp-04",
+    "extractedKode": "CP-04",
+    "reason": "kode tidak ditemukan di judul_training"
+  },
+  {
+    "liniBisnis": "Migas",
+    "rawEntry": "SW-03",
+    "extractedKode": "SW-03",
+    "reason": "kode tidak ditemukan di judul_training"
+  },
+  {
+    "liniBisnis": "Migas",
+    "rawEntry": "EM12 (EM-01, EM-02)",
+    "extractedKode": "EM-12",
+    "reason": "kode tidak ditemukan di judul_training"
+  },
+  {
+    "liniBisnis": "Migas",
+    "rawEntry": "WMMJ",
+    "reason": "tidak ada kode terdeteksi (di-skip)"
+  },
+  {
+    "liniBisnis": "Migas",
+    "rawEntry": "GP-01",
+    "extractedKode": "GP-01",
+    "reason": "kode tidak ditemukan di judul_training"
+  },
+  {
+    "liniBisnis": "Migas",
+    "rawEntry": "ET-01",
+    "extractedKode": "ET-01",
+    "reason": "kode tidak ditemukan di judul_training"
+  },
+  {
+    "liniBisnis": "Migas",
+    "rawEntry": "ET-03",
+    "extractedKode": "ET-03",
+    "reason": "kode tidak ditemukan di judul_training"
+  },
+  {
+    "liniBisnis": "Migas",
+    "rawEntry": "HAZ",
+    "reason": "tidak ada kode terdeteksi (di-skip)"
+  },
+  {
+    "liniBisnis": "Migas",
+    "rawEntry": "ET-02",
+    "extractedKode": "ET-02",
+    "reason": "kode tidak ditemukan di judul_training"
+  },
+  {
+    "liniBisnis": "Plantation & HTI",
+    "rawEntry": "EMS-02",
+    "extractedKode": "EMS-02",
+    "reason": "kode tidak ditemukan di judul_training"
+  },
+  {
+    "liniBisnis": "Plantation & HTI",
+    "rawEntry": "EMS-03",
+    "extractedKode": "EMS-03",
+    "reason": "kode tidak ditemukan di judul_training"
+  },
+  {
+    "liniBisnis": "Plantation & HTI",
+    "rawEntry": "EMS-01",
+    "extractedKode": "EMS-01",
+    "reason": "kode tidak ditemukan di judul_training"
+  },
+  {
+    "liniBisnis": "Plantation & HTI",
+    "rawEntry": "CP-01",
+    "extractedKode": "CP-01",
+    "reason": "kode tidak ditemukan di judul_training"
+  },
+  {
+    "liniBisnis": "Plantation & HTI",
+    "rawEntry": "KONVERSI",
+    "reason": "tidak ada kode terdeteksi (di-skip)"
+  },
+  {
+    "liniBisnis": "Plantation & HTI",
+    "rawEntry": "EMA",
+    "reason": "tidak ada kode terdeteksi (di-skip)"
+  },
+  {
+    "liniBisnis": "Plantation & HTI",
+    "rawEntry": "EMS-05",
+    "extractedKode": "EMS-05",
+    "reason": "kode tidak ditemukan di judul_training"
+  },
+  {
+    "liniBisnis": "Plantation & HTI",
+    "rawEntry": "SW-01",
+    "extractedKode": "SW-01",
+    "reason": "kode tidak ditemukan di judul_training"
+  },
+  {
+    "liniBisnis": "Plantation & HTI",
+    "rawEntry": "ET-01",
+    "extractedKode": "ET-01",
+    "reason": "kode tidak ditemukan di judul_training"
+  },
+  {
+    "liniBisnis": "Plantation & HTI",
+    "rawEntry": "ET-02",
+    "extractedKode": "ET-02",
+    "reason": "kode tidak ditemukan di judul_training"
+  },
+  {
+    "liniBisnis": "Plantation & HTI",
+    "rawEntry": "ET-03",
+    "extractedKode": "ET-03",
+    "reason": "kode tidak ditemukan di judul_training"
+  },
+  {
+    "liniBisnis": "Otomotif",
+    "rawEntry": "EMS-02",
+    "extractedKode": "EMS-02",
+    "reason": "kode tidak ditemukan di judul_training"
+  },
+  {
+    "liniBisnis": "Otomotif",
+    "rawEntry": "EMS-01",
+    "extractedKode": "EMS-01",
+    "reason": "kode tidak ditemukan di judul_training"
+  },
+  {
+    "liniBisnis": "Otomotif",
+    "rawEntry": "EMS-03",
+    "extractedKode": "EMS-03",
+    "reason": "kode tidak ditemukan di judul_training"
+  },
+  {
+    "liniBisnis": "Otomotif",
+    "rawEntry": "EMS-03(+)",
+    "extractedKode": "EMS-03",
+    "reason": "kode tidak ditemukan di judul_training"
+  },
+  {
+    "liniBisnis": "Otomotif",
+    "rawEntry": "CP-01",
+    "extractedKode": "CP-01",
+    "reason": "kode tidak ditemukan di judul_training"
+  },
+  {
+    "liniBisnis": "Otomotif",
+    "rawEntry": "EMS-05 (+)",
+    "extractedKode": "EMS-05",
+    "reason": "kode tidak ditemukan di judul_training"
+  },
+  {
+    "liniBisnis": "Otomotif",
+    "rawEntry": "EMS-05",
+    "extractedKode": "EMS-05",
+    "reason": "kode tidak ditemukan di judul_training"
+  },
+  {
+    "liniBisnis": "Otomotif",
+    "rawEntry": "KONVERSI",
+    "reason": "tidak ada kode terdeteksi (di-skip)"
+  },
+  {
+    "liniBisnis": "Otomotif",
+    "rawEntry": "EMS-03 (2-0-06)-KONVERSI",
+    "extractedKode": "EMS-03",
+    "reason": "kode tidak ditemukan di judul_training"
+  },
+  {
+    "liniBisnis": "Otomotif",
+    "rawEntry": "EMA",
+    "reason": "tidak ada kode terdeteksi (di-skip)"
+  },
+  {
+    "liniBisnis": "Otomotif",
+    "rawEntry": "EMS-06",
+    "extractedKode": "EMS-06",
+    "reason": "kode tidak ditemukan di judul_training"
+  },
+  {
+    "liniBisnis": "Otomotif",
+    "rawEntry": "CP-03",
+    "extractedKode": "CP-03",
+    "reason": "kode tidak ditemukan di judul_training"
+  },
+  {
+    "liniBisnis": "Otomotif",
+    "rawEntry": "SW-01",
+    "extractedKode": "SW-01",
+    "reason": "kode tidak ditemukan di judul_training"
+  },
+  {
+    "liniBisnis": "Otomotif",
+    "rawEntry": "Ems-02",
+    "extractedKode": "EMS-02",
+    "reason": "kode tidak ditemukan di judul_training"
+  },
+  {
+    "liniBisnis": "Otomotif",
+    "rawEntry": "CP-04",
+    "extractedKode": "CP-04",
+    "reason": "kode tidak ditemukan di judul_training"
+  },
+  {
+    "liniBisnis": "Otomotif",
+    "rawEntry": "HAZSM",
+    "reason": "tidak ada kode terdeteksi (di-skip)"
+  },
+  {
+    "liniBisnis": "Otomotif",
+    "rawEntry": "WMTA",
+    "reason": "tidak ada kode terdeteksi (di-skip)"
+  },
+  {
+    "liniBisnis": "Otomotif",
+    "rawEntry": "EETA",
+    "reason": "tidak ada kode terdeteksi (di-skip)"
+  },
+  {
+    "liniBisnis": "Otomotif",
+    "rawEntry": "ET-02",
+    "extractedKode": "ET-02",
+    "reason": "kode tidak ditemukan di judul_training"
+  },
+  {
+    "liniBisnis": "Otomotif",
+    "rawEntry": "ET-O1",
+    "extractedKode": "O-1",
+    "reason": "kode tidak ditemukan di judul_training"
+  },
+  {
+    "liniBisnis": "Metal",
+    "rawEntry": "EMS-02",
+    "extractedKode": "EMS-02",
+    "reason": "kode tidak ditemukan di judul_training"
+  },
+  {
+    "liniBisnis": "Metal",
+    "rawEntry": "EMS-03",
+    "extractedKode": "EMS-03",
+    "reason": "kode tidak ditemukan di judul_training"
+  },
+  {
+    "liniBisnis": "Metal",
+    "rawEntry": "EMS-03(+)",
+    "extractedKode": "EMS-03",
+    "reason": "kode tidak ditemukan di judul_training"
+  },
+  {
+    "liniBisnis": "Metal",
+    "rawEntry": "EMS-06",
+    "extractedKode": "EMS-06",
+    "reason": "kode tidak ditemukan di judul_training"
+  },
+  {
+    "liniBisnis": "Metal",
+    "rawEntry": "EMS-04",
+    "extractedKode": "EMS-04",
+    "reason": "kode tidak ditemukan di judul_training"
+  },
+  {
+    "liniBisnis": "Metal",
+    "rawEntry": "CP-01",
+    "extractedKode": "CP-01",
+    "reason": "kode tidak ditemukan di judul_training"
+  },
+  {
+    "liniBisnis": "Metal",
+    "rawEntry": "EMS-04 (+)",
+    "extractedKode": "EMS-04",
+    "reason": "kode tidak ditemukan di judul_training"
+  },
+  {
+    "liniBisnis": "Metal",
+    "rawEntry": "EMS-01",
+    "extractedKode": "EMS-01",
+    "reason": "kode tidak ditemukan di judul_training"
+  },
+  {
+    "liniBisnis": "Metal",
+    "rawEntry": "KONVERSI",
+    "reason": "tidak ada kode terdeteksi (di-skip)"
+  },
+  {
+    "liniBisnis": "Metal",
+    "rawEntry": "CP-04",
+    "extractedKode": "CP-04",
+    "reason": "kode tidak ditemukan di judul_training"
+  },
+  {
+    "liniBisnis": "Metal",
+    "rawEntry": "CP-03",
+    "extractedKode": "CP-03",
+    "reason": "kode tidak ditemukan di judul_training"
+  },
+  {
+    "liniBisnis": "Metal",
+    "rawEntry": "Cp-04",
+    "extractedKode": "CP-04",
+    "reason": "kode tidak ditemukan di judul_training"
+  },
+  {
+    "liniBisnis": "Metal",
+    "rawEntry": "EMS-05",
+    "extractedKode": "EMS-05",
+    "reason": "kode tidak ditemukan di judul_training"
+  },
+  {
+    "liniBisnis": "Metal",
+    "rawEntry": "ET-01",
+    "extractedKode": "ET-01",
+    "reason": "kode tidak ditemukan di judul_training"
+  },
+  {
+    "liniBisnis": "Metal",
+    "rawEntry": "ET-03",
+    "extractedKode": "ET-03",
+    "reason": "kode tidak ditemukan di judul_training"
+  },
+  {
+    "liniBisnis": "Metal",
+    "rawEntry": "ET-02",
+    "extractedKode": "ET-02",
+    "reason": "kode tidak ditemukan di judul_training"
+  },
+  {
+    "liniBisnis": "Makanan/Minuman",
+    "rawEntry": "EMS-04 (+)",
+    "extractedKode": "EMS-04",
+    "reason": "kode tidak ditemukan di judul_training"
+  },
+  {
+    "liniBisnis": "Makanan/Minuman",
+    "rawEntry": "EMS-01",
+    "extractedKode": "EMS-01",
+    "reason": "kode tidak ditemukan di judul_training"
+  },
+  {
+    "liniBisnis": "Makanan/Minuman",
+    "rawEntry": "EMS-02",
+    "extractedKode": "EMS-02",
+    "reason": "kode tidak ditemukan di judul_training"
+  },
+  {
+    "liniBisnis": "Makanan/Minuman",
+    "rawEntry": "EMS-03",
+    "extractedKode": "EMS-03",
+    "reason": "kode tidak ditemukan di judul_training"
+  },
+  {
+    "liniBisnis": "Makanan/Minuman",
+    "rawEntry": "EMS-01",
+    "extractedKode": "EMS-01",
+    "reason": "kode tidak ditemukan di judul_training"
+  },
+  {
+    "liniBisnis": "Makanan/Minuman",
+    "rawEntry": "EMS-02",
+    "extractedKode": "EMS-02",
+    "reason": "kode tidak ditemukan di judul_training"
+  },
+  {
+    "liniBisnis": "Makanan/Minuman",
+    "rawEntry": "EMS-01",
+    "extractedKode": "EMS-01",
+    "reason": "kode tidak ditemukan di judul_training"
+  },
+  {
+    "liniBisnis": "Makanan/Minuman",
+    "rawEntry": "EMS-02",
+    "extractedKode": "EMS-02",
+    "reason": "kode tidak ditemukan di judul_training"
+  },
+  {
+    "liniBisnis": "Makanan/Minuman",
+    "rawEntry": "EMS-01",
+    "extractedKode": "EMS-01",
+    "reason": "kode tidak ditemukan di judul_training"
+  },
+  {
+    "liniBisnis": "Makanan/Minuman",
+    "rawEntry": "EMS-02",
+    "extractedKode": "EMS-02",
+    "reason": "kode tidak ditemukan di judul_training"
+  },
+  {
+    "liniBisnis": "Makanan/Minuman",
+    "rawEntry": "EMS-01",
+    "extractedKode": "EMS-01",
+    "reason": "kode tidak ditemukan di judul_training"
+  },
+  {
+    "liniBisnis": "Makanan/Minuman",
+    "rawEntry": "EMS-02",
+    "extractedKode": "EMS-02",
+    "reason": "kode tidak ditemukan di judul_training"
+  },
+  {
+    "liniBisnis": "Makanan/Minuman",
+    "rawEntry": "EMS-01",
+    "extractedKode": "EMS-01",
+    "reason": "kode tidak ditemukan di judul_training"
+  },
+  {
+    "liniBisnis": "Makanan/Minuman",
+    "rawEntry": "EMS-02",
+    "extractedKode": "EMS-02",
+    "reason": "kode tidak ditemukan di judul_training"
+  },
+  {
+    "liniBisnis": "Makanan/Minuman",
+    "rawEntry": "EMS-01",
+    "extractedKode": "EMS-01",
+    "reason": "kode tidak ditemukan di judul_training"
+  },
+  {
+    "liniBisnis": "Makanan/Minuman",
+    "rawEntry": "EMS-02",
+    "extractedKode": "EMS-02",
+    "reason": "kode tidak ditemukan di judul_training"
+  },
+  {
+    "liniBisnis": "Makanan/Minuman",
+    "rawEntry": "EMS-01",
+    "extractedKode": "EMS-01",
+    "reason": "kode tidak ditemukan di judul_training"
+  },
+  {
+    "liniBisnis": "Makanan/Minuman",
+    "rawEntry": "EMS-02",
+    "extractedKode": "EMS-02",
+    "reason": "kode tidak ditemukan di judul_training"
+  },
+  {
+    "liniBisnis": "Makanan/Minuman",
+    "rawEntry": "EMS-01",
+    "extractedKode": "EMS-01",
+    "reason": "kode tidak ditemukan di judul_training"
+  },
+  {
+    "liniBisnis": "Makanan/Minuman",
+    "rawEntry": "EMS-02",
+    "extractedKode": "EMS-02",
+    "reason": "kode tidak ditemukan di judul_training"
+  },
+  {
+    "liniBisnis": "Makanan/Minuman",
+    "rawEntry": "EMS-01",
+    "extractedKode": "EMS-01",
+    "reason": "kode tidak ditemukan di judul_training"
+  },
+  {
+    "liniBisnis": "Makanan/Minuman",
+    "rawEntry": "EMS-02",
+    "extractedKode": "EMS-02",
+    "reason": "kode tidak ditemukan di judul_training"
+  },
+  {
+    "liniBisnis": "Makanan/Minuman",
+    "rawEntry": "EMS-01",
+    "extractedKode": "EMS-01",
+    "reason": "kode tidak ditemukan di judul_training"
+  },
+  {
+    "liniBisnis": "Makanan/Minuman",
+    "rawEntry": "EMS-02",
+    "extractedKode": "EMS-02",
+    "reason": "kode tidak ditemukan di judul_training"
+  },
+  {
+    "liniBisnis": "Makanan/Minuman",
+    "rawEntry": "EMS-01",
+    "extractedKode": "EMS-01",
+    "reason": "kode tidak ditemukan di judul_training"
+  },
+  {
+    "liniBisnis": "Makanan/Minuman",
+    "rawEntry": "EMS-02",
+    "extractedKode": "EMS-02",
+    "reason": "kode tidak ditemukan di judul_training"
+  },
+  {
+    "liniBisnis": "Makanan/Minuman",
+    "rawEntry": "EMS-01",
+    "extractedKode": "EMS-01",
+    "reason": "kode tidak ditemukan di judul_training"
+  },
+  {
+    "liniBisnis": "Makanan/Minuman",
+    "rawEntry": "EMS-02",
+    "extractedKode": "EMS-02",
+    "reason": "kode tidak ditemukan di judul_training"
+  },
+  {
+    "liniBisnis": "Makanan/Minuman",
+    "rawEntry": "EMS-01",
+    "extractedKode": "EMS-01",
+    "reason": "kode tidak ditemukan di judul_training"
+  },
+  {
+    "liniBisnis": "Makanan/Minuman",
+    "rawEntry": "EMS-02",
+    "extractedKode": "EMS-02",
+    "reason": "kode tidak ditemukan di judul_training"
+  },
+  {
+    "liniBisnis": "Makanan/Minuman",
+    "rawEntry": "EMS-01",
+    "extractedKode": "EMS-01",
+    "reason": "kode tidak ditemukan di judul_training"
+  },
+  {
+    "liniBisnis": "Makanan/Minuman",
+    "rawEntry": "EMS-02",
+    "extractedKode": "EMS-02",
+    "reason": "kode tidak ditemukan di judul_training"
+  },
+  {
+    "liniBisnis": "Makanan/Minuman",
+    "rawEntry": "EMS-01",
+    "extractedKode": "EMS-01",
+    "reason": "kode tidak ditemukan di judul_training"
+  },
+  {
+    "liniBisnis": "Makanan/Minuman",
+    "rawEntry": "EMS-02",
+    "extractedKode": "EMS-02",
+    "reason": "kode tidak ditemukan di judul_training"
+  },
+  {
+    "liniBisnis": "Makanan/Minuman",
+    "rawEntry": "EMS-01",
+    "extractedKode": "EMS-01",
+    "reason": "kode tidak ditemukan di judul_training"
+  },
+  {
+    "liniBisnis": "Makanan/Minuman",
+    "rawEntry": "EMS-02",
+    "extractedKode": "EMS-02",
+    "reason": "kode tidak ditemukan di judul_training"
+  },
+  {
+    "liniBisnis": "Makanan/Minuman",
+    "rawEntry": "EMS-01",
+    "extractedKode": "EMS-01",
+    "reason": "kode tidak ditemukan di judul_training"
+  },
+  {
+    "liniBisnis": "Makanan/Minuman",
+    "rawEntry": "EMS-02",
+    "extractedKode": "EMS-02",
+    "reason": "kode tidak ditemukan di judul_training"
+  },
+  {
+    "liniBisnis": "Makanan/Minuman",
+    "rawEntry": "EMS-01",
+    "extractedKode": "EMS-01",
+    "reason": "kode tidak ditemukan di judul_training"
+  },
+  {
+    "liniBisnis": "Makanan/Minuman",
+    "rawEntry": "EMS-02",
+    "extractedKode": "EMS-02",
+    "reason": "kode tidak ditemukan di judul_training"
+  },
+  {
+    "liniBisnis": "Makanan/Minuman",
+    "rawEntry": "EMS-01",
+    "extractedKode": "EMS-01",
+    "reason": "kode tidak ditemukan di judul_training"
+  },
+  {
+    "liniBisnis": "Makanan/Minuman",
+    "rawEntry": "EMS-02",
+    "extractedKode": "EMS-02",
+    "reason": "kode tidak ditemukan di judul_training"
+  },
+  {
+    "liniBisnis": "Makanan/Minuman",
+    "rawEntry": "EMS-01",
+    "extractedKode": "EMS-01",
+    "reason": "kode tidak ditemukan di judul_training"
+  },
+  {
+    "liniBisnis": "Makanan/Minuman",
+    "rawEntry": "EMS-02",
+    "extractedKode": "EMS-02",
+    "reason": "kode tidak ditemukan di judul_training"
+  },
+  {
+    "liniBisnis": "Makanan/Minuman",
+    "rawEntry": "EMS-01",
+    "extractedKode": "EMS-01",
+    "reason": "kode tidak ditemukan di judul_training"
+  },
+  {
+    "liniBisnis": "Makanan/Minuman",
+    "rawEntry": "EMS-02",
+    "extractedKode": "EMS-02",
+    "reason": "kode tidak ditemukan di judul_training"
+  },
+  {
+    "liniBisnis": "Makanan/Minuman",
+    "rawEntry": "EMS-01",
+    "extractedKode": "EMS-01",
+    "reason": "kode tidak ditemukan di judul_training"
+  },
+  {
+    "liniBisnis": "Makanan/Minuman",
+    "rawEntry": "EMS-02",
+    "extractedKode": "EMS-02",
+    "reason": "kode tidak ditemukan di judul_training"
+  },
+  {
+    "liniBisnis": "Makanan/Minuman",
+    "rawEntry": "EMS-01",
+    "extractedKode": "EMS-01",
+    "reason": "kode tidak ditemukan di judul_training"
+  },
+  {
+    "liniBisnis": "Makanan/Minuman",
+    "rawEntry": "EMS-02",
+    "extractedKode": "EMS-02",
+    "reason": "kode tidak ditemukan di judul_training"
+  },
+  {
+    "liniBisnis": "Makanan/Minuman",
+    "rawEntry": "EMS-01",
+    "extractedKode": "EMS-01",
+    "reason": "kode tidak ditemukan di judul_training"
+  },
+  {
+    "liniBisnis": "Makanan/Minuman",
+    "rawEntry": "EMS-02",
+    "extractedKode": "EMS-02",
+    "reason": "kode tidak ditemukan di judul_training"
+  },
+  {
+    "liniBisnis": "Makanan/Minuman",
+    "rawEntry": "EMS-01",
+    "extractedKode": "EMS-01",
+    "reason": "kode tidak ditemukan di judul_training"
+  },
+  {
+    "liniBisnis": "Makanan/Minuman",
+    "rawEntry": "EMS-02",
+    "extractedKode": "EMS-02",
+    "reason": "kode tidak ditemukan di judul_training"
+  },
+  {
+    "liniBisnis": "Makanan/Minuman",
+    "rawEntry": "EMS-01",
+    "extractedKode": "EMS-01",
+    "reason": "kode tidak ditemukan di judul_training"
+  },
+  {
+    "liniBisnis": "Makanan/Minuman",
+    "rawEntry": "EMS-02",
+    "extractedKode": "EMS-02",
+    "reason": "kode tidak ditemukan di judul_training"
+  },
+  {
+    "liniBisnis": "Makanan/Minuman",
+    "rawEntry": "EMS-05 (+)",
+    "extractedKode": "EMS-05",
+    "reason": "kode tidak ditemukan di judul_training"
+  },
+  {
+    "liniBisnis": "Makanan/Minuman",
+    "rawEntry": "CP-01",
+    "extractedKode": "CP-01",
+    "reason": "kode tidak ditemukan di judul_training"
+  },
+  {
+    "liniBisnis": "Makanan/Minuman",
+    "rawEntry": "EMS-04",
+    "extractedKode": "EMS-04",
+    "reason": "kode tidak ditemukan di judul_training"
+  },
+  {
+    "liniBisnis": "Makanan/Minuman",
+    "rawEntry": "EMA",
+    "reason": "tidak ada kode terdeteksi (di-skip)"
+  },
+  {
+    "liniBisnis": "Makanan/Minuman",
+    "rawEntry": "EMS-05",
+    "extractedKode": "EMS-05",
+    "reason": "kode tidak ditemukan di judul_training"
+  },
+  {
+    "liniBisnis": "Makanan/Minuman",
+    "rawEntry": "CP-03",
+    "extractedKode": "CP-03",
+    "reason": "kode tidak ditemukan di judul_training"
+  },
+  {
+    "liniBisnis": "Makanan/Minuman",
+    "rawEntry": "EMS-06",
+    "extractedKode": "EMS-06",
+    "reason": "kode tidak ditemukan di judul_training"
+  },
+  {
+    "liniBisnis": "Makanan/Minuman",
+    "rawEntry": "EMS-05",
+    "extractedKode": "EMS-05",
+    "reason": "kode tidak ditemukan di judul_training"
+  },
+  {
+    "liniBisnis": "Makanan/Minuman",
+    "rawEntry": "EMS-05",
+    "extractedKode": "EMS-05",
+    "reason": "kode tidak ditemukan di judul_training"
+  },
+  {
+    "liniBisnis": "Makanan/Minuman",
+    "rawEntry": "EMS-05",
+    "extractedKode": "EMS-05",
+    "reason": "kode tidak ditemukan di judul_training"
+  },
+  {
+    "liniBisnis": "Makanan/Minuman",
+    "rawEntry": "EMS-05",
+    "extractedKode": "EMS-05",
+    "reason": "kode tidak ditemukan di judul_training"
+  },
+  {
+    "liniBisnis": "Makanan/Minuman",
+    "rawEntry": "EMS-05",
+    "extractedKode": "EMS-05",
+    "reason": "kode tidak ditemukan di judul_training"
+  },
+  {
+    "liniBisnis": "Makanan/Minuman",
+    "rawEntry": "EMS-05",
+    "extractedKode": "EMS-05",
+    "reason": "kode tidak ditemukan di judul_training"
+  },
+  {
+    "liniBisnis": "Makanan/Minuman",
+    "rawEntry": "EMS-05",
+    "extractedKode": "EMS-05",
+    "reason": "kode tidak ditemukan di judul_training"
+  },
+  {
+    "liniBisnis": "Makanan/Minuman",
+    "rawEntry": "EMS-05",
+    "extractedKode": "EMS-05",
+    "reason": "kode tidak ditemukan di judul_training"
+  },
+  {
+    "liniBisnis": "Makanan/Minuman",
+    "rawEntry": "SW-03",
+    "extractedKode": "SW-03",
+    "reason": "kode tidak ditemukan di judul_training"
+  },
+  {
+    "liniBisnis": "Makanan/Minuman",
+    "rawEntry": "SW-02",
+    "extractedKode": "SW-02",
+    "reason": "kode tidak ditemukan di judul_training"
+  },
+  {
+    "liniBisnis": "Makanan/Minuman",
+    "rawEntry": "CP-04",
+    "extractedKode": "CP-04",
+    "reason": "kode tidak ditemukan di judul_training"
+  },
+  {
+    "liniBisnis": "Makanan/Minuman",
+    "rawEntry": "EM-02B",
+    "extractedKode": "EM-02B",
+    "reason": "kode tidak ditemukan di judul_training"
+  },
+  {
+    "liniBisnis": "Makanan/Minuman",
+    "rawEntry": "ET-01",
+    "extractedKode": "ET-01",
+    "reason": "kode tidak ditemukan di judul_training"
+  },
+  {
+    "liniBisnis": "Makanan/Minuman",
+    "rawEntry": "HAZ",
+    "reason": "tidak ada kode terdeteksi (di-skip)"
+  },
+  {
+    "liniBisnis": "Makanan/Minuman",
+    "rawEntry": "ET-02",
+    "extractedKode": "ET-02",
+    "reason": "kode tidak ditemukan di judul_training"
+  },
+  {
+    "liniBisnis": "Makanan/Minuman",
+    "rawEntry": "ET-03",
+    "extractedKode": "ET-03",
+    "reason": "kode tidak ditemukan di judul_training"
+  },
+  {
+    "liniBisnis": "Semen/Kramik",
+    "rawEntry": "EMS-03",
+    "extractedKode": "EMS-03",
+    "reason": "kode tidak ditemukan di judul_training"
+  },
+  {
+    "liniBisnis": "Semen/Kramik",
+    "rawEntry": "EMS-03(+)",
+    "extractedKode": "EMS-03",
+    "reason": "kode tidak ditemukan di judul_training"
+  },
+  {
+    "liniBisnis": "Semen/Kramik",
+    "rawEntry": "EMS-04 (+)",
+    "extractedKode": "EMS-04",
+    "reason": "kode tidak ditemukan di judul_training"
+  },
+  {
+    "liniBisnis": "Semen/Kramik",
+    "rawEntry": "EMS-05",
+    "extractedKode": "EMS-05",
+    "reason": "kode tidak ditemukan di judul_training"
+  },
+  {
+    "liniBisnis": "Semen/Kramik",
+    "rawEntry": "CP-04",
+    "extractedKode": "CP-04",
+    "reason": "kode tidak ditemukan di judul_training"
+  },
+  {
+    "liniBisnis": "Semen/Kramik",
+    "rawEntry": "EM-02B",
+    "extractedKode": "EM-02B",
+    "reason": "kode tidak ditemukan di judul_training"
+  },
+  {
+    "liniBisnis": "Semen/Kramik",
+    "rawEntry": "ET-03",
+    "extractedKode": "ET-03",
+    "reason": "kode tidak ditemukan di judul_training"
+  },
+  {
+    "liniBisnis": "Elektronika",
+    "rawEntry": "CP-01",
+    "extractedKode": "CP-01",
+    "reason": "kode tidak ditemukan di judul_training"
+  },
+  {
+    "liniBisnis": "Elektronika",
+    "rawEntry": "EMS-03 (+)",
+    "extractedKode": "EMS-03",
+    "reason": "kode tidak ditemukan di judul_training"
+  },
+  {
+    "liniBisnis": "Elektronika",
+    "rawEntry": "EMS-03",
+    "extractedKode": "EMS-03",
+    "reason": "kode tidak ditemukan di judul_training"
+  },
+  {
+    "liniBisnis": "Elektronika",
+    "rawEntry": "EMS-05 (+)",
+    "extractedKode": "EMS-05",
+    "reason": "kode tidak ditemukan di judul_training"
+  },
+  {
+    "liniBisnis": "Elektronika",
+    "rawEntry": "EMS-01",
+    "extractedKode": "EMS-01",
+    "reason": "kode tidak ditemukan di judul_training"
+  },
+  {
+    "liniBisnis": "Elektronika",
+    "rawEntry": "EMS-02",
+    "extractedKode": "EMS-02",
+    "reason": "kode tidak ditemukan di judul_training"
+  },
+  {
+    "liniBisnis": "Elektronika",
+    "rawEntry": "EMS-03(+)",
+    "extractedKode": "EMS-03",
+    "reason": "kode tidak ditemukan di judul_training"
+  },
+  {
+    "liniBisnis": "Elektronika",
+    "rawEntry": "EMS-06",
+    "extractedKode": "EMS-06",
+    "reason": "kode tidak ditemukan di judul_training"
+  },
+  {
+    "liniBisnis": "Elektronika",
+    "rawEntry": "tak terdeteksi",
+    "reason": "tidak ada kode terdeteksi (di-skip)"
+  },
+  {
+    "liniBisnis": "Elektronika",
+    "rawEntry": "EMS-04",
+    "extractedKode": "EMS-04",
+    "reason": "kode tidak ditemukan di judul_training"
+  },
+  {
+    "liniBisnis": "Elektronika",
+    "rawEntry": "KONVERSI",
+    "reason": "tidak ada kode terdeteksi (di-skip)"
+  },
+  {
+    "liniBisnis": "Elektronika",
+    "rawEntry": "EMS-03 (2-0-06)-KONVERSI",
+    "extractedKode": "EMS-03",
+    "reason": "kode tidak ditemukan di judul_training"
+  },
+  {
+    "liniBisnis": "Elektronika",
+    "rawEntry": "CP-03",
+    "extractedKode": "CP-03",
+    "reason": "kode tidak ditemukan di judul_training"
+  },
+  {
+    "liniBisnis": "Elektronika",
+    "rawEntry": "SS-06/EMS-06",
+    "extractedKode": "SS-06",
+    "reason": "kode tidak ditemukan di judul_training"
+  },
+  {
+    "liniBisnis": "Elektronika",
+    "rawEntry": "SS-06/EMS-06",
+    "extractedKode": "EMS-06",
+    "reason": "kode tidak ditemukan di judul_training"
+  },
+  {
+    "liniBisnis": "Elektronika",
+    "rawEntry": "ET-02",
+    "extractedKode": "ET-02",
+    "reason": "kode tidak ditemukan di judul_training"
+  },
+  {
+    "liniBisnis": "Elektronika",
+    "rawEntry": "ET-03",
+    "extractedKode": "ET-03",
+    "reason": "kode tidak ditemukan di judul_training"
+  },
+  {
+    "liniBisnis": "Pulp & Paper",
+    "rawEntry": "EMS-04",
+    "extractedKode": "EMS-04",
+    "reason": "kode tidak ditemukan di judul_training"
+  },
+  {
+    "liniBisnis": "Pulp & Paper",
+    "rawEntry": "CP-01",
+    "extractedKode": "CP-01",
+    "reason": "kode tidak ditemukan di judul_training"
+  },
+  {
+    "liniBisnis": "Pulp & Paper",
+    "rawEntry": "EMS-05 (+)",
+    "extractedKode": "EMS-05",
+    "reason": "kode tidak ditemukan di judul_training"
+  },
+  {
+    "liniBisnis": "Pulp & Paper",
+    "rawEntry": "EMS-03(+)",
+    "extractedKode": "EMS-03",
+    "reason": "kode tidak ditemukan di judul_training"
+  },
+  {
+    "liniBisnis": "Pulp & Paper",
+    "rawEntry": "EMS-02",
+    "extractedKode": "EMS-02",
+    "reason": "kode tidak ditemukan di judul_training"
+  },
+  {
+    "liniBisnis": "Pulp & Paper",
+    "rawEntry": "CP-03",
+    "extractedKode": "CP-03",
+    "reason": "kode tidak ditemukan di judul_training"
+  },
+  {
+    "liniBisnis": "Pulp & Paper",
+    "rawEntry": "SW-01",
+    "extractedKode": "SW-01",
+    "reason": "kode tidak ditemukan di judul_training"
+  },
+  {
+    "liniBisnis": "Pulp & Paper",
+    "rawEntry": "Ems-04",
+    "extractedKode": "EMS-04",
+    "reason": "kode tidak ditemukan di judul_training"
+  },
+  {
+    "liniBisnis": "Pulp & Paper",
+    "rawEntry": "Sw-03",
+    "extractedKode": "SW-03",
+    "reason": "kode tidak ditemukan di judul_training"
+  },
+  {
+    "liniBisnis": "Tekstil",
+    "rawEntry": "EMS-01",
+    "extractedKode": "EMS-01",
+    "reason": "kode tidak ditemukan di judul_training"
+  },
+  {
+    "liniBisnis": "Tekstil",
+    "rawEntry": "EMS-02",
+    "extractedKode": "EMS-02",
+    "reason": "kode tidak ditemukan di judul_training"
+  },
+  {
+    "liniBisnis": "Tekstil",
+    "rawEntry": "EMS-03",
+    "extractedKode": "EMS-03",
+    "reason": "kode tidak ditemukan di judul_training"
+  },
+  {
+    "liniBisnis": "Tekstil",
+    "rawEntry": "EMS-03 (+)",
+    "extractedKode": "EMS-03",
+    "reason": "kode tidak ditemukan di judul_training"
+  },
+  {
+    "liniBisnis": "Tekstil",
+    "rawEntry": "EMS-04 (+)",
+    "extractedKode": "EMS-04",
+    "reason": "kode tidak ditemukan di judul_training"
+  },
+  {
+    "liniBisnis": "Tekstil",
+    "rawEntry": "EMS-05 (+)",
+    "extractedKode": "EMS-05",
+    "reason": "kode tidak ditemukan di judul_training"
+  },
+  {
+    "liniBisnis": "Tekstil",
+    "rawEntry": "EMS-03(+)",
+    "extractedKode": "EMS-03",
+    "reason": "kode tidak ditemukan di judul_training"
+  },
+  {
+    "liniBisnis": "Tekstil",
+    "rawEntry": "EMS-06",
+    "extractedKode": "EMS-06",
+    "reason": "kode tidak ditemukan di judul_training"
+  },
+  {
+    "liniBisnis": "Tekstil",
+    "rawEntry": "EMA",
+    "reason": "tidak ada kode terdeteksi (di-skip)"
+  },
+  {
+    "liniBisnis": "Tekstil",
+    "rawEntry": "CP-03",
+    "extractedKode": "CP-03",
+    "reason": "kode tidak ditemukan di judul_training"
+  },
+  {
+    "liniBisnis": "Tekstil",
+    "rawEntry": "CP-01",
+    "extractedKode": "CP-01",
+    "reason": "kode tidak ditemukan di judul_training"
+  },
+  {
+    "liniBisnis": "Tekstil",
+    "rawEntry": "Ems-01",
+    "extractedKode": "EMS-01",
+    "reason": "kode tidak ditemukan di judul_training"
+  },
+  {
+    "liniBisnis": "Tekstil",
+    "rawEntry": "ET-01",
+    "extractedKode": "ET-01",
+    "reason": "kode tidak ditemukan di judul_training"
+  },
+  {
+    "liniBisnis": "Tekstil",
+    "rawEntry": "ET-02",
+    "extractedKode": "ET-02",
+    "reason": "kode tidak ditemukan di judul_training"
+  },
+  {
+    "liniBisnis": "Manufacturing",
+    "rawEntry": "CP-01",
+    "extractedKode": "CP-01",
+    "reason": "kode tidak ditemukan di judul_training"
+  },
+  {
+    "liniBisnis": "Manufacturing",
+    "rawEntry": "CP-03",
+    "extractedKode": "CP-03",
+    "reason": "kode tidak ditemukan di judul_training"
+  },
+  {
+    "liniBisnis": "Manufacturing",
+    "rawEntry": "CP-04",
+    "extractedKode": "CP-04",
+    "reason": "kode tidak ditemukan di judul_training"
+  },
+  {
+    "liniBisnis": "Manufacturing",
+    "rawEntry": "ET-02",
+    "extractedKode": "ET-02",
+    "reason": "kode tidak ditemukan di judul_training"
+  },
+  {
+    "liniBisnis": "Kimia",
+    "rawEntry": "CP-01",
+    "extractedKode": "CP-01",
+    "reason": "kode tidak ditemukan di judul_training"
+  },
+  {
+    "liniBisnis": "Kimia",
+    "rawEntry": "EMS-02",
+    "extractedKode": "EMS-02",
+    "reason": "kode tidak ditemukan di judul_training"
+  },
+  {
+    "liniBisnis": "Kimia",
+    "rawEntry": "EMA",
+    "reason": "tidak ada kode terdeteksi (di-skip)"
+  },
+  {
+    "liniBisnis": "Kimia",
+    "rawEntry": "EMS-03 (2-0-06)-KONVERSI",
+    "extractedKode": "EMS-03",
+    "reason": "kode tidak ditemukan di judul_training"
+  },
+  {
+    "liniBisnis": "Kimia",
+    "rawEntry": "Ems-04",
+    "extractedKode": "EMS-04",
+    "reason": "kode tidak ditemukan di judul_training"
+  },
+  {
+    "liniBisnis": "Kimia",
+    "rawEntry": "CP-03",
+    "extractedKode": "CP-03",
+    "reason": "kode tidak ditemukan di judul_training"
+  },
+  {
+    "liniBisnis": "EPC & Property",
+    "rawEntry": "EMS-01",
+    "extractedKode": "EMS-01",
+    "reason": "kode tidak ditemukan di judul_training"
+  },
+  {
+    "liniBisnis": "EPC & Property",
+    "rawEntry": "-",
+    "reason": "tidak ada kode terdeteksi (di-skip)"
+  },
+  {
+    "liniBisnis": "EPC & Property",
+    "rawEntry": "SW-01",
+    "extractedKode": "SW-01",
+    "reason": "kode tidak ditemukan di judul_training"
+  },
+  {
+    "liniBisnis": "EPC & Property",
+    "rawEntry": "EMS-02",
+    "extractedKode": "EMS-02",
+    "reason": "kode tidak ditemukan di judul_training"
+  },
+  {
+    "liniBisnis": "EPC & Property",
+    "rawEntry": "ET-02",
+    "extractedKode": "ET-02",
+    "reason": "kode tidak ditemukan di judul_training"
+  },
+  {
+    "liniBisnis": "Laut",
+    "rawEntry": "EMS-01",
+    "extractedKode": "EMS-01",
+    "reason": "kode tidak ditemukan di judul_training"
+  },
+  {
+    "liniBisnis": "Laut",
+    "rawEntry": "EMS-03(+)",
+    "extractedKode": "EMS-03",
+    "reason": "kode tidak ditemukan di judul_training"
+  },
+  {
+    "liniBisnis": "Laut",
+    "rawEntry": "EMS-05 (+)",
+    "extractedKode": "EMS-05",
+    "reason": "kode tidak ditemukan di judul_training"
+  },
+  {
+    "liniBisnis": "Laut",
+    "rawEntry": "EMS-02",
+    "extractedKode": "EMS-02",
+    "reason": "kode tidak ditemukan di judul_training"
+  },
+  {
+    "liniBisnis": "Laut",
+    "rawEntry": "CP-04",
+    "extractedKode": "CP-04",
+    "reason": "kode tidak ditemukan di judul_training"
+  },
+  {
+    "liniBisnis": "Trading - Mall - Kawasan",
+    "rawEntry": "EMS-06",
+    "extractedKode": "EMS-06",
+    "reason": "kode tidak ditemukan di judul_training"
+  },
+  {
+    "liniBisnis": "Trading - Mall - Kawasan",
+    "rawEntry": "EMS-01",
+    "extractedKode": "EMS-01",
+    "reason": "kode tidak ditemukan di judul_training"
+  },
+  {
+    "liniBisnis": "Trading - Mall - Kawasan",
+    "rawEntry": "EMS-02",
+    "extractedKode": "EMS-02",
+    "reason": "kode tidak ditemukan di judul_training"
+  },
+  {
+    "liniBisnis": "Trading - Mall - Kawasan",
+    "rawEntry": "EMS-05",
+    "extractedKode": "EMS-05",
+    "reason": "kode tidak ditemukan di judul_training"
+  },
+  {
+    "liniBisnis": "Trading - Mall - Kawasan",
+    "rawEntry": "CP-01",
+    "extractedKode": "CP-01",
+    "reason": "kode tidak ditemukan di judul_training"
+  },
+  {
+    "liniBisnis": "Trading - Mall - Kawasan",
+    "rawEntry": "SW-01",
+    "extractedKode": "SW-01",
+    "reason": "kode tidak ditemukan di judul_training"
+  },
+  {
+    "liniBisnis": "Hotel - Building ",
+    "rawEntry": "ET-02",
+    "extractedKode": "ET-02",
+    "reason": "kode tidak ditemukan di judul_training"
+  },
+  {
+    "liniBisnis": "Laboratorium, LH",
+    "rawEntry": "EMS-01",
+    "extractedKode": "EMS-01",
+    "reason": "kode tidak ditemukan di judul_training"
+  },
+  {
+    "liniBisnis": "Laboratorium, LH",
+    "rawEntry": "EMS-02",
+    "extractedKode": "EMS-02",
+    "reason": "kode tidak ditemukan di judul_training"
+  },
+  {
+    "liniBisnis": "Laboratorium, LH",
+    "rawEntry": "EMS-04",
+    "extractedKode": "EMS-04",
+    "reason": "kode tidak ditemukan di judul_training"
+  },
+  {
+    "liniBisnis": "Laboratorium, LH",
+    "rawEntry": "CP-03",
+    "extractedKode": "CP-03",
+    "reason": "kode tidak ditemukan di judul_training"
+  },
+  {
+    "liniBisnis": "Laboratorium, LH",
+    "rawEntry": "EMS-05",
+    "extractedKode": "EMS-05",
+    "reason": "kode tidak ditemukan di judul_training"
+  },
+  {
+    "liniBisnis": "Laboratorium, LH",
+    "rawEntry": "CP-04",
+    "extractedKode": "CP-04",
+    "reason": "kode tidak ditemukan di judul_training"
+  },
+  {
+    "liniBisnis": "Laboratorium, LH",
+    "rawEntry": "EM-02B",
+    "extractedKode": "EM-02B",
+    "reason": "kode tidak ditemukan di judul_training"
+  },
+  {
+    "liniBisnis": "Laboratorium, LH",
+    "rawEntry": "ET-02",
+    "extractedKode": "ET-02",
+    "reason": "kode tidak ditemukan di judul_training"
+  },
+  {
+    "liniBisnis": "Konsultan dan Training",
+    "rawEntry": "EMS-01",
+    "extractedKode": "EMS-01",
+    "reason": "kode tidak ditemukan di judul_training"
+  },
+  {
+    "liniBisnis": "Konsultan dan Training",
+    "rawEntry": "EMS-03",
+    "extractedKode": "EMS-03",
+    "reason": "kode tidak ditemukan di judul_training"
+  },
+  {
+    "liniBisnis": "Konsultan dan Training",
+    "rawEntry": "EMS-03(+)",
+    "extractedKode": "EMS-03",
+    "reason": "kode tidak ditemukan di judul_training"
+  },
+  {
+    "liniBisnis": "Konsultan dan Training",
+    "rawEntry": "EMS-02",
+    "extractedKode": "EMS-02",
+    "reason": "kode tidak ditemukan di judul_training"
+  },
+  {
+    "liniBisnis": "Konsultan dan Training",
+    "rawEntry": "CP-03",
+    "extractedKode": "CP-03",
+    "reason": "kode tidak ditemukan di judul_training"
+  },
+  {
+    "liniBisnis": "Konsultan dan Training",
+    "rawEntry": "Ems-03",
+    "extractedKode": "EMS-03",
+    "reason": "kode tidak ditemukan di judul_training"
+  },
+  {
+    "liniBisnis": "Konsultan dan Training",
+    "rawEntry": "Sw-03",
+    "extractedKode": "SW-03",
+    "reason": "kode tidak ditemukan di judul_training"
+  },
+  {
+    "liniBisnis": "Konsultan dan Training",
+    "rawEntry": "CP-04",
+    "extractedKode": "CP-04",
+    "reason": "kode tidak ditemukan di judul_training"
+  },
+  {
+    "liniBisnis": "Konsultan dan Training",
+    "rawEntry": "ET-02",
+    "extractedKode": "ET-02",
+    "reason": "kode tidak ditemukan di judul_training"
+  },
+  {
+    "liniBisnis": "Konsultan dan Training",
+    "rawEntry": "ET-01",
+    "extractedKode": "ET-01",
+    "reason": "kode tidak ditemukan di judul_training"
+  },
+  {
+    "liniBisnis": "Konsultan dan Training",
+    "rawEntry": "RCC",
+    "reason": "tidak ada kode terdeteksi (di-skip)"
+  },
+  {
+    "liniBisnis": "Plastik-Packaging - Printing",
+    "rawEntry": "EMS-05 (+)",
+    "extractedKode": "EMS-05",
+    "reason": "kode tidak ditemukan di judul_training"
+  },
+  {
+    "liniBisnis": "Plastik-Packaging - Printing",
+    "rawEntry": "CP-04",
+    "extractedKode": "CP-04",
+    "reason": "kode tidak ditemukan di judul_training"
+  },
+  {
+    "liniBisnis": "Plastik-Packaging - Printing",
+    "rawEntry": "SW-01",
+    "extractedKode": "SW-01",
+    "reason": "kode tidak ditemukan di judul_training"
+  },
+  {
+    "liniBisnis": "Donor-LSM-Intl Org",
+    "rawEntry": "SW-01",
+    "extractedKode": "SW-01",
+    "reason": "kode tidak ditemukan di judul_training"
+  },
+  {
+    "liniBisnis": "Pemerintah",
+    "rawEntry": "EMS-01",
+    "extractedKode": "EMS-01",
+    "reason": "kode tidak ditemukan di judul_training"
+  },
+  {
+    "liniBisnis": "Pemerintah",
+    "rawEntry": "EMS-02",
+    "extractedKode": "EMS-02",
+    "reason": "kode tidak ditemukan di judul_training"
+  },
+  {
+    "liniBisnis": "Pemerintah",
+    "rawEntry": "CP-03",
+    "extractedKode": "CP-03",
+    "reason": "kode tidak ditemukan di judul_training"
+  },
+  {
+    "liniBisnis": "Jasa (Service)",
+    "rawEntry": "Cp-04",
+    "extractedKode": "CP-04",
+    "reason": "kode tidak ditemukan di judul_training"
+  }
+]

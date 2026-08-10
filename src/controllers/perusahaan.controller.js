@@ -330,6 +330,15 @@ const getOnePerusahaan = async (req, res) => {
       return res.status(404).json({ message: "not found" });
     }
 
+    let prioritasAeNama = null;
+    if (data.prioritasAe) {
+      const pegawaiAe = await prisma.pegawai.findUnique({
+        where: { id: data.prioritasAe },
+        select: { nama: true },
+      });
+      prioritasAeNama = pegawaiAe?.nama ?? null;
+    }
+
     // ================= BASE (ALL TYPES)
     const response = {
       noInduk: data.noInduk,
@@ -344,7 +353,7 @@ const getOnePerusahaan = async (req, res) => {
       fasilitas: data.fasilitas,
       butuhTraining: data.butuhTraining,
       prioritasMa: data.prioritasMa,
-      prioritasAe: data.prioritasAe,
+      prioritasAe: prioritasAeNama,
       group: data.group,
 
       inputter: data.inputter,
@@ -2278,6 +2287,37 @@ const getProperByTahun = async (req, res) => {
   }
 };
 
+const getLiniBisnis = async (req, res) => {
+  try {
+    const liniBisnis = await prisma.liniBisnis.findMany({
+      select: {
+        id: true,
+        nama: true,
+      },
+      orderBy: {
+        nama: "asc",
+      },
+    });
+
+    if (!liniBisnis || liniBisnis.length === 0) {
+      return res.status(404).json({
+        message: "Tidak ada data lini bisnis.",
+        data: [],
+      });
+    }
+
+    return res.status(200).json({
+      message: "Berhasil mendapatkan data lini bisnis.",
+      data: liniBisnis,
+    });
+  } catch (error) {
+    console.error("[getLiniBisnis error]", error);
+    return res.status(500).json({
+      message: "Terjadi kesalahan saat mengambil data lini bisnis.",
+    });
+  }
+};
+
 module.exports = {
   getTabPerusahaanList,
   createTabPerusahaan,
@@ -2310,6 +2350,7 @@ module.exports = {
   updateStatusPermohonan,
   getLogPerubahanSummary,
   getProperByTahun,
+  getLiniBisnis,
 };
 
 // Taruh ini di bagian atas file controller lo

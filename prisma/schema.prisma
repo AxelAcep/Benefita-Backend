@@ -170,6 +170,9 @@ model TabPerusahaan {
   kategoriCpn    String? @db.VarChar(255)
   lineOfBusiness String? @db.VarChar(255)
   lineBisnisSub  String? @db.VarChar(255)
+  liniBisnisId    Int?
+  liniBisnis      LiniBisnis? @relation(fields: [liniBisnisId], references: [id])
+  liniBisnisNote  String?
   permodalan     String? @db.VarChar(255)
 
   nilaiSubBidangProper Int?
@@ -520,6 +523,7 @@ model JudulTraining {
 
   jadwalTraining JadwalTraining[]
 
+  liniBisnis LiniBisnisTraining[]
   @@map("judul_training")
 }
 
@@ -821,4 +825,29 @@ enum Peringkat {
   TUTUP
   DITANGGUHKAN
   MERAH_MUDA   
+}
+
+model LiniBisnis {
+  id        Int      @id @default(autoincrement())
+  nama      String   @unique
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  trainings LiniBisnisTraining[]
+  perusahaan TabPerusahaan[]  
+
+  @@map("lini_bisnis")
+}
+
+model LiniBisnisTraining {
+  id              Int      @id @default(autoincrement())
+  liniBisnisId    Int
+  judulTrainingId Int
+  createdAt       DateTime @default(now())
+
+  liniBisnis    LiniBisnis    @relation(fields: [liniBisnisId], references: [id], onDelete: Cascade)
+  judulTraining JudulTraining @relation(fields: [judulTrainingId], references: [id], onDelete: Cascade)
+
+  @@unique([liniBisnisId, judulTrainingId])
+  @@map("lini_bisnis_training")
 }
