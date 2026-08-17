@@ -18,17 +18,17 @@ enum RoleStatus {
 }
 
 model Pegawai {
-  id                 String               @id @default(cuid())
-  nama               String
-  nip                String?              @unique
-  prefix             String?
-  kode               String?
-  jabatan            String?
-  departemen         String?
+  id         String  @id @default(cuid())
+  nama       String
+  nip        String? @unique
+  prefix     String?
+  kode       String?
+  jabatan    String?
+  departemen String?
 
   // Foto profil
-  fotoUrl            String?
-  fotoKey            String?
+  fotoUrl String?
+  fotoKey String?
 
   // Field migrasi
   nik                String?
@@ -62,23 +62,23 @@ model Pegawai {
   pesertaDikonfirmasi    PesertaTraining[]        @relation("PesertaKonfirmasiOleh")
   pengajuanIzin          PengajuanIzin[]
   permintaanSurat        PermintaanNomorSurat[]
-  inputNeraca  TableNeraca[] @relation("inputNeraca")
-  updateNeraca TableNeraca[] @relation("updateNeraca")
-  umkPic              Umk[]     @relation("UmkPic")
-  umkInputter         Umk[]     @relation("UmkInputter")
+  inputNeraca            TableNeraca[]            @relation("inputNeraca")
+  updateNeraca           TableNeraca[]            @relation("updateNeraca")
+  umkPic                 Umk[]                    @relation("UmkPic")
+  umkInputter            Umk[]                    @relation("UmkInputter")
   user                   User?
 }
 
 model DokumenPegawai {
-  id         String   @id @default(cuid())
-  pegawaiId  String
-  nama       String                // nama file asli, misal "KTP.pdf"
-  url        String                // URL akses file
-  key        String                // key di storage untuk delete/update
-  tipe       String?               // opsional: "KTP", "NPWP", "Ijazah", dll
-  createdAt  DateTime @default(now())
+  id        String   @id @default(cuid())
+  pegawaiId String
+  nama      String // nama file asli, misal "KTP.pdf"
+  url       String // URL akses file
+  key       String // key di storage untuk delete/update
+  tipe      String? // opsional: "KTP", "NPWP", "Ijazah", dll
+  createdAt DateTime @default(now())
 
-  pegawai    Pegawai  @relation(fields: [pegawaiId], references: [id], onDelete: Cascade)
+  pegawai Pegawai @relation(fields: [pegawaiId], references: [id], onDelete: Cascade)
 }
 
 model User {
@@ -137,10 +137,10 @@ model TabPerusahaan {
   // =========================
   // CORE + COMMON (SEMUA JENIS)
   // =========================
-  noInduk       String  @id @map("0NO_INDUK") @db.VarChar(50)
-  jenisInstansi String  @default("PERUSAHAAN") @db.VarChar(50)
+  noInduk       String @id @map("0NO_INDUK") @db.VarChar(50)
+  jenisInstansi String @default("PERUSAHAAN") @db.VarChar(50)
 
-  company       String? @map("1COMPANY") @db.VarChar(255)
+  company String? @map("1COMPANY") @db.VarChar(255)
 
   alamat        String? @map("2ALAMAT") @db.VarChar(255)
   telp          String? @map("5TELP") @db.VarChar(255)
@@ -167,13 +167,13 @@ model TabPerusahaan {
   iso14000       String? @db.VarChar(255)
   ohsas18001smk3 String? @db.VarChar(255)
 
-  kategoriCpn    String? @db.VarChar(255)
-  lineOfBusiness String? @db.VarChar(255)
-  lineBisnisSub  String? @db.VarChar(255)
-  liniBisnisId    Int?
-  liniBisnis      LiniBisnis? @relation(fields: [liniBisnisId], references: [id])
-  liniBisnisNote  String?
-  permodalan     String? @db.VarChar(255)
+  kategoriCpn    String?     @db.VarChar(255)
+  lineOfBusiness String?     @db.VarChar(255)
+  lineBisnisSub  String?     @db.VarChar(255)
+  liniBisnisId   Int?
+  liniBisnis     LiniBisnis? @relation(fields: [liniBisnisId], references: [id])
+  liniBisnisNote String?
+  permodalan     String?     @db.VarChar(255)
 
   nilaiSubBidangProper Int?
   batasEmas            Int?
@@ -233,70 +233,70 @@ model TabPerusahaan {
   // =========================
   // UNUSED FIELD
   // =========================
-  produksi         String?   @db.VarChar(255)
-  tglRecord        String?   @db.VarChar(255)
-  tglRecordCsr     String?   @db.VarChar(20)
-  tglRecordEnv     String?   @db.VarChar(20)
-  tglRecordEpm     String?   @db.VarChar(20)
-  tglRecordTsm     String?   @db.VarChar(20)
-  acc              String?   @db.VarChar(225)
-  accCsr           String?   @db.VarChar(50)
-  accEpm           String?   @db.VarChar(50)
-  accTsm           String?   @db.VarChar(50)
-  noGroup          String?   @db.VarChar(25)
-  groupInduk       String?   @db.VarChar(255)
-  actionPareto     String?   @db.VarChar(255)
+  produksi          String?   @db.VarChar(255)
+  tglRecord         String?   @db.VarChar(255)
+  tglRecordCsr      String?   @db.VarChar(20)
+  tglRecordEnv      String?   @db.VarChar(20)
+  tglRecordEpm      String?   @db.VarChar(20)
+  tglRecordTsm      String?   @db.VarChar(20)
+  acc               String?   @db.VarChar(225)
+  accCsr            String?   @db.VarChar(50)
+  accEpm            String?   @db.VarChar(50)
+  accTsm            String?   @db.VarChar(50)
+  noGroup           String?   @db.VarChar(25)
+  groupInduk        String?   @db.VarChar(255)
+  actionPareto      String?   @db.VarChar(255)
   dateRequestAcount DateTime?
-  requestAcount    String?   @db.VarChar(10)
-  expiredVendor    DateTime?
-  ims              String?   @db.VarChar(255)
-  indukKab         String?   @db.VarChar(10)
-  indukProv        String?   @db.VarChar(10)
-  kd2              String?   @db.VarChar(50)
-  kd3              String?   @db.VarChar(50)
-  kd4              String?   @db.VarChar(50)
-  kd5              String?   @db.VarChar(50)
-  khusus           String?   @db.VarChar(255)
-  kirimPos         String?   @db.VarChar(5)
-  pesertaInh       Int?
-  pesertaTot       Int?
-  region           String?   @db.VarChar(50)
-  subBidangProper  String?   @db.VarChar(100)
-  tglInfoKeu       String?   @db.VarChar(10)
-  prioritasMaLama  String?   @db.VarChar(50)
+  requestAcount     String?   @db.VarChar(10)
+  expiredVendor     DateTime?
+  ims               String?   @db.VarChar(255)
+  indukKab          String?   @db.VarChar(10)
+  indukProv         String?   @db.VarChar(10)
+  kd2               String?   @db.VarChar(50)
+  kd3               String?   @db.VarChar(50)
+  kd4               String?   @db.VarChar(50)
+  kd5               String?   @db.VarChar(50)
+  khusus            String?   @db.VarChar(255)
+  kirimPos          String?   @db.VarChar(5)
+  pesertaInh        Int?
+  pesertaTot        Int?
+  region            String?   @db.VarChar(50)
+  subBidangProper   String?   @db.VarChar(100)
+  tglInfoKeu        String?   @db.VarChar(10)
+  prioritasMaLama   String?   @db.VarChar(50)
 
-  status          String? @db.VarChar(255)
-  statusDaerah    String? @db.VarChar(100)
-  golkar          String? @db.VarChar(255)
-  pdip            String? @db.VarChar(255)
-  ppp             String? @db.VarChar(255)
-  pan             String? @db.VarChar(255)
-  lain            String? @db.VarChar(255)
-  humasDanHukum   String? @db.VarChar(255)
-  costomer        String? @db.VarChar(50)
-  tglRecordAdm    String? @db.VarChar(50)
+  status        String? @db.VarChar(255)
+  statusDaerah  String? @db.VarChar(100)
+  golkar        String? @db.VarChar(255)
+  pdip          String? @db.VarChar(255)
+  ppp           String? @db.VarChar(255)
+  pan           String? @db.VarChar(255)
+  lain          String? @db.VarChar(255)
+  humasDanHukum String? @db.VarChar(255)
+  costomer      String? @db.VarChar(50)
+  tglRecordAdm  String? @db.VarChar(50)
 
-  noIndukProv   String?  @db.VarChar(10)
-  prioritas     Int?
-  pelanggan     Boolean?
-  sertifikasi String? @db.VarChar(255)
-  contakPerson String? @db.VarChar(255)
+  noIndukProv  String?  @db.VarChar(10)
+  prioritas    Int?
+  pelanggan    Boolean?
+  sertifikasi  String?  @db.VarChar(255)
+  contakPerson String?  @db.VarChar(255)
 
   // =========================
   // RELATION
   // =========================
-  contactPersons     ContactPersonPerusahaan[]
-  dailyActivities    DailyActivity[]
+  contactPersons  ContactPersonPerusahaan[]
+  dailyActivities DailyActivity[]
   sertifikasiBnsp SertifikasiBnsp[]
 
-  hakAksesKaryawan   HakAksesKaryawan[]
-  logs               LogPerubahanPerusahaan[]
-  posPerusahaan      TabPosPerusahaan[]
-  permohonanHakAkses PermohonanHakAkses[]
-  penawaran  Penawaran[]
+  hakAksesKaryawan       HakAksesKaryawan[]
+  logs                   LogPerubahanPerusahaan[]
+  posPerusahaan          TabPosPerusahaan[]
+  permohonanHakAkses     PermohonanHakAkses[]
+  penawaran              Penawaran[]
   pengajuanJudulTraining PengajuanJudulTraining[]
-  pesertaTraining PesertaTraining[]
-  permintaanSurat PermintaanNomorSurat[]
+  pesertaTraining        PesertaTraining[]
+  permintaanSurat        PermintaanNomorSurat[]
 }
 
 model ContactPersonPerusahaan {
@@ -398,8 +398,8 @@ model Penawaran {
   tanggal       DateTime @default(now())
   filePath      String?  @db.VarChar(500)
 
-  perusahaanId  String
-  perusahaan    TabPerusahaan @relation(fields: [perusahaanId], references: [noInduk])
+  perusahaanId String
+  perusahaan   TabPerusahaan @relation(fields: [perusahaanId], references: [noInduk])
 
   @@map("penawaran")
 }
@@ -419,38 +419,38 @@ model PermohonanHakAkses {
 }
 
 model SertifikasiBnsp {
-  id          Int     @id @default(autoincrement())
+  id           Int    @id @default(autoincrement())
   perusahaanId String @db.VarChar(50)
 
-  pppa    String? @db.VarChar(255)
-  popal   String? @db.VarChar(255)
-  pppu    String? @db.VarChar(255)
-  poippu  String? @db.VarChar(255)
+  pppa     String? @db.VarChar(255)
+  popal    String? @db.VarChar(255)
+  pppu     String? @db.VarChar(255)
+  poippu   String? @db.VarChar(255)
   limbahB3 String? @db.VarChar(255)
-  tpsLb3  String? @db.VarChar(255)
+  tpsLb3   String? @db.VarChar(255)
   sampah3R String? @db.VarChar(255)
   pSampah  String? @db.VarChar(255)
   aEnergi  String? @db.VarChar(255)
   mEnergi  String? @db.VarChar(255)
-  pcua    String? @db.VarChar(255)
-  lca     String? @db.VarChar(255)
+  pcua     String? @db.VarChar(255)
+  lca      String? @db.VarChar(255)
 
   perusahaan TabPerusahaan @relation(fields: [perusahaanId], references: [noInduk])
 }
 
 model Hotel {
-  id        String  @id @default(cuid())
+  id String @id @default(cuid())
 
-  kodeHotel String  @unique @map("kode_hotel") // PM
-  namaHotel String  @map("nama_hotel")
+  kodeHotel String @unique @map("kode_hotel") // PM
+  namaHotel String @map("nama_hotel")
   alamat    String
   kota      String
   telepon   String
 
-  fax       String? // optional
+  fax String? // optional
 
-  pubRate   Int?    @map("pub_rate") // optional integer
-  corRate   Int?    @map("cor_rate") // optional integer
+  pubRate Int? @map("pub_rate") // optional integer
+  corRate Int? @map("cor_rate") // optional integer
 
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
@@ -459,24 +459,24 @@ model Hotel {
 }
 
 model Trainer {
-  id             Int      @id @default(autoincrement())
-  kode           String   @unique
-  nama           String
-  referensi      String?
-  alamat         String?
-  subjekKhusus   String?
-  telp           String?
-  keterangan     String?
-  email          String?
-  tugas          DateTime?
-  kantor         String?
-  alamatKantor   String?
-  noTelpKantor   String?
+  id           Int       @id @default(autoincrement())
+  kode         String    @unique
+  nama         String
+  referensi    String?
+  alamat       String?
+  subjekKhusus String?
+  telp         String?
+  keterangan   String?
+  email        String?
+  tugas        DateTime?
+  kantor       String?
+  alamatKantor String?
+  noTelpKantor String?
 
-  CV_Trainer     String?
+  CV_Trainer String?
 
-  createdAt      DateTime @default(now())
-  updatedAt      DateTime @updatedAt
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
   jadwalTraining TrainerOnJadwal[]
 
@@ -484,46 +484,50 @@ model Trainer {
 }
 
 model PengajuanJudulTraining {
-  id              String   @id @default(cuid())
-  judulTraining   String
-  jumlahHari      Int
-  namaKontak      String?
-  kontak          String?
-  jumlahPeserta   Int?
-  responMA  String?  @default("PENDING")
-  tanggalPengajuan  DateTime @default(now())
+  id               String   @id @default(cuid())
+  judulTraining    String
+  jumlahHari       Int
+  namaKontak       String?
+  kontak           String?
+  jumlahPeserta    Int?
+  responMA         String?  @default("PENDING")
+  tanggalPengajuan DateTime @default(now())
 
-  // Relasi ke TabPerusahaan
-  perusahaanId    String
-  perusahaan      TabPerusahaan @relation(fields: [perusahaanId], references: [noInduk])
+  // Relasi ke TabPerusahaan (opsional, kalau perusahaan sudah terdaftar di sistem)
+  perusahaanId String?
+  perusahaan   TabPerusahaan? @relation(fields: [perusahaanId], references: [noInduk])
+
+  // Fallback kalau perusahaan belum ada di sistem / input manual
+  namaPerusahaanManual String?
 
   // Relasi ke Pegawai
-  inputOlehId     String
-  inputOleh       Pegawai  @relation(fields: [inputOlehId], references: [id])
+  inputOlehId String
+  inputOleh   Pegawai @relation(fields: [inputOlehId], references: [id])
 
-  createdAt       DateTime @default(now())
-  updatedAt       DateTime @updatedAt
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
   @@map("pengajuan_judul_training")
 }
 
 model JudulTraining {
-  id            Int      @id @default(autoincrement())
-  kode          String   @unique
+  id            Int     @id @default(autoincrement())
+  kode          String  @unique
   judulTraining String
   tipe          String
   hari          Int
   biayaOffline  Int
   biayaOnline   Int
   batch         Int
-  brosur        String?  // path/url file brosur
+  brosur        String? // path/url file brosur
 
-  createdAt     DateTime @default(now())
-  updatedAt     DateTime @updatedAt
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
   jadwalTraining JadwalTraining[]
 
   liniBisnis LiniBisnisTraining[]
+
   @@map("judul_training")
 }
 
@@ -546,21 +550,21 @@ model JadwalTraining {
   lastUpdate    DateTime  @updatedAt
 
   // Field tambahan dari MySQL
-  durasi        Int?
-  tglRencana    DateTime?
-  periode       String?
-  tipe          String?
-  penawaran     String?
-  statusPrio    String?
-  trainer       String?
-  statusTr      String?
-  updTgl        DateTime?
-  batch         Int?
+  durasi     Int?
+  tglRencana DateTime?
+  periode    String?
+  tipe       String?
+  penawaran  String?
+  statusPrio String?
+  trainer    String?
+  statusTr   String?
+  updTgl     DateTime?
+  batch      Int?
 
   // Relations
   updateOleh    String
-  pegawai       Pegawai        @relation(fields: [updateOleh], references: [id])
-  judulTraining JudulTraining  @relation(fields: [kodePelatihan], references: [kode])
+  pegawai       Pegawai           @relation(fields: [updateOleh], references: [id])
+  judulTraining JudulTraining     @relation(fields: [kodePelatihan], references: [kode])
   trainers      TrainerOnJadwal[]
   peserta       PesertaTraining[]
 
@@ -569,18 +573,18 @@ model JadwalTraining {
 
 // Pivot table Trainer <-> JadwalTraining
 model TrainerOnJadwal {
-  jadwalId  Int
+  jadwalId    Int
   trainerKode String
 
-  jadwal    JadwalTraining @relation(fields: [jadwalId], references: [id])
-  trainer   Trainer        @relation(fields: [trainerKode], references: [kode])
+  jadwal  JadwalTraining @relation(fields: [jadwalId], references: [id])
+  trainer Trainer        @relation(fields: [trainerKode], references: [kode])
 
   @@id([jadwalId, trainerKode])
   @@map("trainer_on_jadwal")
 }
 
 model PesertaTraining {
-  id                         Int       @id @default(autoincrement())
+  id Int @id @default(autoincrement())
 
   // Data Peserta
   nama                       String
@@ -599,75 +603,74 @@ model PesertaTraining {
   filePendaftaran            String?
 
   // Field tambahan dari MySQL
-  noUrut        String?
-  tglMulai      DateTime?
-  tempatLahir   String?
-  tanggalLahir  DateTime?
-  jenisKelamin  String?
-  bidang        String?
-  noCust        String?
-  instansi      String?
+  noUrut         String?
+  tglMulai       DateTime?
+  tempatLahir    String?
+  tanggalLahir   DateTime?
+  jenisKelamin   String?
+  bidang         String?
+  noCust         String?
+  instansi       String?
   namaPerusahaan String?
-  noHp          String?
-  konTgl        DateTime?
-  konOleh       String?
-  dep           String?
-  gender        String?
-  religi        String?
-  partisipan    String?
-  biaya         Int?
-  periode       String?
-  noRegUji      String?
-  idDok         String?
-  noJadOld      String?
-  idPesPel      String?
-  fee           String?
+  noHp           String?
+  konTgl         DateTime?
+  konOleh        String?
+  dep            String?
+  gender         String?
+  religi         String?
+  partisipan     String?
+  biaya          Int?
+  periode        String?
+  noRegUji       String?
+  idDok          String?
+  noJadOld       String?
+  idPesPel       String?
+  fee            String?
 
   // Relasi ke TabPerusahaan
-  noIndukPerusahaan          String?
-  perusahaan                 TabPerusahaan? @relation(fields: [noIndukPerusahaan], references: [noInduk])
+  noIndukPerusahaan String?
+  perusahaan        TabPerusahaan? @relation(fields: [noIndukPerusahaan], references: [noInduk])
 
   // Relasi ke JadwalTraining
-  noJadwal                   String
-  jadwalTraining             JadwalTraining @relation(fields: [noJadwal], references: [noJadwal])
+  noJadwal       String
+  jadwalTraining JadwalTraining @relation(fields: [noJadwal], references: [noJadwal])
 
   // AE (Account Executive) - string
-  accExecutive               String?
+  accExecutive String?
 
   // Ujian
-  ujian                      String?
-  noInvUjian                 String?
-  noKwtUjian                 String?
+  ujian      String?
+  noInvUjian String?
+  noKwtUjian String?
 
   // Keuangan
-  diskon                     Int?
-  ppn                        Int?
-  cashback                   Int?
-  hargaTotal                 Int?
-  bayar                      Int?
-  infoPembayaran             String?
-  infoPenagihan              String?
-  tglBayar                   DateTime?
-  noInvoice                  String?
-  noKwitansi                 String?
+  diskon         Int?
+  ppn            Int?
+  cashback       Int?
+  hargaTotal     Int?
+  bayar          Int?
+  infoPembayaran String?
+  infoPenagihan  String?
+  tglBayar       DateTime?
+  noInvoice      String?
+  noKwitansi     String?
 
   // Relasi ke Pegawai
-  inputOleh                  String
-  pegawaiInput               Pegawai   @relation("PesertaInputOleh", fields: [inputOleh], references: [id])
+  inputOleh    String
+  pegawaiInput Pegawai @relation("PesertaInputOleh", fields: [inputOleh], references: [id])
 
-  updateOleh                 String?
-  pegawaiUpdate              Pegawai?  @relation("PesertaUpdateOleh", fields: [updateOleh], references: [id])
+  updateOleh    String?
+  pegawaiUpdate Pegawai? @relation("PesertaUpdateOleh", fields: [updateOleh], references: [id])
 
-  konfirmasiOleh             String?
-  pegawaiKonfirmasi          Pegawai?  @relation("PesertaKonfirmasiOleh", fields: [konfirmasiOleh], references: [id])
+  konfirmasiOleh    String?
+  pegawaiKonfirmasi Pegawai? @relation("PesertaKonfirmasiOleh", fields: [konfirmasiOleh], references: [id])
 
   // Timestamps
-  tglInput                   DateTime  @default(now())
-  tglUpdate                  DateTime  @updatedAt
+  tglInput  DateTime @default(now())
+  tglUpdate DateTime @updatedAt
 
   @@map("peserta_training")
 }
-
 
 enum JenisIzin {
   CUTI
@@ -682,31 +685,31 @@ enum StatusIzin {
 }
 
 model PengajuanIzin {
-  id             String         @id @default(cuid())
-  pegawaiId      String
-  jenisIzin      JenisIzin
-  tanggalMulai   DateTime
-  tanggalSelesai DateTime
-  alasan         String
-  alasanTolak    String?
+  id                String     @id @default(cuid())
+  pegawaiId         String
+  jenisIzin         JenisIzin
+  tanggalMulai      DateTime
+  tanggalSelesai    DateTime
+  alasan            String
+  alasanTolak       String?
   tanggalKonfirmasi DateTime?
-  status         StatusIzin     @default(PENDING)
-  createdAt      DateTime       @default(now())
-  updatedAt      DateTime       @updatedAt
+  status            StatusIzin @default(PENDING)
+  createdAt         DateTime   @default(now())
+  updatedAt         DateTime   @updatedAt
 
-  pegawai        Pegawai        @relation(fields: [pegawaiId], references: [id], onDelete: Cascade)
-  bukti          BuktiIzin[]
+  pegawai Pegawai     @relation(fields: [pegawaiId], references: [id], onDelete: Cascade)
+  bukti   BuktiIzin[]
 }
 
 model BuktiIzin {
-  id              String        @id @default(cuid())
+  id              String   @id @default(cuid())
   pengajuanIzinId String
   nama            String
   url             String
   key             String
-  createdAt       DateTime      @default(now())
+  createdAt       DateTime @default(now())
 
-  pengajuanIzin   PengajuanIzin @relation(fields: [pengajuanIzinId], references: [id], onDelete: Cascade)
+  pengajuanIzin PengajuanIzin @relation(fields: [pengajuanIzinId], references: [id], onDelete: Cascade)
 }
 
 model Berita {
@@ -720,23 +723,24 @@ model Berita {
 }
 
 model PermintaanNomorSurat {
-  id             Int      @id @default(autoincrement())
-  noSurat        String   @unique @db.VarChar(100)
-  keterangan     String?  @db.Text
-  tanggalKirim   DateTime @default(now()) @map("tanggal_kirim")
-  tipe           TipeSurat @default(umum)
-  
+  id           Int       @id @default(autoincrement())
+  noSurat      String    @unique @db.VarChar(100)
+  keterangan   String?   @db.Text
+  tanggalKirim DateTime  @default(now()) @map("tanggal_kirim")
+  tipe         TipeSurat @default(umum)
+
   // Foreign Keys
-  tujuanNoInduk  String   @map("tujuan_no_induk") @db.VarChar(50)
-  pengirimId     String   @map("pengirim_id")
-  
+  tujuanNoInduk String? @map("tujuan_no_induk") @db.VarChar(50)
+  tujuanNama    String? @map("tujuan_nama") @db.VarChar(255)
+  pengirimId    String  @map("pengirim_id")
+
   // Relations
-  tujuan         TabPerusahaan @relation(fields: [tujuanNoInduk], references: [noInduk])
-  pengirim       Pegawai       @relation(fields: [pengirimId], references: [id])
-  
-  createdAt      DateTime @default(now()) @map("created_at")
-  updatedAt      DateTime @updatedAt @map("updated_at")
-  
+  tujuan   TabPerusahaan? @relation(fields: [tujuanNoInduk], references: [noInduk])
+  pengirim Pegawai        @relation(fields: [pengirimId], references: [id])
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
   @@unique([tujuanNoInduk, pengirimId, tanggalKirim])
   @@map("permintaan_nomor_surat")
 }
@@ -748,10 +752,10 @@ enum TipeSurat {
 }
 
 model TableJenisBiaya {
-  id      Int            @id @default(autoincrement())
-  kode    String         @unique
-  ket     String?
-  neraca  TableNeraca[]
+  id     Int           @id @default(autoincrement())
+  kode   String        @unique
+  ket    String?
+  neraca TableNeraca[]
 
   @@map("TableJenisBiaya")
 }
@@ -771,47 +775,47 @@ model TableNeraca {
   userUpdateId  String?
   tanggalUpdate DateTime?
 
-  jenisBiaya   TableJenisBiaya @relation(fields: [jenisBiayaId], references: [id])
-  userInput    Pegawai?        @relation("inputNeraca", fields: [userInputId], references: [id])
-  userUpdate   Pegawai?        @relation("updateNeraca", fields: [userUpdateId], references: [id])
+  jenisBiaya TableJenisBiaya @relation(fields: [jenisBiayaId], references: [id])
+  userInput  Pegawai?        @relation("inputNeraca", fields: [userInputId], references: [id])
+  userUpdate Pegawai?        @relation("updateNeraca", fields: [userUpdateId], references: [id])
 
   @@map("TableNeraca")
 }
 
 model Umk {
-  id                  Int      @id @default(autoincrement())
-  tglInput            DateTime @default(now()) @map("TglInput_umk")
-  noUmk               String   @unique @map("No_umk")
-  jumlahUmk           Int      @map("Jumlah_umk")
-  picId               String?  @map("PIC_umk")   // nullable
-  tujuanUmk           String   @map("Tujuan_umk")
-  tglPenyerahanUang   String?  @map("TglPeyerahanUang_umk")
-  realisasiUmk        Int      @map("Realisasi_umk")
-  tglPutmKmk          String?  @map("TglPutm_kmk")
-  sisaUangUmk         Int      @map("SisaUang_umk")
-  ketUmk              String?  @map("Ket_umk")
-  periodeUmk          String   @map("Periode_umk")
-  inputterId          String?  @map("inputter")   // nullable juga
+  id                Int      @id @default(autoincrement())
+  tglInput          DateTime @default(now()) @map("TglInput_umk")
+  noUmk             String   @unique @map("No_umk")
+  jumlahUmk         Int      @map("Jumlah_umk")
+  picId             String?  @map("PIC_umk") // nullable
+  tujuanUmk         String   @map("Tujuan_umk")
+  tglPenyerahanUang String?  @map("TglPeyerahanUang_umk")
+  realisasiUmk      Int      @map("Realisasi_umk")
+  tglPutmKmk        String?  @map("TglPutm_kmk")
+  sisaUangUmk       Int      @map("SisaUang_umk")
+  ketUmk            String?  @map("Ket_umk")
+  periodeUmk        String   @map("Periode_umk")
+  inputterId        String?  @map("inputter") // nullable juga
 
   // Relasi opsional
-  pic                 Pegawai? @relation("UmkPic", fields: [picId], references: [id])
-  inputter            Pegawai? @relation("UmkInputter", fields: [inputterId], references: [id])
+  pic      Pegawai? @relation("UmkPic", fields: [picId], references: [id])
+  inputter Pegawai? @relation("UmkInputter", fields: [inputterId], references: [id])
 
   @@map("umk")
 }
 
 model Proper {
-  id                Int       @id @default(autoincrement())
-  namaPerusahaan    String    @db.VarChar(255)
-  bidangIndustri    String?   @db.VarChar(255)
-  jenisIndustris    String    @db.VarChar(255)
-  tahun             Int
+  id             Int     @id @default(autoincrement())
+  namaPerusahaan String  @db.VarChar(255)
+  bidangIndustri String? @db.VarChar(255)
+  jenisIndustris String  @db.VarChar(255)
+  tahun          Int
 
   noIndukProvinsi   String?
   noIndukPemda      String?
   noIndukPerusahaan String?
 
-  peringkat         Peringkat
+  peringkat Peringkat
 }
 
 enum Peringkat {
@@ -820,11 +824,11 @@ enum Peringkat {
   BIRU
   MERAH
   HITAM
-  DITUNDA 
+  DITUNDA
   MASALAH
   TUTUP
   DITANGGUHKAN
-  MERAH_MUDA   
+  MERAH_MUDA
 }
 
 model LiniBisnis {
@@ -833,8 +837,8 @@ model LiniBisnis {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  trainings LiniBisnisTraining[]
-  perusahaan TabPerusahaan[]  
+  trainings  LiniBisnisTraining[]
+  perusahaan TabPerusahaan[]
 
   @@map("lini_bisnis")
 }

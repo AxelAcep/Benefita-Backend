@@ -389,6 +389,44 @@ const getTrainers = async (req, res) => {
   }
 };
 
+// ─────────────────────────────────────────────
+// HELPER: resolve perusahaan dari 1 input string
+// ─────────────────────────────────────────────
+
+const resolvePerusahaan = async (inputValue) => {
+  if (!inputValue) {
+    return { perusahaanId: null, namaPerusahaanManual: null };
+  }
+
+  const perusahaan = await prisma.tabPerusahaan.findUnique({
+    where: { noInduk: inputValue },
+    select: { noInduk: true },
+  });
+
+  if (perusahaan) {
+    return { perusahaanId: perusahaan.noInduk, namaPerusahaanManual: null };
+  }
+
+  return { perusahaanId: null, namaPerusahaanManual: inputValue };
+};
+
+// ─────────────────────────────────────────────
+// HELPER: bentuk response, cuma 1 field perusahaanId
+// ─────────────────────────────────────────────
+
+const formatPengajuanResponse = (pengajuan) => {
+  const result = { ...pengajuan };
+  result.perusahaanId =
+    result.perusahaanId ?? result.namaPerusahaanManual ?? null;
+  delete result.namaPerusahaanManual;
+  delete result.perusahaan;
+  return result;
+};
+
+// ─────────────────────────────────────────────
+// CREATE
+// ─────────────────────────────────────────────
+
 const createPengajuanJudulTraining = async (req, res) => {
   try {
     const {
@@ -400,13 +438,12 @@ const createPengajuanJudulTraining = async (req, res) => {
       jumlahPeserta,
     } = req.body;
 
-    const updateOleh = req.user?.userId; // dari JWT middleware
+    const updateOleh = req.user?.userId;
 
     if (!updateOleh) {
       return res.status(401).json({ message: "Unauthorized." });
     }
 
-    // Ambil pegawaiId dari userId
     const user = await prisma.user.findUnique({
       where: { id: updateOleh },
       select: { pegawaiId: true },
@@ -418,6 +455,8 @@ const createPengajuanJudulTraining = async (req, res) => {
         .json({ success: false, message: "User tidak ditemukan." });
     }
 
+    const resolved = await resolvePerusahaan(perusahaanId);
+
     const pengajuan = await prisma.pengajuanJudulTraining.create({
       data: {
         judulTraining,
@@ -425,8 +464,8 @@ const createPengajuanJudulTraining = async (req, res) => {
         namaKontak,
         kontak,
         jumlahPeserta: jumlahPeserta ? Number(jumlahPeserta) : null,
-        perusahaanId,
-        inputOlehId: user.pegawaiId, // ← pakai pegawaiId
+        ...resolved,
+        inputOlehId: user.pegawaiId,
       },
       include: {
         perusahaan: { select: { noInduk: true, company: true } },
@@ -434,7 +473,9 @@ const createPengajuanJudulTraining = async (req, res) => {
       },
     });
 
-    return res.status(201).json({ success: true, data: pengajuan });
+    return res
+      .status(201)
+      .json({ success: true, data: formatPengajuanResponse(pengajuan) });
   } catch (error) {
     if (error.code === "P2003") {
       return res
@@ -462,24 +503,29 @@ const updatePengajuan = async (req, res) => {
       responMA,
     } = req.body;
 
+    const resolved =
+      perusahaanId !== undefined ? await resolvePerusahaan(perusahaanId) : {};
+
     const pengajuan = await prisma.pengajuanJudulTraining.update({
       where: { id },
       data: {
         judulTraining,
         jumlahHari: jumlahHari ? Number(jumlahHari) : undefined,
-        perusahaanId,
         namaKontak,
         kontak,
         jumlahPeserta: jumlahPeserta ? Number(jumlahPeserta) : undefined,
         responMA: responMA ?? "PENDING",
+        ...resolved,
       },
       include: {
-        perusahaan: { select: { noInduk: true } },
+        perusahaan: { select: { noInduk: true, company: true } },
         inputOleh: { select: { id: true, nama: true } },
       },
     });
 
-    return res.status(200).json({ success: true, data: pengajuan });
+    return res
+      .status(200)
+      .json({ success: true, data: formatPengajuanResponse(pengajuan) });
   } catch (error) {
     if (error.code === "P2025") {
       return res
@@ -512,7 +558,9 @@ const getPengajuanById = async (req, res) => {
         .json({ success: false, message: "Pengajuan tidak ditemukan." });
     }
 
-    return res.status(200).json({ success: true, data: pengajuan });
+    return res
+      .status(200)
+      .json({ success: true, data: formatPengajuanResponse(pengajuan) });
   } catch (error) {
     return res.status(500).json({ success: false, message: error.message });
   }
@@ -540,6 +588,7 @@ const getPengajuan = async (req, res) => {
                 company: { contains: search, mode: "insensitive" },
               },
             },
+            { namaPerusahaanManual: { contains: search, mode: "insensitive" } },
             {
               inputOleh: {
                 nama: { contains: search, mode: "insensitive" },
@@ -565,8 +614,9 @@ const getPengajuan = async (req, res) => {
           kontak: true,
           responMA: true,
           tanggalPengajuan: true,
+          namaPerusahaanManual: true,
           perusahaan: {
-            select: { noInduk: true, company: true },
+            select: { company: true },
           },
           inputOleh: {
             select: { id: true, nama: true },
@@ -575,9 +625,18 @@ const getPengajuan = async (req, res) => {
       }),
     ]);
 
+    // Cuma tampilkan nama perusahaan (dari relasi atau teks manual),
+    // tanpa expose object relasi/namaPerusahaanManual mentah.
+    const formatted = data.map(
+      ({ perusahaan, namaPerusahaanManual, ...rest }) => ({
+        ...rest,
+        perusahaan: perusahaan?.company ?? namaPerusahaanManual ?? null,
+      }),
+    );
+
     return res.status(200).json({
       success: true,
-      data,
+      data: formatted,
       pagination: {
         total,
         page: pageNum,
