@@ -43,7 +43,10 @@ const getMarketingActivity = async (req, res) => {
     const { start: monthStart, end: monthEnd } = getCurrentMonthRange();
 
     const marketingUsers = await prisma.user.findMany({
-      where: { role: { in: ["MARKETING_STAFF", "MARKETING_SEMENTARA"] } },
+      where: {
+        role: { in: ["MARKETING_STAFF", "MARKETING_SEMENTARA"] },
+        pegawai: { statusAktif: true },
+      },
       include: { pegawai: true },
     });
 
@@ -129,7 +132,7 @@ const getKehadiran = async (req, res) => {
     todayEnd.setHours(23, 59, 59, 999);
 
     const [semuaPegawai, izinHariIni] = await Promise.all([
-      prisma.pegawai.findMany(),
+      prisma.pegawai.findMany({ where: { statusAktif: true } }),
       prisma.pengajuanIzin.findMany({
         where: {
           status: "DISETUJUI",
@@ -293,12 +296,14 @@ const getKalenderTraining = async (req, res) => {
             { kota: { contains: search, mode: "insensitive" } },
             { lokasiDetail: { contains: search, mode: "insensitive" } },
             { kodePelatihan: { contains: search, mode: "insensitive" } },
+            { tipe: { contains: search, mode: "insensitive" } },
           ],
         }),
       },
       include: {
         peserta: { select: { id: true } },
         trainers: { include: { trainer: { select: { nama: true } } } },
+        judulTraining: { select: { tipe: true } },
       },
       orderBy: { tglMulai: "asc" },
     });
@@ -321,13 +326,13 @@ const getKalenderTraining = async (req, res) => {
         const end = new Date(j.tglSelesai);
         while (cur <= end) {
           const dayKey = dayKeys[cur.getDay()];
-          if (["senin", "selasa", "rabu", "kamis", "jumat"].includes(dayKey)) {
-            days.push({
-              day: dayKey,
-              code: j.kodePelatihan,
-              category: mapKategori(j.kodePelatihan),
-            });
-          }
+          days.push({
+            day: dayKey,
+            tanggal: cur.getDate(), // angka tanggal (1-31), buat ditampilin di kalender
+            code: j.kodePelatihan,
+            category: mapKategori(j.kodePelatihan),
+            tipe: j.judulTraining.tipe,
+          });
           cur.setDate(cur.getDate() + 1);
         }
       }
@@ -348,6 +353,7 @@ const getKalenderTraining = async (req, res) => {
         judul: j.judulLengkap,
         noJadwal: j.noJadwal,
         jenis: j.jenisTraining,
+        tipe: j.judulTraining.tipe,
         status: j.status,
         isHot: totalPeserta >= 20,
         metode: j.metode,

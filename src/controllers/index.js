@@ -8,6 +8,7 @@ const beritaControllers = require("./berita.controller");
 const suratControllers = require("./surat.controller");
 const dashboardControllers = require("./dashboard.controller");
 const accountingControllers = require("./accounting.controller");
+const publicControllers = require("./public.controller");
 
 module.exports = {
   ...userControllers,
@@ -20,4 +21,5 @@ module.exports = {
   ...suratControllers,
   ...dashboardControllers,
   ...accountingControllers,
+  ...publicControllers,
 };

@@ -193,6 +193,7 @@ const getRiwayatByPegawai = async (req, res) => {
 
     const where = {
       pegawaiId,
+      pegawai: { statusAktif: true },
       AND: [
         status ? { status } : {},
         jenisIzin ? { jenisIzin } : {},
@@ -237,7 +238,11 @@ const getRiwayatByPegawai = async (req, res) => {
       // Hitung total per jenis (hanya DISETUJUI)
       prisma.pengajuanIzin.groupBy({
         by: ["jenisIzin"],
-        where: { pegawaiId, status: "DISETUJUI" },
+        where: {
+          pegawaiId,
+          status: "DISETUJUI",
+          pegawai: { statusAktif: true },
+        },
         _count: { id: true },
       }),
     ]);
@@ -293,6 +298,7 @@ const getRiwayatAll = async (req, res) => {
         search
           ? { pegawai: { nama: { contains: search, mode: "insensitive" } } }
           : {},
+        { pegawai: { statusAktif: true } },
         tanggalPengajuan
           ? {
               createdAt: {
@@ -345,7 +351,7 @@ const getRiwayatAll = async (req, res) => {
       prisma.pengajuanIzin.count({ where }),
       prisma.pengajuanIzin.groupBy({
         by: ["jenisIzin"],
-        where: { status: "DISETUJUI" },
+        where: { status: "DISETUJUI", pegawai: { statusAktif: true } },
         _count: { id: true },
       }),
     ]);
@@ -385,9 +391,10 @@ const getKaryawanCuti = async (req, res) => {
     const { search, page = 1, limit = 10 } = req.query;
     const skip = (parseInt(page) - 1) * parseInt(limit);
 
-    const where = search
-      ? { nama: { contains: search, mode: "insensitive" } }
-      : {};
+    const where = {
+      statusAktif: true,
+      ...(search ? { nama: { contains: search, mode: "insensitive" } } : {}),
+    };
 
     const [pegawaiList, total] = await Promise.all([
       prisma.pegawai.findMany({

@@ -676,6 +676,112 @@ const getListPerusahaan = async (req, res) => {
   }
 };
 
+/**
+ * REKAP EVALUASI PELATIHAN — ADMIN (PROTECTED)
+ *
+ * Ringkasan hasil evaluasi peserta untuk 1 jadwal training: total peserta vs
+ * total yang sudah isi evaluasi, rata-rata 6 nilai (dibulatkan 1 desimal),
+ * dan kumpulan komentar bebas (manfaat untuk peserta/perusahaan). BUKAN
+ * daftar per-peserta satu-satu.
+ *
+ * EvaluasiPelatihan tidak punya field noJadwal langsung — filter lewat
+ * relasi pesertaTraining.noJadwal. Relation filter ini didukung penuh oleh
+ * Prisma aggregate/count, jadi rata-rata dihitung pakai _avg langsung
+ * (bukan findMany + hitung manual di JS).
+ */
+const getRekapEvaluasi = async (req, res) => {
+  try {
+    const { noJadwal } = req.params;
+
+    if (!noJadwal) {
+      return res
+        .status(400)
+        .json({ success: false, message: "noJadwal wajib diisi." });
+    }
+
+    const jadwal = await prisma.jadwalTraining.findUnique({
+      where: { noJadwal },
+      select: {
+        judulLengkap: true,
+        tglMulai: true,
+        tglSelesai: true,
+      },
+    });
+
+    if (!jadwal) {
+      return res
+        .status(404)
+        .json({ success: false, message: "Jadwal Training tidak ditemukan." });
+    }
+
+    const [totalPeserta, totalMengisi, avgResult, evaluasiList] =
+      await Promise.all([
+        prisma.pesertaTraining.count({ where: { noJadwal } }),
+        prisma.evaluasiPelatihan.count({
+          where: { pesertaTraining: { noJadwal } },
+        }),
+        prisma.evaluasiPelatihan.aggregate({
+          where: { pesertaTraining: { noJadwal } },
+          _avg: {
+            nilaiSistematikaMateri: true,
+            nilaiTampilanSlide: true,
+            nilaiAlokasiWaktu: true,
+            nilaiPenerapanMateri: true,
+            nilaiPeningkatanKompetensi: true,
+            nilaiTrainer: true,
+          },
+        }),
+        prisma.evaluasiPelatihan.findMany({
+          where: { pesertaTraining: { noJadwal } },
+          select: {
+            manfaatUntukPeserta: true,
+            manfaatUntukPerusahaan: true,
+          },
+        }),
+      ]);
+
+    // Belum ada yang isi evaluasi → _avg semua field null, default-kan ke 0
+    const round1 = (val) => (val == null ? 0 : Math.round(val * 10) / 10);
+
+    const rataRata = {
+      nilaiSistematikaMateri: round1(avgResult._avg.nilaiSistematikaMateri),
+      nilaiTampilanSlide: round1(avgResult._avg.nilaiTampilanSlide),
+      nilaiAlokasiWaktu: round1(avgResult._avg.nilaiAlokasiWaktu),
+      nilaiPenerapanMateri: round1(avgResult._avg.nilaiPenerapanMateri),
+      nilaiPeningkatanKompetensi: round1(
+        avgResult._avg.nilaiPeningkatanKompetensi,
+      ),
+      nilaiTrainer: round1(avgResult._avg.nilaiTrainer),
+    };
+
+    const komentarManfaatPeserta = evaluasiList
+      .map((e) => e.manfaatUntukPeserta)
+      .filter((v) => v && v.trim() !== "");
+
+    const komentarManfaatPerusahaan = evaluasiList
+      .map((e) => e.manfaatUntukPerusahaan)
+      .filter((v) => v && v.trim() !== "");
+
+    return res.status(200).json({
+      success: true,
+      data: {
+        jadwal: {
+          judulLengkap: jadwal.judulLengkap,
+          tglMulai: jadwal.tglMulai,
+          tglSelesai: jadwal.tglSelesai,
+        },
+        totalPeserta,
+        totalMengisi,
+        rataRata,
+        komentarManfaatPeserta,
+        komentarManfaatPerusahaan,
+      },
+    });
+  } catch (error) {
+    return res.status(500).json({ success: false, message: error.message });
+  }
+};
+
 const createJudulTraining = async (req, res) => {
   try {
     const {
@@ -867,6 +973,43 @@ const getJudulTraining = async (req, res) => {
     res
       .status(500)
       .json({ message: "Internal server error.", error: error.message });
+  }
+};
+
+/**
+ * GET NEXT NO. JADWAL (auto-generate)
+ *
+ * noJadwal formatnya numerik (mis. "2017154"). Buat dapetin nomor
+ * berikutnya, kita ambil 100 JadwalTraining TERBARU (order by id desc —
+ * bukan scan MAX(noJadwal) ke seluruh tabel biar query-nya ringan), cari
+ * nilai numerik tertinggi di antara 100 itu, terus +1.
+ *
+ * Catatan: ini pendekatan approksimasi (bukan MAX absolut se-tabel) —
+ * cukup akurat selama insert noJadwal kurang lebih berurutan sama urutan
+ * baris dibuat (kasus normal di aplikasi ini).
+ */
+const getNextNoJadwal = async (req, res) => {
+  try {
+    const recentJadwal = await prisma.jadwalTraining.findMany({
+      take: 100,
+      orderBy: { id: "desc" },
+      select: { noJadwal: true },
+    });
+
+    const numericNoJadwal = recentJadwal
+      .map((j) => parseInt(j.noJadwal, 10))
+      .filter((n) => Number.isFinite(n));
+
+    const maxNoJadwal =
+      numericNoJadwal.length > 0 ? Math.max(...numericNoJadwal) : 0;
+    const nextNoJadwal = String(maxNoJadwal + 1);
+
+    return res.status(200).json({
+      success: true,
+      data: { noJadwal: nextNoJadwal },
+    });
+  } catch (error) {
+    return res.status(500).json({ success: false, message: error.message });
   }
 };
 
@@ -1284,6 +1427,7 @@ module.exports = {
   getJudulTraining,
 
   getListPerusahaan,
+  getRekapEvaluasi,
 
   createJudulTraining,
   getJudulTrainingById,
@@ -1295,6 +1439,7 @@ module.exports = {
   getJadwalTraining,
   getJadwalTrainingById,
   deleteJadwalTraining,
+  getNextNoJadwal,
 
   getTrainerOptions,
   getJudulTrainingOptions,

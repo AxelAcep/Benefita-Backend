@@ -5,6 +5,8 @@ const {
   updatePesertaTraining,
   createPesertaTraining,
   getPesertaTrainingById,
+  getBiodataPeserta,
+  updateBiodataPeserta,
 } = require("../controllers");
 const { authMiddleware } = require("../middlewares/auth.middleware");
 const { upload } = require("../middlewares/upload.middleware");
@@ -29,5 +31,8 @@ router.put(
   ]),
   updatePesertaTraining,
 );
+
+router.get("/peserta/:id/biodata", getBiodataPeserta);
+router.patch("/peserta/:id/biodata", updateBiodataPeserta);
 
 module.exports = router;

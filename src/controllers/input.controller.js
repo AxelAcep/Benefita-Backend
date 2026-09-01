@@ -492,9 +492,326 @@ const getPesertaTrainingById = async (req, res) => {
   }
 };
 
+const updateBiodataPeserta = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    const parsedId = parseInt(id);
+    if (!id || isNaN(parsedId)) {
+      return res.status(400).json({ message: "ID tidak valid." });
+    }
+
+    const {
+      nama,
+      tempatLahir,
+      tanggalLahir,
+      jenisKelamin,
+      noIndukPerusahaan,
+      jabatan,
+      bidang,
+      email,
+      noHp,
+    } = req.body;
+
+    const existing = await prisma.pesertaTraining.findUnique({
+      where: { id: parsedId },
+    });
+
+    if (!existing) {
+      return res
+        .status(404)
+        .json({ message: "Peserta Training tidak ditemukan." });
+    }
+
+    if (noIndukPerusahaan !== undefined) {
+      const perusahaan = await prisma.tabPerusahaan.findUnique({
+        where: { noInduk: noIndukPerusahaan },
+      });
+      if (!perusahaan) {
+        return res.status(400).json({ message: "Perusahaan tidak ditemukan." });
+      }
+    }
+
+    const dataUpdate = {};
+
+    if (nama !== undefined) dataUpdate.nama = nama;
+    if (tempatLahir !== undefined) dataUpdate.tempatLahir = tempatLahir;
+    if (tanggalLahir !== undefined)
+      dataUpdate.tanggalLahir = tanggalLahir ? new Date(tanggalLahir) : null;
+    if (jenisKelamin !== undefined) dataUpdate.jenisKelamin = jenisKelamin;
+    if (noIndukPerusahaan !== undefined)
+      dataUpdate.noIndukPerusahaan = noIndukPerusahaan;
+    if (jabatan !== undefined) dataUpdate.jabatan = jabatan;
+    if (bidang !== undefined) dataUpdate.bidang = bidang;
+    if (email !== undefined) dataUpdate.email = email;
+    if (noHp !== undefined) dataUpdate.noHp = noHp;
+
+    const updated = await prisma.pesertaTraining.update({
+      where: { id: parsedId },
+      data: dataUpdate,
+      include: {
+        perusahaan: {
+          select: { noInduk: true, company: true, alamat: true, telp: true },
+        },
+        jadwalTraining: {
+          select: {
+            noJadwal: true,
+            judulLengkap: true,
+            judulPendek: true,
+          },
+        },
+      },
+    });
+
+    res
+      .status(200)
+      .json({ message: "Biodata berhasil diperbarui.", data: updated });
+  } catch (error) {
+    res
+      .status(500)
+      .json({ message: "Internal server error.", error: error.message });
+  }
+};
+
+const getBiodataPeserta = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    const parsedId = parseInt(id);
+    if (!id || isNaN(parsedId)) {
+      return res.status(400).json({ message: "ID tidak valid." });
+    }
+
+    const data = await prisma.pesertaTraining.findUnique({
+      where: { id: parsedId },
+      select: {
+        id: true,
+        nama: true,
+        tempatLahir: true,
+        tanggalLahir: true,
+        jenisKelamin: true,
+        jabatan: true,
+        bidang: true,
+        email: true,
+        noHp: true,
+        noIndukPerusahaan: true,
+        perusahaan: {
+          select: {
+            noInduk: true,
+            company: true,
+            alamat: true,
+            telp: true,
+          },
+        },
+      },
+    });
+
+    if (!data) {
+      return res
+        .status(404)
+        .json({ message: "Peserta Training tidak ditemukan." });
+    }
+
+    res.status(200).json({ data });
+  } catch (error) {
+    res
+      .status(500)
+      .json({ message: "Internal server error.", error: error.message });
+  }
+};
+
+const getEvaluasiContext = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    const parsedId = parseInt(id);
+    if (!id || isNaN(parsedId)) {
+      return res.status(400).json({ message: "ID tidak valid." });
+    }
+
+    const peserta = await prisma.pesertaTraining.findUnique({
+      where: { id: parsedId },
+      select: {
+        id: true,
+        nama: true,
+        noJadwal: true,
+        jadwalTraining: {
+          select: {
+            noJadwal: true,
+            judulLengkap: true,
+            judulPendek: true,
+            tglMulai: true,
+            tglSelesai: true,
+          },
+        },
+        evaluasi: {
+          select: { id: true },
+        },
+      },
+    });
+
+    if (!peserta) {
+      return res
+        .status(404)
+        .json({ message: "Peserta Training tidak ditemukan." });
+    }
+
+    res.status(200).json({
+      data: {
+        pesertaTrainingId: peserta.id,
+        nama: peserta.nama,
+        jadwalTraining: peserta.jadwalTraining,
+        sudahMengisi: !!peserta.evaluasi,
+      },
+    });
+  } catch (error) {
+    res
+      .status(500)
+      .json({ message: "Internal server error.", error: error.message });
+  }
+};
+
+/**
+ * GET LIST JUDUL TRAINING (public)
+ * Opsi checkbox "Pelatihan lain yang diminati"
+ */
+const getJudulTrainingOptions = async (req, res) => {
+  try {
+    const data = await prisma.judulTraining.findMany({
+      select: {
+        id: true,
+        kode: true,
+        judulTraining: true,
+        tipe: true,
+      },
+      orderBy: { kode: "asc" },
+    });
+
+    res.status(200).json({ data });
+  } catch (error) {
+    res
+      .status(500)
+      .json({ message: "Internal server error.", error: error.message });
+  }
+};
+
+/**
+ * CREATE EVALUASI PELATIHAN
+ */
+const createEvaluasiPelatihan = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    const parsedId = parseInt(id);
+    if (!id || isNaN(parsedId)) {
+      return res.status(400).json({ message: "ID tidak valid." });
+    }
+
+    const {
+      nilaiSistematikaMateri,
+      nilaiTampilanSlide,
+      nilaiAlokasiWaktu,
+      nilaiPenerapanMateri,
+      nilaiPeningkatanKompetensi,
+      nilaiTrainer,
+      manfaatUntukPeserta,
+      manfaatUntukPerusahaan,
+      divisiDisarankan,
+      prosedurPengajuan,
+      pelatihanDiminatiIds, // array of JudulTraining.id, misal [3, 15, 42]
+    } = req.body;
+
+    const peserta = await prisma.pesertaTraining.findUnique({
+      where: { id: parsedId },
+      include: { evaluasi: true },
+    });
+
+    if (!peserta) {
+      return res
+        .status(404)
+        .json({ message: "Peserta Training tidak ditemukan." });
+    }
+
+    if (peserta.evaluasi) {
+      return res
+        .status(409)
+        .json({ message: "Evaluasi untuk peserta ini sudah pernah diisi." });
+    }
+
+    const nilaiFields = {
+      nilaiSistematikaMateri,
+      nilaiTampilanSlide,
+      nilaiAlokasiWaktu,
+      nilaiPenerapanMateri,
+      nilaiPeningkatanKompetensi,
+      nilaiTrainer,
+    };
+
+    for (const [key, val] of Object.entries(nilaiFields)) {
+      const num = Number(val);
+      if (!Number.isInteger(num) || num < 1 || num > 5) {
+        return res.status(400).json({
+          message: `Field ${key} harus berupa angka 1-5.`,
+        });
+      }
+    }
+
+    let judulTrainingIds = [];
+    if (Array.isArray(pelatihanDiminatiIds)) {
+      judulTrainingIds = pelatihanDiminatiIds
+        .map((v) => parseInt(v))
+        .filter((v) => !isNaN(v));
+    }
+
+    const created = await prisma.evaluasiPelatihan.create({
+      data: {
+        pesertaTrainingId: parsedId,
+        nilaiSistematikaMateri: Number(nilaiSistematikaMateri),
+        nilaiTampilanSlide: Number(nilaiTampilanSlide),
+        nilaiAlokasiWaktu: Number(nilaiAlokasiWaktu),
+        nilaiPenerapanMateri: Number(nilaiPenerapanMateri),
+        nilaiPeningkatanKompetensi: Number(nilaiPeningkatanKompetensi),
+        nilaiTrainer: Number(nilaiTrainer),
+        manfaatUntukPeserta: manfaatUntukPeserta || null,
+        manfaatUntukPerusahaan: manfaatUntukPerusahaan || null,
+        divisiDisarankan: divisiDisarankan || null,
+        prosedurPengajuan: prosedurPengajuan || null,
+        pelatihanDiminati: {
+          create: judulTrainingIds.map((judulTrainingId) => ({
+            judulTraining: { connect: { id: judulTrainingId } },
+          })),
+        },
+      },
+      include: {
+        pelatihanDiminati: {
+          include: { judulTraining: true },
+        },
+      },
+    });
+
+    res
+      .status(201)
+      .json({ message: "Evaluasi berhasil disimpan.", data: created });
+  } catch (error) {
+    if (error.code === "P2002") {
+      return res
+        .status(409)
+        .json({ message: "Evaluasi untuk peserta ini sudah pernah diisi." });
+    }
+    res
+      .status(500)
+      .json({ message: "Internal server error.", error: error.message });
+  }
+};
+
 module.exports = {
   getPesertaTraining,
   updatePesertaTraining,
   createPesertaTraining,
   getPesertaTrainingById,
+  updateBiodataPeserta,
+  getBiodataPeserta,
+  getEvaluasiContext,
+  getJudulTrainingOptions,
+  createEvaluasiPelatihan,
 };

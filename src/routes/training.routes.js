@@ -31,6 +31,8 @@ const {
 
   getJudulTrainingOptions,
   getTrainerOptions,
+  getRekapEvaluasi,
+  getNextNoJadwal,
 } = require("../controllers");
 const { authMiddleware } = require("../middlewares/auth.middleware");
 const { upload } = require("../middlewares/upload.middleware");
@@ -72,6 +74,12 @@ router.get("/judul-training", authMiddleware, getJudulTraining);
 router.get("/judul-training/:id", authMiddleware, getJudulTrainingById);
 
 router.get("/jadwal-training", authMiddleware, getJadwalTraining);
+// ⚠️ harus di atas /jadwal-training/:id biar gak ketangkep sebagai :id
+router.get(
+  "/jadwal-training/next-no-jadwal",
+  authMiddleware,
+  getNextNoJadwal,
+);
 router.get("/jadwal-training/:id", authMiddleware, getJadwalTrainingById);
 router.post(
   "/jadwal-training",
@@ -90,5 +98,8 @@ router.delete(
   authMiddleware,
   deleteJadwalTraining,
 );
+
+// Rekap evaluasi pelatihan per jadwal — admin, protected
+router.get("/jadwal/:noJadwal/rekap-evaluasi", authMiddleware, getRekapEvaluasi);
 
 module.exports = router;

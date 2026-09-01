@@ -49,6 +49,7 @@ model Pegawai {
   updatedBy          String?
   statusDate         DateTime?
   akunInfo           String?
+  statusAktif        Boolean   @default(false)
 
   // Dokumen (relasi ke model terpisah)
   dokumen                DokumenPegawai[]
@@ -528,6 +529,8 @@ model JudulTraining {
 
   liniBisnis LiniBisnisTraining[]
 
+  evaluasiPelatihanDiminati EvaluasiPelatihanDiminati[]
+
   @@map("judul_training")
 }
 
@@ -669,7 +672,48 @@ model PesertaTraining {
   tglInput  DateTime @default(now())
   tglUpdate DateTime @updatedAt
 
+  evaluasi EvaluasiPelatihan?
+
   @@map("peserta_training")
+}
+
+model EvaluasiPelatihan {
+  id Int @id @default(autoincrement())
+
+  pesertaTrainingId Int             @unique
+  pesertaTraining   PesertaTraining @relation(fields: [pesertaTrainingId], references: [id])
+
+  nilaiSistematikaMateri     Int
+  nilaiTampilanSlide         Int
+  nilaiAlokasiWaktu          Int
+  nilaiPenerapanMateri       Int
+  nilaiPeningkatanKompetensi Int
+
+  nilaiTrainer Int
+
+  manfaatUntukPeserta    String? @db.Text
+  manfaatUntukPerusahaan String? @db.Text
+
+  divisiDisarankan  String? @db.Text
+  prosedurPengajuan String? @db.Text
+
+  pelatihanDiminati EvaluasiPelatihanDiminati[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("evaluasi_pelatihan")
+}
+
+model EvaluasiPelatihanDiminati {
+  evaluasiId      Int
+  judulTrainingId Int
+
+  evaluasi      EvaluasiPelatihan @relation(fields: [evaluasiId], references: [id], onDelete: Cascade)
+  judulTraining JudulTraining     @relation(fields: [judulTrainingId], references: [id])
+
+  @@id([evaluasiId, judulTrainingId])
+  @@map("evaluasi_pelatihan_diminati")
 }
 
 enum JenisIzin {

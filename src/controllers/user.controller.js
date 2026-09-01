@@ -153,6 +153,12 @@ const login = async (req, res) => {
       return res.status(401).json({ message: "Email atau password salah." });
     }
 
+    if (!user.pegawai.statusAktif) {
+      return res
+        .status(403)
+        .json({ message: "Akun Anda tidak aktif. Hubungi admin." });
+    }
+
     const trustedDevice = await prisma.deviceTrusted.findUnique({
       where: { userId_deviceHash: { userId: user.id, deviceHash } },
     });
