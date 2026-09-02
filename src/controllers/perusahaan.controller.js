@@ -1,4 +1,4 @@
-const { PrismaClient } = require("@prisma/client");
+const { PrismaClient, Prisma } = require("@prisma/client");
 const prisma = new PrismaClient();
 
 /**
@@ -2318,10 +2318,810 @@ const getLiniBisnis = async (req, res) => {
   }
 };
 
+/**
+ * Daftar perusahaan yang kategoriCpn-nya mengandung "Tbk" — di mana pun posisinya,
+ * apa pun spasi/kapitalisasinya (54 varian nilai kategoriCpn di data eksisting
+ * gak konsisten formatnya, jadi filternya cuma substring match, case-insensitive).
+ *
+ * Sertakan tanggal training terakhir (dari peserta_training → jadwal_training,
+ * diambil MAX(tglMulai) per perusahaan) dan lini bisnis, karena butuh JOIN +
+ * agregasi yang gak praktis lewat Prisma query builder biasa — jadi pakai raw SQL.
+ */
+const getPerusahaanTbkList = async (req, res) => {
+  try {
+    const { page = 1, limit = 10, search = "", sort = "desc" } = req.query;
+
+    const pageNumber = Math.max(1, parseInt(page, 10) || 1);
+    const pageSize = Math.max(1, parseInt(limit, 10) || 10);
+    const offset = (pageNumber - 1) * pageSize;
+    const sortDirection =
+      String(sort).toLowerCase() === "asc"
+        ? Prisma.sql`ASC`
+        : Prisma.sql`DESC`;
+    const searchTerm = `%${search}%`;
+
+    // Filter dasar: kategoriCpn mengandung "Tbk" (case-insensitive, posisi bebas)
+    // + search bebas di kategoriCpn ATAU nama perusahaan (kalau search kosong,
+    // "%%" otomatis match semua).
+    const whereSql = Prisma.sql`
+      p."kategoriCpn" ILIKE '%Tbk%'
+      AND (p."kategoriCpn" ILIKE ${searchTerm} OR p."1COMPANY" ILIKE ${searchTerm})
+    `;
+
+    const totalRows = await prisma.$queryRaw`
+      SELECT COUNT(*)::int AS count
+      FROM "benefita"."TabPerusahaan" p
+      WHERE ${whereSql}
+    `;
+    const total = Number(totalRows[0]?.count ?? 0);
+
+    const data = await prisma.$queryRaw`
+      SELECT
+        p."0NO_INDUK" AS "noInduk",
+        p."1COMPANY" AS "namaPerusahaan",
+        p."acc" AS "acc",
+        p."2ALAMAT" AS "alamat",
+        p."5TELP" AS "telp",
+        p."dateUpdate" AS "updateTerakhir",
+        lb."nama" AS "liniBisnis",
+        tgl."tglTerakhirTraining" AS "tglTerakhirTraining"
+      FROM "benefita"."TabPerusahaan" p
+      LEFT JOIN "benefita"."lini_bisnis" lb ON lb."id" = p."liniBisnisId"
+      LEFT JOIN LATERAL (
+        SELECT MAX(jt."tglMulai") AS "tglTerakhirTraining"
+        FROM "benefita"."peserta_training" pt
+        JOIN "benefita"."jadwal_training" jt ON jt."noJadwal" = pt."noJadwal"
+        WHERE pt."noIndukPerusahaan" = p."0NO_INDUK"
+      ) tgl ON TRUE
+      WHERE ${whereSql}
+      ORDER BY tgl."tglTerakhirTraining" ${sortDirection} NULLS LAST, p."1COMPANY" ASC
+      LIMIT ${pageSize} OFFSET ${offset}
+    `;
+
+    res.status(200).json({
+      success: true,
+      data,
+      pagination: {
+        total,
+        totalPages: Math.ceil(total / pageSize),
+        currentPage: pageNumber,
+        pageSize,
+      },
+    });
+  } catch (error) {
+    console.error("Error fetching Perusahaan TBK list:", error);
+    res.status(500).json({
+      success: false,
+      message: "An error occurred while fetching the data.",
+    });
+  }
+};
+
+const PERINGKAT_VALUES = [
+  "EMAS",
+  "HIJAU",
+  "BIRU",
+  "MERAH",
+  "HITAM",
+  "DITUNDA",
+  "MASALAH",
+  "TUTUP",
+  "DITANGGUHKAN",
+  "MERAH_MUDA",
+];
+
+/**
+ * Daftar perusahaan yang punya riwayat rating PROPER (tabel Proper, ditautkan
+ * lewat noIndukPerusahaan). "Tahun Peringkat" digenerate dari tabel Proper
+ * (format "P25: Biru; P24: Merah; ..."), dan "Cust" = kategoriCpn apa adanya.
+ * Butuh JOIN + agregasi per perusahaan → raw SQL, sama kayak getPerusahaanTbkList.
+ */
+const getPerusahaanProperList = async (req, res) => {
+  try {
+    const {
+      page = 1,
+      limit = 10,
+      search = "",
+      sort = "desc",
+      peringkat,
+      liniBisnisId,
+    } = req.query;
+
+    const pageNumber = Math.max(1, parseInt(page, 10) || 1);
+    const pageSize = Math.max(1, parseInt(limit, 10) || 10);
+    const offset = (pageNumber - 1) * pageSize;
+    const sortDirection =
+      String(sort).toLowerCase() === "asc"
+        ? Prisma.sql`ASC`
+        : Prisma.sql`DESC`;
+    const searchTerm = `%${search}%`;
+
+    const peringkatFilter = PERINGKAT_VALUES.includes(
+      String(peringkat).toUpperCase(),
+    )
+      ? Prisma.sql`AND EXISTS (
+          SELECT 1 FROM "benefita"."Proper" pr2
+          WHERE pr2."noIndukPerusahaan" = p."0NO_INDUK"
+            AND pr2."peringkat" = ${String(peringkat).toUpperCase()}::"benefita"."Peringkat"
+        )`
+      : Prisma.empty;
+
+    const parsedLiniBisnisId = parseInt(liniBisnisId, 10);
+    const liniBisnisFilter = !isNaN(parsedLiniBisnisId)
+      ? Prisma.sql`AND p."liniBisnisId" = ${parsedLiniBisnisId}`
+      : Prisma.empty;
+
+    // Base filter: cuma perusahaan yang punya minimal 1 baris di tabel Proper
+    const whereSql = Prisma.sql`
+      EXISTS (
+        SELECT 1 FROM "benefita"."Proper" pr
+        WHERE pr."noIndukPerusahaan" = p."0NO_INDUK"
+      )
+      AND (p."kategoriCpn" ILIKE ${searchTerm} OR p."1COMPANY" ILIKE ${searchTerm})
+      ${peringkatFilter}
+      ${liniBisnisFilter}
+    `;
+
+    const totalRows = await prisma.$queryRaw`
+      SELECT COUNT(*)::int AS count
+      FROM "benefita"."TabPerusahaan" p
+      WHERE ${whereSql}
+    `;
+    const total = Number(totalRows[0]?.count ?? 0);
+
+    const data = await prisma.$queryRaw`
+      SELECT
+        p."0NO_INDUK" AS "noInduk",
+        p."1COMPANY" AS "namaPerusahaan",
+        p."acc" AS "acc",
+        p."2ALAMAT" AS "alamat",
+        p."5TELP" AS "telp",
+        p."7EMAIL" AS "email",
+        p."updatter" AS "updatter",
+        p."dateUpdate" AS "updateTerakhir",
+        p."kategoriCpn" AS "kategoriCpn",
+        lb."nama" AS "liniBisnis",
+        tp."tahunPeringkat" AS "tahunPeringkat"
+      FROM "benefita"."TabPerusahaan" p
+      LEFT JOIN "benefita"."lini_bisnis" lb ON lb."id" = p."liniBisnisId"
+      JOIN LATERAL (
+        SELECT
+          string_agg(
+            'P' || (pr."tahun" - 2000) || ': ' || initcap(replace(pr."peringkat"::text, '_', ' ')),
+            '; ' ORDER BY pr."tahun" DESC
+          ) AS "tahunPeringkat",
+          MAX(pr."tahun") AS "tahunTerakhir"
+        FROM "benefita"."Proper" pr
+        WHERE pr."noIndukPerusahaan" = p."0NO_INDUK"
+      ) tp ON TRUE
+      WHERE ${whereSql}
+      ORDER BY tp."tahunTerakhir" ${sortDirection} NULLS LAST, p."1COMPANY" ASC
+      LIMIT ${pageSize} OFFSET ${offset}
+    `;
+
+    res.status(200).json({
+      success: true,
+      data,
+      pagination: {
+        total,
+        totalPages: Math.ceil(total / pageSize),
+        currentPage: pageNumber,
+        pageSize,
+      },
+    });
+  } catch (error) {
+    console.error("Error fetching Perusahaan PROPER list:", error);
+    res.status(500).json({
+      success: false,
+      message: "An error occurred while fetching the data.",
+    });
+  }
+};
+
+const HAK_AKSES_JENIS = ["ENV", "CSR", "TSM", "EPM"];
+
+/**
+ * Daftar perusahaan yang kategoriCpn-nya mengandung "ISO" (substring, case-insensitive,
+ * posisi bebas — sama pendekatan kayak getPerusahaanTbkList). Sertakan juga:
+ * - tahunPeringkat: digenerate dari tabel Proper (LEFT, gak wajib ada — beda dari
+ *   getPerusahaanProperList yang mewajibkan)
+ * - ENV/CSR/TSM/EPM: PIC (kode pegawai) dari HakAksesKaryawan per jenisAkses,
+ *   diambil terpisah lewat Prisma (bukan raw SQL) biar gak perlu nebak-nebak
+ *   qualifiedname tabel Pegawai/HakAksesKaryawan yang gak konsisten skemanya
+ *   di migration lama.
+ */
+const getPerusahaanIsoList = async (req, res) => {
+  try {
+    const {
+      page = 1,
+      limit = 10,
+      search = "",
+      sort = "desc",
+      liniBisnisId,
+    } = req.query;
+
+    const pageNumber = Math.max(1, parseInt(page, 10) || 1);
+    const pageSize = Math.max(1, parseInt(limit, 10) || 10);
+    const offset = (pageNumber - 1) * pageSize;
+    const sortDirection =
+      String(sort).toLowerCase() === "asc"
+        ? Prisma.sql`ASC`
+        : Prisma.sql`DESC`;
+    const searchTerm = `%${search}%`;
+
+    const parsedLiniBisnisId = parseInt(liniBisnisId, 10);
+    const liniBisnisFilter = !isNaN(parsedLiniBisnisId)
+      ? Prisma.sql`AND p."liniBisnisId" = ${parsedLiniBisnisId}`
+      : Prisma.empty;
+
+    const whereSql = Prisma.sql`
+      p."kategoriCpn" ILIKE '%ISO%'
+      AND (p."kategoriCpn" ILIKE ${searchTerm} OR p."1COMPANY" ILIKE ${searchTerm})
+      ${liniBisnisFilter}
+    `;
+
+    const totalRows = await prisma.$queryRaw`
+      SELECT COUNT(*)::int AS count
+      FROM "benefita"."TabPerusahaan" p
+      WHERE ${whereSql}
+    `;
+    const total = Number(totalRows[0]?.count ?? 0);
+
+    const rows = await prisma.$queryRaw`
+      SELECT
+        p."0NO_INDUK" AS "noInduk",
+        p."1COMPANY" AS "namaPerusahaan",
+        p."2ALAMAT" AS "alamat",
+        p."5TELP" AS "telp",
+        p."updatter" AS "updatter",
+        p."dateUpdate" AS "updateTerakhir",
+        p."kategoriCpn" AS "kategoriCpn",
+        lb."nama" AS "liniBisnis",
+        tp."tahunPeringkat" AS "tahunPeringkat"
+      FROM "benefita"."TabPerusahaan" p
+      LEFT JOIN "benefita"."lini_bisnis" lb ON lb."id" = p."liniBisnisId"
+      LEFT JOIN LATERAL (
+        SELECT
+          string_agg(
+            'P' || (pr."tahun" - 2000) || ': ' || initcap(replace(pr."peringkat"::text, '_', ' ')),
+            '; ' ORDER BY pr."tahun" DESC
+          ) AS "tahunPeringkat",
+          MAX(pr."tahun") AS "tahunTerakhir"
+        FROM "benefita"."Proper" pr
+        WHERE pr."noIndukPerusahaan" = p."0NO_INDUK"
+      ) tp ON TRUE
+      WHERE ${whereSql}
+      ORDER BY tp."tahunTerakhir" ${sortDirection} NULLS LAST, p."1COMPANY" ASC
+      LIMIT ${pageSize} OFFSET ${offset}
+    `;
+
+    // Ambil PIC hak akses (ENV/CSR/TSM/EPM) buat perusahaan-perusahaan di halaman ini
+    const noIndukList = rows.map((r) => r.noInduk);
+    const aksesList =
+      noIndukList.length > 0
+        ? await prisma.hakAksesKaryawan.findMany({
+            where: {
+              perusahaanId: { in: noIndukList },
+              jenisAkses: { in: HAK_AKSES_JENIS },
+            },
+            select: {
+              perusahaanId: true,
+              jenisAkses: true,
+              tanggalDibuat: true,
+              pegawai: { select: { kode: true, nama: true } },
+            },
+            orderBy: { tanggalDibuat: "desc" },
+          })
+        : [];
+
+    // Map perusahaanId -> { ENV: kode, CSR: kode, ... } — ambil PIC terbaru per jenis
+    const aksesMap = new Map();
+    for (const item of aksesList) {
+      if (!aksesMap.has(item.perusahaanId)) aksesMap.set(item.perusahaanId, {});
+      const entry = aksesMap.get(item.perusahaanId);
+      if (!entry[item.jenisAkses]) {
+        entry[item.jenisAkses] = item.pegawai?.kode ?? null;
+      }
+    }
+
+    const data = rows.map((row) => {
+      const akses = aksesMap.get(row.noInduk) ?? {};
+      return {
+        ...row,
+        env: akses.ENV ?? null,
+        csr: akses.CSR ?? null,
+        tsm: akses.TSM ?? null,
+        epm: akses.EPM ?? null,
+      };
+    });
+
+    res.status(200).json({
+      success: true,
+      data,
+      pagination: {
+        total,
+        totalPages: Math.ceil(total / pageSize),
+        currentPage: pageNumber,
+        pageSize,
+      },
+    });
+  } catch (error) {
+    console.error("Error fetching Perusahaan ISO list:", error);
+    res.status(500).json({
+      success: false,
+      message: "An error occurred while fetching the data.",
+    });
+  }
+};
+
+const PRIORITAS_LETTERS = ["A", "B", "C", "D", "E"];
+
+/**
+ * Daftar perusahaan yang difilter by Prioritas MA / Prioritas AE (field asli
+ * TabPerusahaan.prioritasMa / prioritasAe). Data aslinya kotor — harusnya cuma
+ * huruf A–E, tapi banyak yang kecampur tanggal/nama nyasar di belakang huruf
+ * (misal "B250904", "BInhouseTraining"). Makanya filternya pakai startsWith
+ * (prefix match), bukan exact match, biar "B" tetep nangkep varian kotor itu.
+ * Kolom Kategori & Akun di UI lama DIHAPUS/DIKOMEN dulu — belum ketemu field
+ * DB yang jadi sumbernya, daripada ngarang. ENV/CSR reuse pola PIC dari
+ * HakAksesKaryawan sama kayak halaman ISO.
+ */
+const getPerusahaanPrioritasList = async (req, res) => {
+  try {
+    const {
+      page = 1,
+      limit = 10,
+      search = "",
+      prioritasMa,
+      prioritasAe,
+    } = req.query;
+
+    const pageNumber = Math.max(1, parseInt(page, 10) || 1);
+    const pageSize = Math.max(1, parseInt(limit, 10) || 10);
+    const offset = (pageNumber - 1) * pageSize;
+
+    const maLetter = PRIORITAS_LETTERS.includes(
+      String(prioritasMa).toUpperCase(),
+    )
+      ? String(prioritasMa).toUpperCase()
+      : null;
+    const aeLetter = PRIORITAS_LETTERS.includes(
+      String(prioritasAe).toUpperCase(),
+    )
+      ? String(prioritasAe).toUpperCase()
+      : null;
+
+    const whereClause = {
+      AND: [
+        maLetter
+          ? { prioritasMa: { startsWith: maLetter, mode: "insensitive" } }
+          : {},
+        aeLetter
+          ? { prioritasAe: { startsWith: aeLetter, mode: "insensitive" } }
+          : {},
+        search
+          ? {
+              OR: [
+                { company: { contains: search, mode: "insensitive" } },
+                { noInduk: { contains: search, mode: "insensitive" } },
+              ],
+            }
+          : {},
+      ],
+    };
+
+    const [total, rows] = await Promise.all([
+      prisma.tabPerusahaan.count({ where: whereClause }),
+      prisma.tabPerusahaan.findMany({
+        where: whereClause,
+        skip: offset,
+        take: pageSize,
+        orderBy: { company: "asc" },
+        select: {
+          noInduk: true,
+          company: true,
+          alamat: true,
+          telp: true,
+          email: true,
+          prioritasMa: true,
+          prioritasAe: true,
+          updatter: true,
+          dateUpdate: true,
+        },
+      }),
+    ]);
+
+    // PIC ENV/CSR — sama pola kayak getPerusahaanIsoList
+    const noIndukList = rows.map((r) => r.noInduk);
+    const aksesList =
+      noIndukList.length > 0
+        ? await prisma.hakAksesKaryawan.findMany({
+            where: {
+              perusahaanId: { in: noIndukList },
+              jenisAkses: { in: ["ENV", "CSR"] },
+            },
+            select: {
+              perusahaanId: true,
+              jenisAkses: true,
+              tanggalDibuat: true,
+              pegawai: { select: { kode: true } },
+            },
+            orderBy: { tanggalDibuat: "desc" },
+          })
+        : [];
+
+    const aksesMap = new Map();
+    for (const item of aksesList) {
+      if (!aksesMap.has(item.perusahaanId)) aksesMap.set(item.perusahaanId, {});
+      const entry = aksesMap.get(item.perusahaanId);
+      if (!entry[item.jenisAkses]) {
+        entry[item.jenisAkses] = item.pegawai?.kode ?? null;
+      }
+    }
+
+    const data = rows.map((row) => {
+      const akses = aksesMap.get(row.noInduk) ?? {};
+      return {
+        noInduk: row.noInduk,
+        namaPerusahaan: row.company,
+        alamat: row.alamat,
+        telp: row.telp,
+        email: row.email,
+        prioritasMa: row.prioritasMa,
+        prioritasAe: row.prioritasAe,
+        updatter: row.updatter,
+        updateTerakhir: row.dateUpdate,
+        env: akses.ENV ?? null,
+        csr: akses.CSR ?? null,
+      };
+    });
+
+    res.status(200).json({
+      success: true,
+      data,
+      pagination: {
+        total,
+        totalPages: Math.ceil(total / pageSize),
+        currentPage: pageNumber,
+        pageSize,
+      },
+    });
+  } catch (error) {
+    console.error("Error fetching Perusahaan Prioritas list:", error);
+    res.status(500).json({
+      success: false,
+      message: "An error occurred while fetching the data.",
+    });
+  }
+};
+
+// Ambil kode-kode singkat (mis. "EE", "MA", "SL") dari field `acc` yang
+// formatnya "KODEtanggal; KODEtanggal-;..." — buat ditampilin sebagai badge.
+const parseAccCodes = (acc) => {
+  if (!acc) return [];
+  return acc.match(/[A-Za-z]+(?=\d)/g) ?? [];
+};
+
+/**
+ * Daftar perusahaan yang field `vendor`-nya keisi (bukan null, bukan string
+ * kosong — data vendor di TabPerusahaan nyaris semuanya kosong, cuma segelintir
+ * yang keisi beneran).
+ */
+const getPerusahaanVendorList = async (req, res) => {
+  try {
+    const { page = 1, limit = 10, search = "" } = req.query;
+
+    const pageNumber = Math.max(1, parseInt(page, 10) || 1);
+    const pageSize = Math.max(1, parseInt(limit, 10) || 10);
+    const offset = (pageNumber - 1) * pageSize;
+
+    const whereClause = {
+      AND: [
+        { vendor: { not: null, notIn: [""] } },
+        search
+          ? {
+              OR: [
+                { company: { contains: search, mode: "insensitive" } },
+                { noInduk: { contains: search, mode: "insensitive" } },
+              ],
+            }
+          : {},
+      ],
+    };
+
+    const [total, rows] = await Promise.all([
+      prisma.tabPerusahaan.count({ where: whereClause }),
+      prisma.tabPerusahaan.findMany({
+        where: whereClause,
+        skip: offset,
+        take: pageSize,
+        orderBy: { company: "asc" },
+        select: {
+          noInduk: true,
+          company: true,
+          vendor: true,
+          expiredVendor: true,
+          acc: true,
+        },
+      }),
+    ]);
+
+    const data = rows.map((row) => ({
+      noInduk: row.noInduk,
+      namaPerusahaan: row.company,
+      acc: parseAccCodes(row.acc),
+      status: row.vendor,
+      expired: row.expiredVendor,
+    }));
+
+    res.status(200).json({
+      success: true,
+      data,
+      pagination: {
+        total,
+        totalPages: Math.ceil(total / pageSize),
+        currentPage: pageNumber,
+        pageSize,
+      },
+    });
+  } catch (error) {
+    console.error("Error fetching Perusahaan Vendor list:", error);
+    res.status(500).json({
+      success: false,
+      message: "An error occurred while fetching the data.",
+    });
+  }
+};
+
+/**
+ * Daftar SEMUA perusahaan, diurutkan berdasarkan alamat. Simpel — gak ada
+ * filter khusus, cuma nampilin alamat kantor pusat + alamat factory + acc.
+ */
+const getPerusahaanByAlamatList = async (req, res) => {
+  try {
+    const { page = 1, limit = 10, search = "" } = req.query;
+
+    const pageNumber = Math.max(1, parseInt(page, 10) || 1);
+    const pageSize = Math.max(1, parseInt(limit, 10) || 10);
+    const offset = (pageNumber - 1) * pageSize;
+
+    const whereClause = {
+      jenisInstansi: "PERUSAHAAN",
+      ...(search
+        ? {
+            OR: [
+              { company: { contains: search, mode: "insensitive" } },
+              { noInduk: { contains: search, mode: "insensitive" } },
+              { alamat: { contains: search, mode: "insensitive" } },
+            ],
+          }
+        : {}),
+    };
+
+    const [total, rows] = await Promise.all([
+      prisma.tabPerusahaan.count({ where: whereClause }),
+      prisma.tabPerusahaan.findMany({
+        where: whereClause,
+        skip: offset,
+        take: pageSize,
+        orderBy: { alamat: "asc" },
+        select: {
+          noInduk: true,
+          company: true,
+          alamat: true,
+          alamatFactory: true,
+          acc: true,
+        },
+      }),
+    ]);
+
+    const data = rows.map((row) => ({
+      noInduk: row.noInduk,
+      namaPerusahaan: row.company,
+      alamat: row.alamat,
+      alamatFactory: row.alamatFactory,
+      acc: parseAccCodes(row.acc)[0] ?? null,
+    }));
+
+    res.status(200).json({
+      success: true,
+      data,
+      pagination: {
+        total,
+        totalPages: Math.ceil(total / pageSize),
+        currentPage: pageNumber,
+        pageSize,
+      },
+    });
+  } catch (error) {
+    console.error("Error fetching Perusahaan by Alamat list:", error);
+    res.status(500).json({
+      success: false,
+      message: "An error occurred while fetching the data.",
+    });
+  }
+};
+
+/**
+ * Opsi tahun (dari jadwal_training.tglMulai) buat filter "Peserta Terakhir"
+ * di halaman Customer — dinamis dari data asli, bukan hardcode 2024/2025/2026.
+ */
+const getPelatihanTahunOptions = async (req, res) => {
+  try {
+    const rows = await prisma.$queryRaw`
+      SELECT DISTINCT EXTRACT(YEAR FROM jt."tglMulai")::int AS tahun
+      FROM "benefita"."jadwal_training" jt
+      WHERE jt."tglMulai" IS NOT NULL
+      ORDER BY tahun DESC
+    `;
+    res.status(200).json({
+      success: true,
+      data: rows.map((r) => r.tahun),
+    });
+  } catch (error) {
+    console.error("Error fetching Pelatihan Tahun options:", error);
+    res.status(500).json({
+      success: false,
+      message: "An error occurred while fetching the data.",
+    });
+  }
+};
+
+/**
+ * Daftar SEMUA perusahaan (bukan cuma yang punya training — semua tetep
+ * muncul, yang belum pernah training tampilin dash). Sertakan pelatihan
+ * pertama & terakhir (dari jadwal_training via peserta_training), rating
+ * PROPER (tabel Proper), dan PIC ENV/CSR/TSM/EPM (HakAksesKaryawan) — reuse
+ * pola yang sama kayak halaman ISO/Prioritas.
+ */
+const getPerusahaanCustomerList = async (req, res) => {
+  try {
+    const { page = 1, limit = 10, search = "", tahun } = req.query;
+
+    const pageNumber = Math.max(1, parseInt(page, 10) || 1);
+    const pageSize = Math.max(1, parseInt(limit, 10) || 10);
+    const offset = (pageNumber - 1) * pageSize;
+    const searchTerm = `%${search}%`;
+    const parsedTahun = parseInt(tahun, 10);
+    const tahunFilter = !isNaN(parsedTahun)
+      ? Prisma.sql`AND EXTRACT(YEAR FROM last."tglMulai")::int = ${parsedTahun}`
+      : Prisma.empty;
+
+    const whereSql = Prisma.sql`
+      p."jenisInstansi" = 'PERUSAHAAN'
+      AND (p."1COMPANY" ILIKE ${searchTerm} OR p."0NO_INDUK" ILIKE ${searchTerm})
+    `;
+
+    const totalRows = await prisma.$queryRaw`
+      SELECT COUNT(*)::int AS count
+      FROM "benefita"."TabPerusahaan" p
+      LEFT JOIN LATERAL (
+        SELECT jt."tglMulai"
+        FROM "benefita"."peserta_training" pt
+        JOIN "benefita"."jadwal_training" jt ON jt."noJadwal" = pt."noJadwal"
+        WHERE pt."noIndukPerusahaan" = p."0NO_INDUK" AND jt."tglMulai" IS NOT NULL
+        ORDER BY jt."tglMulai" DESC LIMIT 1
+      ) last ON TRUE
+      WHERE ${whereSql} ${tahunFilter}
+    `;
+    const total = Number(totalRows[0]?.count ?? 0);
+
+    const rows = await prisma.$queryRaw`
+      SELECT
+        p."0NO_INDUK" AS "noInduk",
+        p."1COMPANY" AS "namaPerusahaan",
+        tp."tahunPeringkat" AS "tahunPeringkat",
+        first."tglMulai" AS "pertamaTglMulai",
+        first."tglSelesai" AS "pertamaTglSelesai",
+        last."tglMulai" AS "terakhirTglMulai",
+        last."tglSelesai" AS "terakhirTglSelesai"
+      FROM "benefita"."TabPerusahaan" p
+      LEFT JOIN LATERAL (
+        SELECT jt."tglMulai", jt."tglSelesai"
+        FROM "benefita"."peserta_training" pt
+        JOIN "benefita"."jadwal_training" jt ON jt."noJadwal" = pt."noJadwal"
+        WHERE pt."noIndukPerusahaan" = p."0NO_INDUK" AND jt."tglMulai" IS NOT NULL
+        ORDER BY jt."tglMulai" ASC LIMIT 1
+      ) first ON TRUE
+      LEFT JOIN LATERAL (
+        SELECT jt."tglMulai", jt."tglSelesai"
+        FROM "benefita"."peserta_training" pt
+        JOIN "benefita"."jadwal_training" jt ON jt."noJadwal" = pt."noJadwal"
+        WHERE pt."noIndukPerusahaan" = p."0NO_INDUK" AND jt."tglMulai" IS NOT NULL
+        ORDER BY jt."tglMulai" DESC LIMIT 1
+      ) last ON TRUE
+      LEFT JOIN LATERAL (
+        SELECT string_agg(
+          'P' || (pr."tahun" - 2000) || ': ' || initcap(replace(pr."peringkat"::text, '_', ' ')),
+          '; ' ORDER BY pr."tahun" DESC
+        ) AS "tahunPeringkat"
+        FROM "benefita"."Proper" pr
+        WHERE pr."noIndukPerusahaan" = p."0NO_INDUK"
+      ) tp ON TRUE
+      WHERE ${whereSql} ${tahunFilter}
+      ORDER BY last."tglMulai" DESC NULLS LAST, p."1COMPANY" ASC
+      LIMIT ${pageSize} OFFSET ${offset}
+    `;
+
+    const noIndukList = rows.map((r) => r.noInduk);
+    const aksesList =
+      noIndukList.length > 0
+        ? await prisma.hakAksesKaryawan.findMany({
+            where: {
+              perusahaanId: { in: noIndukList },
+              jenisAkses: { in: HAK_AKSES_JENIS },
+            },
+            select: {
+              perusahaanId: true,
+              jenisAkses: true,
+              tanggalDibuat: true,
+              pegawai: { select: { kode: true } },
+            },
+            orderBy: { tanggalDibuat: "desc" },
+          })
+        : [];
+
+    const aksesMap = new Map();
+    for (const item of aksesList) {
+      if (!aksesMap.has(item.perusahaanId)) aksesMap.set(item.perusahaanId, {});
+      const entry = aksesMap.get(item.perusahaanId);
+      if (!entry[item.jenisAkses]) {
+        entry[item.jenisAkses] = item.pegawai?.kode ?? null;
+      }
+    }
+
+    const data = rows.map((row) => {
+      const akses = aksesMap.get(row.noInduk) ?? {};
+      return {
+        noInduk: row.noInduk,
+        namaPerusahaan: row.namaPerusahaan,
+        env: akses.ENV ?? null,
+        csr: akses.CSR ?? null,
+        tsm: akses.TSM ?? null,
+        epm: akses.EPM ?? null,
+        proper: row.tahunPeringkat,
+        pelatihanPertama: {
+          tglMulai: row.pertamaTglMulai,
+          tglSelesai: row.pertamaTglSelesai,
+        },
+        pelatihanTerakhir: {
+          tglMulai: row.terakhirTglMulai,
+          tglSelesai: row.terakhirTglSelesai,
+        },
+      };
+    });
+
+    res.status(200).json({
+      success: true,
+      data,
+      pagination: {
+        total,
+        totalPages: Math.ceil(total / pageSize),
+        currentPage: pageNumber,
+        pageSize,
+      },
+    });
+  } catch (error) {
+    console.error("Error fetching Perusahaan Customer list:", error);
+    res.status(500).json({
+      success: false,
+      message: "An error occurred while fetching the data.",
+    });
+  }
+};
+
 module.exports = {
   getTabPerusahaanList,
   createTabPerusahaan,
   getOnePerusahaan,
+  getPerusahaanTbkList,
+  getPerusahaanProperList,
+  getPerusahaanIsoList,
+  getPerusahaanVendorList,
+  getPerusahaanPrioritasList,
+  getPerusahaanByAlamatList,
+  getPelatihanTahunOptions,
+  getPerusahaanCustomerList,
   updatePerusahaan,
   getContactPersonList,
   createContactPerson,

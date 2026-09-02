@@ -222,6 +222,7 @@ const createTrainer = async (req, res) => {
       kantor,
       alamatKantor,
       noTelpKantor,
+      statusAktif,
     } = req.body;
 
     const trainer = await prisma.trainer.create({
@@ -238,6 +239,7 @@ const createTrainer = async (req, res) => {
         kantor,
         alamatKantor,
         noTelpKantor,
+        statusAktif: statusAktif === undefined ? true : statusAktif === true || statusAktif === "true",
       },
     });
 
@@ -269,6 +271,7 @@ const updateTrainer = async (req, res) => {
       kantor,
       alamatKantor,
       noTelpKantor,
+      statusAktif,
     } = req.body;
 
     const trainer = await prisma.trainer.update({
@@ -286,6 +289,10 @@ const updateTrainer = async (req, res) => {
         kantor,
         alamatKantor,
         noTelpKantor,
+        statusAktif:
+          statusAktif === undefined
+            ? undefined
+            : statusAktif === true || statusAktif === "true",
       },
     });
 
@@ -324,23 +331,30 @@ const getTrainerById = async (req, res) => {
 // GET LIST WITH PAGINATION & SEARCH
 const getTrainers = async (req, res) => {
   try {
-    const { page = 1, limit = 10, search = "" } = req.query;
+    const { page = 1, limit = 10, search = "", status } = req.query;
 
     const pageNum = Math.max(1, Number(page));
     const limitNum = Math.max(1, Number(limit));
     const skip = (pageNum - 1) * limitNum;
 
-    const whereClause = search
-      ? {
-          OR: [
-            { kode: { contains: search, mode: "insensitive" } },
-            { nama: { contains: search, mode: "insensitive" } },
-            { telp: { contains: search, mode: "insensitive" } },
-            { kantor: { contains: search, mode: "insensitive" } },
-            { subjekKhusus: { contains: search, mode: "insensitive" } },
-          ],
-        }
-      : {};
+    const whereClause = {
+      ...(search
+        ? {
+            OR: [
+              { kode: { contains: search, mode: "insensitive" } },
+              { nama: { contains: search, mode: "insensitive" } },
+              { telp: { contains: search, mode: "insensitive" } },
+              { kantor: { contains: search, mode: "insensitive" } },
+              { subjekKhusus: { contains: search, mode: "insensitive" } },
+            ],
+          }
+        : {}),
+      ...(status === "aktif"
+        ? { statusAktif: true }
+        : status === "nonaktif"
+          ? { statusAktif: false }
+          : {}),
+    };
 
     const [total, trainers] = await prisma.$transaction([
       prisma.trainer.count({ where: whereClause }),
@@ -355,6 +369,7 @@ const getTrainers = async (req, res) => {
           nama: true,
           telp: true,
           email: true,
+          statusAktif: true,
           kantor: true,
           referensi: true,
           subjekKhusus: true,
@@ -1369,6 +1384,230 @@ const deleteJadwalTraining = async (req, res) => {
   }
 };
 
+// ─────────────────────────────────────────────
+// ASSIGN TRAINER PER HARI
+// Jadwal training punya rentang tglMulai–tglSelesai. Fitur ini "membongkar"
+// rentang itu jadi per-hari, dan tiap hari bisa diisi lebih dari 1 trainer.
+// ─────────────────────────────────────────────
+
+// yyyy-mm-dd dari Date/string, dibaca sebagai UTC biar gak geser TZ
+const toDateOnly = (dateInput) => new Date(dateInput).toISOString().slice(0, 10);
+
+// yyyy-mm-dd → Date jam 00:00 UTC (biar konsisten sama kolom @db.Date)
+const toUTCDate = (isoDateStr) => new Date(`${isoDateStr}T00:00:00.000Z`);
+
+const buildDateRange = (startIso, endIso) => {
+  const dates = [];
+  let cur = toUTCDate(startIso);
+  const end = toUTCDate(endIso);
+  while (cur <= end) {
+    dates.push(toDateOnly(cur));
+    cur = new Date(cur.getTime() + 24 * 60 * 60 * 1000);
+  }
+  return dates;
+};
+
+// Gabungkan rentang tanggal jadwal dengan data trainer yang sudah diassign
+const getJadwalHariMerged = async (jadwal) => {
+  const dates = buildDateRange(
+    toDateOnly(jadwal.tglMulai),
+    toDateOnly(jadwal.tglSelesai),
+  );
+
+  const rows = await prisma.jadwalTrainingHari.findMany({
+    where: { jadwalId: jadwal.id },
+    include: {
+      trainers: {
+        include: { trainer: { select: { kode: true, nama: true } } },
+      },
+    },
+  });
+
+  const rowByDate = new Map(rows.map((row) => [toDateOnly(row.tanggal), row]));
+
+  return dates.map((tanggal) => {
+    const row = rowByDate.get(tanggal);
+    return {
+      tanggal,
+      trainers: row ? row.trainers.map((t) => t.trainer) : [],
+    };
+  });
+};
+
+/**
+ * GET assign trainer per hari untuk 1 jadwal training
+ */
+const getJadwalTrainingHari = async (req, res) => {
+  try {
+    const { noJadwal } = req.params;
+
+    const jadwal = await prisma.jadwalTraining.findUnique({
+      where: { noJadwal },
+      select: {
+        id: true,
+        noJadwal: true,
+        judulLengkap: true,
+        tglMulai: true,
+        tglSelesai: true,
+      },
+    });
+
+    if (!jadwal) {
+      return res
+        .status(404)
+        .json({ message: "Jadwal Training tidak ditemukan." });
+    }
+
+    if (!jadwal.tglMulai || !jadwal.tglSelesai) {
+      return res.status(400).json({
+        message: "Jadwal Training belum punya tanggal mulai/selesai.",
+      });
+    }
+
+    const data = await getJadwalHariMerged(jadwal);
+
+    res.status(200).json({
+      jadwal: {
+        noJadwal: jadwal.noJadwal,
+        judulLengkap: jadwal.judulLengkap,
+        tglMulai: jadwal.tglMulai,
+        tglSelesai: jadwal.tglSelesai,
+      },
+      data,
+    });
+  } catch (error) {
+    res
+      .status(500)
+      .json({ message: "Internal server error.", error: error.message });
+  }
+};
+
+/**
+ * UPDATE (assign/edit) trainer per hari untuk 1 jadwal training
+ * Body: { hari: [{ tanggal: "2026-04-20", trainerKodes: ["WM-01","WM-02"] }, ...] }
+ */
+const updateJadwalTrainingHari = async (req, res) => {
+  try {
+    const { noJadwal } = req.params;
+    const { hari } = req.body;
+
+    if (!Array.isArray(hari) || hari.length === 0) {
+      return res.status(400).json({
+        message: "hari wajib diisi berupa array [{ tanggal, trainerKodes }].",
+      });
+    }
+
+    const jadwal = await prisma.jadwalTraining.findUnique({
+      where: { noJadwal },
+      select: {
+        id: true,
+        noJadwal: true,
+        judulLengkap: true,
+        tglMulai: true,
+        tglSelesai: true,
+      },
+    });
+
+    if (!jadwal) {
+      return res
+        .status(404)
+        .json({ message: "Jadwal Training tidak ditemukan." });
+    }
+
+    if (!jadwal.tglMulai || !jadwal.tglSelesai) {
+      return res.status(400).json({
+        message: "Jadwal Training belum punya tanggal mulai/selesai.",
+      });
+    }
+
+    const rangeStart = toDateOnly(jadwal.tglMulai);
+    const rangeEnd = toDateOnly(jadwal.tglSelesai);
+
+    // Validasi tiap entry sebelum nulis apa pun
+    const normalized = [];
+    for (const item of hari) {
+      const { tanggal, trainerKodes } = item ?? {};
+      if (!tanggal) {
+        return res
+          .status(400)
+          .json({ message: "Setiap item hari wajib punya tanggal." });
+      }
+
+      const tanggalIso = toDateOnly(tanggal);
+      if (tanggalIso < rangeStart || tanggalIso > rangeEnd) {
+        return res.status(400).json({
+          message: `Tanggal ${tanggalIso} di luar rentang jadwal (${rangeStart} s/d ${rangeEnd}).`,
+        });
+      }
+
+      let kodes = trainerKodes;
+      if (!Array.isArray(kodes)) {
+        kodes = kodes ? [kodes] : [];
+      }
+
+      normalized.push({ tanggalIso, trainerKodes: [...new Set(kodes)] });
+    }
+
+    try {
+      await prisma.$transaction(async (tx) => {
+        for (const item of normalized) {
+          const hariRow = await tx.jadwalTrainingHari.upsert({
+            where: {
+              jadwalId_tanggal: {
+                jadwalId: jadwal.id,
+                tanggal: toUTCDate(item.tanggalIso),
+              },
+            },
+            update: {},
+            create: {
+              jadwalId: jadwal.id,
+              tanggal: toUTCDate(item.tanggalIso),
+            },
+          });
+
+          await tx.trainerOnJadwalHari.deleteMany({
+            where: { jadwalHariId: hariRow.id },
+          });
+
+          if (item.trainerKodes.length > 0) {
+            await tx.trainerOnJadwalHari.createMany({
+              data: item.trainerKodes.map((kode) => ({
+                jadwalHariId: hariRow.id,
+                trainerKode: kode,
+              })),
+              skipDuplicates: true,
+            });
+          }
+        }
+      });
+    } catch (err) {
+      if (err.code === "P2003") {
+        return res
+          .status(400)
+          .json({ message: "Salah satu kode trainer tidak ditemukan." });
+      }
+      throw err;
+    }
+
+    const data = await getJadwalHariMerged(jadwal);
+
+    res.status(200).json({
+      message: "Assign trainer per hari berhasil disimpan.",
+      jadwal: {
+        noJadwal: jadwal.noJadwal,
+        judulLengkap: jadwal.judulLengkap,
+        tglMulai: jadwal.tglMulai,
+        tglSelesai: jadwal.tglSelesai,
+      },
+      data,
+    });
+  } catch (error) {
+    res
+      .status(500)
+      .json({ message: "Internal server error.", error: error.message });
+  }
+};
+
 const getJudulTrainingOptions = async (req, res) => {
   try {
     const data = await prisma.judulTraining.findMany({
@@ -1389,7 +1628,12 @@ const getJudulTrainingOptions = async (req, res) => {
 
 const getTrainerOptions = async (req, res) => {
   try {
+    // Default cuma yang aktif — dropdown assign trainer gak perlu nampilin
+    // trainer yang udah nonaktif. Pakai ?includeInactive=true kalau butuh semua.
+    const { includeInactive } = req.query;
+
     const data = await prisma.trainer.findMany({
+      where: includeInactive === "true" ? {} : { statusAktif: true },
       orderBy: { kode: "asc" },
       select: {
         kode: true,
@@ -1440,6 +1684,9 @@ module.exports = {
   getJadwalTrainingById,
   deleteJadwalTraining,
   getNextNoJadwal,
+
+  getJadwalTrainingHari,
+  updateJadwalTrainingHari,
 
   getTrainerOptions,
   getJudulTrainingOptions,

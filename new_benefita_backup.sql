@@ -2,9 +2,10 @@
 -- PostgreSQL database dump
 --
 
+\restrict x8umZF4teoIMQdouzXuEfKwgOOuYR1MDts7YwYZhYieremaRTLf0SuabOsn1II3
 
--- Dumped from database version 17.7
--- Dumped by pg_dump version 17.7
+-- Dumped from database version 18.4
+-- Dumped by pg_dump version 18.4
 
 SET statement_timeout = 0;
 SET lock_timeout = 0;
@@ -18,17 +19,200 @@ SET xmloption = content;
 SET client_min_messages = warning;
 SET row_security = off;
 
+ALTER TABLE IF EXISTS ONLY benefita.umk DROP CONSTRAINT IF EXISTS umk_inputter_fkey;
+ALTER TABLE IF EXISTS ONLY benefita.umk DROP CONSTRAINT IF EXISTS "umk_PIC_umk_fkey";
+ALTER TABLE IF EXISTS ONLY benefita.trainer_on_jadwal DROP CONSTRAINT IF EXISTS "trainer_on_jadwal_trainerKode_fkey";
+ALTER TABLE IF EXISTS ONLY benefita.trainer_on_jadwal DROP CONSTRAINT IF EXISTS "trainer_on_jadwal_jadwalId_fkey";
+ALTER TABLE IF EXISTS ONLY benefita.trainer_on_jadwal_hari DROP CONSTRAINT IF EXISTS "trainer_on_jadwal_hari_trainerKode_fkey";
+ALTER TABLE IF EXISTS ONLY benefita.trainer_on_jadwal_hari DROP CONSTRAINT IF EXISTS "trainer_on_jadwal_hari_jadwalHariId_fkey";
+ALTER TABLE IF EXISTS ONLY benefita.tabposperusahaan DROP CONSTRAINT IF EXISTS "tabposperusahaan_NO_INDUK_fkey";
+ALTER TABLE IF EXISTS ONLY benefita.peserta_training DROP CONSTRAINT IF EXISTS "peserta_training_updateOleh_fkey";
+ALTER TABLE IF EXISTS ONLY benefita.peserta_training DROP CONSTRAINT IF EXISTS "peserta_training_noJadwal_fkey";
+ALTER TABLE IF EXISTS ONLY benefita.peserta_training DROP CONSTRAINT IF EXISTS "peserta_training_noIndukPerusahaan_fkey";
+ALTER TABLE IF EXISTS ONLY benefita.peserta_training DROP CONSTRAINT IF EXISTS "peserta_training_konfirmasiOleh_fkey";
+ALTER TABLE IF EXISTS ONLY benefita.peserta_training DROP CONSTRAINT IF EXISTS "peserta_training_inputOleh_fkey";
+ALTER TABLE IF EXISTS ONLY benefita.permohonan_hak_akses DROP CONSTRAINT IF EXISTS permohonan_hak_akses_perusahaan_id_fkey;
+ALTER TABLE IF EXISTS ONLY benefita.permohonan_hak_akses DROP CONSTRAINT IF EXISTS permohonan_hak_akses_pegawai_id_fkey;
+ALTER TABLE IF EXISTS ONLY benefita.permintaan_nomor_surat DROP CONSTRAINT IF EXISTS permintaan_nomor_surat_tujuan_no_induk_fkey;
+ALTER TABLE IF EXISTS ONLY benefita.permintaan_nomor_surat DROP CONSTRAINT IF EXISTS permintaan_nomor_surat_pengirim_id_fkey;
+ALTER TABLE IF EXISTS ONLY benefita.pengajuan_judul_training DROP CONSTRAINT IF EXISTS "pengajuan_judul_training_perusahaanId_fkey";
+ALTER TABLE IF EXISTS ONLY benefita.pengajuan_judul_training DROP CONSTRAINT IF EXISTS "pengajuan_judul_training_inputOlehId_fkey";
+ALTER TABLE IF EXISTS ONLY benefita.penawaran DROP CONSTRAINT IF EXISTS "penawaran_perusahaanId_fkey";
+ALTER TABLE IF EXISTS ONLY benefita.log_perubahan_perusahaan DROP CONSTRAINT IF EXISTS log_perubahan_perusahaan_perusahaan_id_fkey;
+ALTER TABLE IF EXISTS ONLY benefita.lini_bisnis_training DROP CONSTRAINT IF EXISTS "lini_bisnis_training_liniBisnisId_fkey";
+ALTER TABLE IF EXISTS ONLY benefita.lini_bisnis_training DROP CONSTRAINT IF EXISTS "lini_bisnis_training_judulTrainingId_fkey";
+ALTER TABLE IF EXISTS ONLY benefita.konfirmasi DROP CONSTRAINT IF EXISTS "konfirmasi_pesertaTrainingId_fkey";
+ALTER TABLE IF EXISTS ONLY benefita.konfirmasi DROP CONSTRAINT IF EXISTS "konfirmasi_noJadwal_fkey";
+ALTER TABLE IF EXISTS ONLY benefita.konfirmasi DROP CONSTRAINT IF EXISTS "konfirmasi_noIndukInstansi_fkey";
+ALTER TABLE IF EXISTS ONLY benefita.konfirmasi DROP CONSTRAINT IF EXISTS "konfirmasi_dibuatOlehId_fkey";
+ALTER TABLE IF EXISTS ONLY benefita.jadwal_training DROP CONSTRAINT IF EXISTS "jadwal_training_updateOleh_fkey";
+ALTER TABLE IF EXISTS ONLY benefita.jadwal_training DROP CONSTRAINT IF EXISTS "jadwal_training_kodePelatihan_fkey";
+ALTER TABLE IF EXISTS ONLY benefita.jadwal_training_hari DROP CONSTRAINT IF EXISTS "jadwal_training_hari_jadwalId_fkey";
+ALTER TABLE IF EXISTS ONLY benefita.evaluasi_pelatihan DROP CONSTRAINT IF EXISTS "evaluasi_pelatihan_pesertaTrainingId_fkey";
+ALTER TABLE IF EXISTS ONLY benefita.evaluasi_pelatihan_diminati DROP CONSTRAINT IF EXISTS "evaluasi_pelatihan_diminati_judulTrainingId_fkey";
+ALTER TABLE IF EXISTS ONLY benefita.evaluasi_pelatihan_diminati DROP CONSTRAINT IF EXISTS "evaluasi_pelatihan_diminati_evaluasiId_fkey";
+ALTER TABLE IF EXISTS ONLY benefita.daily_activity DROP CONSTRAINT IF EXISTS "daily_activity_PERUSAHAAN_ID_fkey";
+ALTER TABLE IF EXISTS ONLY benefita.daily_activity DROP CONSTRAINT IF EXISTS "daily_activity_PEGAWAI_ID_fkey";
+ALTER TABLE IF EXISTS ONLY benefita.contact_person_perusahaan DROP CONSTRAINT IF EXISTS "contact_person_perusahaan_KODE_PERUSAHAAN_fkey";
+ALTER TABLE IF EXISTS ONLY benefita."User" DROP CONSTRAINT IF EXISTS "User_pegawaiId_fkey";
+ALTER TABLE IF EXISTS ONLY benefita."TableNeraca" DROP CONSTRAINT IF EXISTS "TableNeraca_userUpdateId_fkey";
+ALTER TABLE IF EXISTS ONLY benefita."TableNeraca" DROP CONSTRAINT IF EXISTS "TableNeraca_userInputId_fkey";
+ALTER TABLE IF EXISTS ONLY benefita."TableNeraca" DROP CONSTRAINT IF EXISTS "TableNeraca_jenisBiayaId_fkey";
+ALTER TABLE IF EXISTS ONLY benefita."TabPerusahaan" DROP CONSTRAINT IF EXISTS "TabPerusahaan_liniBisnisId_fkey";
+ALTER TABLE IF EXISTS ONLY benefita."SertifikasiBnsp" DROP CONSTRAINT IF EXISTS "SertifikasiBnsp_perusahaanId_fkey";
+ALTER TABLE IF EXISTS ONLY benefita."RefreshToken" DROP CONSTRAINT IF EXISTS "RefreshToken_userId_fkey";
+ALTER TABLE IF EXISTS ONLY benefita."PengajuanIzin" DROP CONSTRAINT IF EXISTS "PengajuanIzin_pegawaiId_fkey";
+ALTER TABLE IF EXISTS ONLY benefita."OtpCode" DROP CONSTRAINT IF EXISTS "OtpCode_userId_fkey";
+ALTER TABLE IF EXISTS ONLY benefita."HakAksesKaryawan" DROP CONSTRAINT IF EXISTS "HakAksesKaryawan_perusahaanId_fkey";
+ALTER TABLE IF EXISTS ONLY benefita."HakAksesKaryawan" DROP CONSTRAINT IF EXISTS "HakAksesKaryawan_pegawaiId_fkey";
+ALTER TABLE IF EXISTS ONLY benefita."DokumenPegawai" DROP CONSTRAINT IF EXISTS "DokumenPegawai_pegawaiId_fkey";
+ALTER TABLE IF EXISTS ONLY benefita."DeviceTrusted" DROP CONSTRAINT IF EXISTS "DeviceTrusted_userId_fkey";
+ALTER TABLE IF EXISTS ONLY benefita."BuktiIzin" DROP CONSTRAINT IF EXISTS "BuktiIzin_pengajuanIzinId_fkey";
+DROP INDEX IF EXISTS benefita."umk_No_umk_key";
+DROP INDEX IF EXISTS benefita.permintaan_nomor_surat_tujuan_no_induk_pengirim_id_tanggal__key;
+DROP INDEX IF EXISTS benefita."permintaan_nomor_surat_noSurat_key";
+DROP INDEX IF EXISTS benefita.log_perubahan_perusahaan_perusahaan_id_idx;
+DROP INDEX IF EXISTS benefita."lini_bisnis_training_liniBisnisId_judulTrainingId_key";
+DROP INDEX IF EXISTS benefita.lini_bisnis_nama_key;
+DROP INDEX IF EXISTS benefita.kontak_kode_key;
+DROP INDEX IF EXISTS benefita."konfirmasi_noKonfirmasi_key";
+DROP INDEX IF EXISTS benefita.judul_training_kode_key;
+DROP INDEX IF EXISTS benefita."jadwal_training_noJadwal_key";
+DROP INDEX IF EXISTS benefita."jadwal_training_hari_jadwalId_tanggal_key";
+DROP INDEX IF EXISTS benefita.hotel_kode_hotel_key;
+DROP INDEX IF EXISTS benefita."evaluasi_pelatihan_pesertaTrainingId_key";
+DROP INDEX IF EXISTS benefita."daily_activity_PERUSAHAAN_ID_idx";
+DROP INDEX IF EXISTS benefita."daily_activity_PEGAWAI_ID_idx";
+DROP INDEX IF EXISTS benefita."contact_person_perusahaan_KODE_PERUSAHAAN_idx";
+DROP INDEX IF EXISTS benefita."User_phone_key";
+DROP INDEX IF EXISTS benefita."User_pegawaiId_key";
+DROP INDEX IF EXISTS benefita."User_email_key";
+DROP INDEX IF EXISTS benefita."TableJenisBiaya_kode_key";
+DROP INDEX IF EXISTS benefita."RefreshToken_userId_idx";
+DROP INDEX IF EXISTS benefita."RefreshToken_token_key";
+DROP INDEX IF EXISTS benefita."Pegawai_nip_key";
+DROP INDEX IF EXISTS benefita."DeviceTrusted_userId_deviceHash_key";
+ALTER TABLE IF EXISTS ONLY benefita.umk DROP CONSTRAINT IF EXISTS umk_pkey;
+ALTER TABLE IF EXISTS ONLY benefita.trainer_on_jadwal DROP CONSTRAINT IF EXISTS trainer_on_jadwal_pkey;
+ALTER TABLE IF EXISTS ONLY benefita.trainer_on_jadwal_hari DROP CONSTRAINT IF EXISTS trainer_on_jadwal_hari_pkey;
+ALTER TABLE IF EXISTS ONLY benefita.tabposperusahaan DROP CONSTRAINT IF EXISTS tabposperusahaan_pkey;
+ALTER TABLE IF EXISTS ONLY benefita.peserta_training DROP CONSTRAINT IF EXISTS peserta_training_pkey;
+ALTER TABLE IF EXISTS ONLY benefita.permohonan_hak_akses DROP CONSTRAINT IF EXISTS permohonan_hak_akses_pkey;
+ALTER TABLE IF EXISTS ONLY benefita.permintaan_nomor_surat DROP CONSTRAINT IF EXISTS permintaan_nomor_surat_pkey;
+ALTER TABLE IF EXISTS ONLY benefita.pengajuan_judul_training DROP CONSTRAINT IF EXISTS pengajuan_judul_training_pkey;
+ALTER TABLE IF EXISTS ONLY benefita.penawaran DROP CONSTRAINT IF EXISTS penawaran_pkey;
+ALTER TABLE IF EXISTS ONLY benefita.log_perubahan_perusahaan DROP CONSTRAINT IF EXISTS log_perubahan_perusahaan_pkey;
+ALTER TABLE IF EXISTS ONLY benefita.lini_bisnis_training DROP CONSTRAINT IF EXISTS lini_bisnis_training_pkey;
+ALTER TABLE IF EXISTS ONLY benefita.lini_bisnis DROP CONSTRAINT IF EXISTS lini_bisnis_pkey;
+ALTER TABLE IF EXISTS ONLY benefita.kontak DROP CONSTRAINT IF EXISTS kontak_pkey;
+ALTER TABLE IF EXISTS ONLY benefita.konfirmasi DROP CONSTRAINT IF EXISTS konfirmasi_pkey;
+ALTER TABLE IF EXISTS ONLY benefita.judul_training DROP CONSTRAINT IF EXISTS judul_training_pkey;
+ALTER TABLE IF EXISTS ONLY benefita.jadwal_training DROP CONSTRAINT IF EXISTS jadwal_training_pkey;
+ALTER TABLE IF EXISTS ONLY benefita.jadwal_training_hari DROP CONSTRAINT IF EXISTS jadwal_training_hari_pkey;
+ALTER TABLE IF EXISTS ONLY benefita.hotel DROP CONSTRAINT IF EXISTS hotel_pkey;
+ALTER TABLE IF EXISTS ONLY benefita.evaluasi_pelatihan DROP CONSTRAINT IF EXISTS evaluasi_pelatihan_pkey;
+ALTER TABLE IF EXISTS ONLY benefita.evaluasi_pelatihan_diminati DROP CONSTRAINT IF EXISTS evaluasi_pelatihan_diminati_pkey;
+ALTER TABLE IF EXISTS ONLY benefita.daily_activity DROP CONSTRAINT IF EXISTS daily_activity_pkey;
+ALTER TABLE IF EXISTS ONLY benefita.contact_person_perusahaan DROP CONSTRAINT IF EXISTS contact_person_perusahaan_pkey;
+ALTER TABLE IF EXISTS ONLY benefita.berita DROP CONSTRAINT IF EXISTS berita_pkey;
+ALTER TABLE IF EXISTS ONLY benefita._prisma_migrations DROP CONSTRAINT IF EXISTS _prisma_migrations_pkey;
+ALTER TABLE IF EXISTS ONLY benefita."User" DROP CONSTRAINT IF EXISTS "User_pkey";
+ALTER TABLE IF EXISTS ONLY benefita."TableNeraca" DROP CONSTRAINT IF EXISTS "TableNeraca_pkey";
+ALTER TABLE IF EXISTS ONLY benefita."TableJenisBiaya" DROP CONSTRAINT IF EXISTS "TableJenisBiaya_pkey";
+ALTER TABLE IF EXISTS ONLY benefita."TabPerusahaan" DROP CONSTRAINT IF EXISTS "TabPerusahaan_pkey";
+ALTER TABLE IF EXISTS ONLY benefita."SertifikasiBnsp" DROP CONSTRAINT IF EXISTS "SertifikasiBnsp_pkey";
+ALTER TABLE IF EXISTS ONLY benefita."RefreshToken" DROP CONSTRAINT IF EXISTS "RefreshToken_pkey";
+ALTER TABLE IF EXISTS ONLY benefita."Proper" DROP CONSTRAINT IF EXISTS "Proper_pkey";
+ALTER TABLE IF EXISTS ONLY benefita."PengajuanIzin" DROP CONSTRAINT IF EXISTS "PengajuanIzin_pkey";
+ALTER TABLE IF EXISTS ONLY benefita."Pegawai" DROP CONSTRAINT IF EXISTS "Pegawai_pkey";
+ALTER TABLE IF EXISTS ONLY benefita."OtpCode" DROP CONSTRAINT IF EXISTS "OtpCode_pkey";
+ALTER TABLE IF EXISTS ONLY benefita."HakAksesKaryawan" DROP CONSTRAINT IF EXISTS "HakAksesKaryawan_pkey";
+ALTER TABLE IF EXISTS ONLY benefita."DokumenPegawai" DROP CONSTRAINT IF EXISTS "DokumenPegawai_pkey";
+ALTER TABLE IF EXISTS ONLY benefita."DeviceTrusted" DROP CONSTRAINT IF EXISTS "DeviceTrusted_pkey";
+ALTER TABLE IF EXISTS ONLY benefita."BuktiIzin" DROP CONSTRAINT IF EXISTS "BuktiIzin_pkey";
+ALTER TABLE IF EXISTS benefita.umk ALTER COLUMN id DROP DEFAULT;
+ALTER TABLE IF EXISTS benefita.peserta_training ALTER COLUMN id DROP DEFAULT;
+ALTER TABLE IF EXISTS benefita.permintaan_nomor_surat ALTER COLUMN id DROP DEFAULT;
+ALTER TABLE IF EXISTS benefita.lini_bisnis_training ALTER COLUMN id DROP DEFAULT;
+ALTER TABLE IF EXISTS benefita.lini_bisnis ALTER COLUMN id DROP DEFAULT;
+ALTER TABLE IF EXISTS benefita.kontak ALTER COLUMN id DROP DEFAULT;
+ALTER TABLE IF EXISTS benefita.konfirmasi ALTER COLUMN id DROP DEFAULT;
+ALTER TABLE IF EXISTS benefita.judul_training ALTER COLUMN id DROP DEFAULT;
+ALTER TABLE IF EXISTS benefita.jadwal_training_hari ALTER COLUMN id DROP DEFAULT;
+ALTER TABLE IF EXISTS benefita.jadwal_training ALTER COLUMN id DROP DEFAULT;
+ALTER TABLE IF EXISTS benefita.evaluasi_pelatihan ALTER COLUMN id DROP DEFAULT;
+ALTER TABLE IF EXISTS benefita."TableNeraca" ALTER COLUMN id DROP DEFAULT;
+ALTER TABLE IF EXISTS benefita."TableJenisBiaya" ALTER COLUMN id DROP DEFAULT;
+ALTER TABLE IF EXISTS benefita."SertifikasiBnsp" ALTER COLUMN id DROP DEFAULT;
+ALTER TABLE IF EXISTS benefita."Proper" ALTER COLUMN id DROP DEFAULT;
+DROP SEQUENCE IF EXISTS benefita.umk_id_seq;
+DROP TABLE IF EXISTS benefita.umk;
+DROP TABLE IF EXISTS benefita.trainer_on_jadwal_hari;
+DROP TABLE IF EXISTS benefita.trainer_on_jadwal;
+DROP TABLE IF EXISTS benefita.tabposperusahaan;
+DROP SEQUENCE IF EXISTS benefita.peserta_training_id_seq;
+DROP TABLE IF EXISTS benefita.peserta_training;
+DROP TABLE IF EXISTS benefita.permohonan_hak_akses;
+DROP SEQUENCE IF EXISTS benefita.permintaan_nomor_surat_id_seq;
+DROP TABLE IF EXISTS benefita.permintaan_nomor_surat;
+DROP TABLE IF EXISTS benefita.pengajuan_judul_training;
+DROP TABLE IF EXISTS benefita.penawaran;
+DROP TABLE IF EXISTS benefita.log_perubahan_perusahaan;
+DROP SEQUENCE IF EXISTS benefita.lini_bisnis_training_id_seq;
+DROP TABLE IF EXISTS benefita.lini_bisnis_training;
+DROP SEQUENCE IF EXISTS benefita.lini_bisnis_id_seq;
+DROP TABLE IF EXISTS benefita.lini_bisnis;
+DROP SEQUENCE IF EXISTS benefita.kontak_id_seq;
+DROP TABLE IF EXISTS benefita.kontak;
+DROP SEQUENCE IF EXISTS benefita.konfirmasi_id_seq;
+DROP TABLE IF EXISTS benefita.konfirmasi;
+DROP SEQUENCE IF EXISTS benefita.judul_training_id_seq;
+DROP TABLE IF EXISTS benefita.judul_training;
+DROP SEQUENCE IF EXISTS benefita.jadwal_training_id_seq;
+DROP SEQUENCE IF EXISTS benefita.jadwal_training_hari_id_seq;
+DROP TABLE IF EXISTS benefita.jadwal_training_hari;
+DROP TABLE IF EXISTS benefita.jadwal_training;
+DROP TABLE IF EXISTS benefita.hotel;
+DROP SEQUENCE IF EXISTS benefita.evaluasi_pelatihan_id_seq;
+DROP TABLE IF EXISTS benefita.evaluasi_pelatihan_diminati;
+DROP TABLE IF EXISTS benefita.evaluasi_pelatihan;
+DROP TABLE IF EXISTS benefita.daily_activity;
+DROP TABLE IF EXISTS benefita.contact_person_perusahaan;
+DROP TABLE IF EXISTS benefita.berita;
+DROP TABLE IF EXISTS benefita._prisma_migrations;
+DROP TABLE IF EXISTS benefita."User";
+DROP SEQUENCE IF EXISTS benefita."TableNeraca_id_seq";
+DROP TABLE IF EXISTS benefita."TableNeraca";
+DROP SEQUENCE IF EXISTS benefita."TableJenisBiaya_id_seq";
+DROP TABLE IF EXISTS benefita."TableJenisBiaya";
+DROP TABLE IF EXISTS benefita."TabPerusahaan";
+DROP SEQUENCE IF EXISTS benefita."SertifikasiBnsp_id_seq";
+DROP TABLE IF EXISTS benefita."SertifikasiBnsp";
+DROP TABLE IF EXISTS benefita."RefreshToken";
+DROP SEQUENCE IF EXISTS benefita."Proper_id_seq";
+DROP TABLE IF EXISTS benefita."Proper";
+DROP TABLE IF EXISTS benefita."PengajuanIzin";
+DROP TABLE IF EXISTS benefita."Pegawai";
+DROP TABLE IF EXISTS benefita."OtpCode";
+DROP TABLE IF EXISTS benefita."HakAksesKaryawan";
+DROP TABLE IF EXISTS benefita."DokumenPegawai";
+DROP TABLE IF EXISTS benefita."DeviceTrusted";
+DROP TABLE IF EXISTS benefita."BuktiIzin";
+DROP TYPE IF EXISTS benefita."TipeSurat";
+DROP TYPE IF EXISTS benefita."StatusIzin";
+DROP TYPE IF EXISTS benefita."RoleStatus";
+DROP TYPE IF EXISTS benefita."Peringkat";
+DROP TYPE IF EXISTS benefita."JenisIzin";
+DROP SCHEMA IF EXISTS benefita;
 --
--- Name: benefita; Type: SCHEMA; Schema: -; Owner: postgres
+-- Name: benefita; Type: SCHEMA; Schema: -; Owner: -
 --
 
 CREATE SCHEMA benefita;
 
 
-ALTER SCHEMA benefita OWNER TO postgres;
-
 --
--- Name: JenisIzin; Type: TYPE; Schema: benefita; Owner: postgres
+-- Name: JenisIzin; Type: TYPE; Schema: benefita; Owner: -
 --
 
 CREATE TYPE benefita."JenisIzin" AS ENUM (
@@ -38,10 +222,8 @@ CREATE TYPE benefita."JenisIzin" AS ENUM (
 );
 
 
-ALTER TYPE benefita."JenisIzin" OWNER TO postgres;
-
 --
--- Name: Peringkat; Type: TYPE; Schema: benefita; Owner: postgres
+-- Name: Peringkat; Type: TYPE; Schema: benefita; Owner: -
 --
 
 CREATE TYPE benefita."Peringkat" AS ENUM (
@@ -58,10 +240,8 @@ CREATE TYPE benefita."Peringkat" AS ENUM (
 );
 
 
-ALTER TYPE benefita."Peringkat" OWNER TO postgres;
-
 --
--- Name: RoleStatus; Type: TYPE; Schema: benefita; Owner: postgres
+-- Name: RoleStatus; Type: TYPE; Schema: benefita; Owner: -
 --
 
 CREATE TYPE benefita."RoleStatus" AS ENUM (
@@ -75,10 +255,8 @@ CREATE TYPE benefita."RoleStatus" AS ENUM (
 );
 
 
-ALTER TYPE benefita."RoleStatus" OWNER TO postgres;
-
 --
--- Name: StatusIzin; Type: TYPE; Schema: benefita; Owner: postgres
+-- Name: StatusIzin; Type: TYPE; Schema: benefita; Owner: -
 --
 
 CREATE TYPE benefita."StatusIzin" AS ENUM (
@@ -88,10 +266,8 @@ CREATE TYPE benefita."StatusIzin" AS ENUM (
 );
 
 
-ALTER TYPE benefita."StatusIzin" OWNER TO postgres;
-
 --
--- Name: TipeSurat; Type: TYPE; Schema: benefita; Owner: postgres
+-- Name: TipeSurat; Type: TYPE; Schema: benefita; Owner: -
 --
 
 CREATE TYPE benefita."TipeSurat" AS ENUM (
@@ -101,14 +277,12 @@ CREATE TYPE benefita."TipeSurat" AS ENUM (
 );
 
 
-ALTER TYPE benefita."TipeSurat" OWNER TO postgres;
-
 SET default_tablespace = '';
 
 SET default_table_access_method = heap;
 
 --
--- Name: BuktiIzin; Type: TABLE; Schema: benefita; Owner: postgres
+-- Name: BuktiIzin; Type: TABLE; Schema: benefita; Owner: -
 --
 
 CREATE TABLE benefita."BuktiIzin" (
@@ -121,10 +295,8 @@ CREATE TABLE benefita."BuktiIzin" (
 );
 
 
-ALTER TABLE benefita."BuktiIzin" OWNER TO postgres;
-
 --
--- Name: DeviceTrusted; Type: TABLE; Schema: benefita; Owner: postgres
+-- Name: DeviceTrusted; Type: TABLE; Schema: benefita; Owner: -
 --
 
 CREATE TABLE benefita."DeviceTrusted" (
@@ -136,10 +308,8 @@ CREATE TABLE benefita."DeviceTrusted" (
 );
 
 
-ALTER TABLE benefita."DeviceTrusted" OWNER TO postgres;
-
 --
--- Name: DokumenPegawai; Type: TABLE; Schema: benefita; Owner: postgres
+-- Name: DokumenPegawai; Type: TABLE; Schema: benefita; Owner: -
 --
 
 CREATE TABLE benefita."DokumenPegawai" (
@@ -153,10 +323,8 @@ CREATE TABLE benefita."DokumenPegawai" (
 );
 
 
-ALTER TABLE benefita."DokumenPegawai" OWNER TO postgres;
-
 --
--- Name: HakAksesKaryawan; Type: TABLE; Schema: benefita; Owner: postgres
+-- Name: HakAksesKaryawan; Type: TABLE; Schema: benefita; Owner: -
 --
 
 CREATE TABLE benefita."HakAksesKaryawan" (
@@ -169,10 +337,8 @@ CREATE TABLE benefita."HakAksesKaryawan" (
 );
 
 
-ALTER TABLE benefita."HakAksesKaryawan" OWNER TO postgres;
-
 --
--- Name: OtpCode; Type: TABLE; Schema: benefita; Owner: postgres
+-- Name: OtpCode; Type: TABLE; Schema: benefita; Owner: -
 --
 
 CREATE TABLE benefita."OtpCode" (
@@ -186,10 +352,8 @@ CREATE TABLE benefita."OtpCode" (
 );
 
 
-ALTER TABLE benefita."OtpCode" OWNER TO postgres;
-
 --
--- Name: Pegawai; Type: TABLE; Schema: benefita; Owner: postgres
+-- Name: Pegawai; Type: TABLE; Schema: benefita; Owner: -
 --
 
 CREATE TABLE benefita."Pegawai" (
@@ -219,14 +383,13 @@ CREATE TABLE benefita."Pegawai" (
     "tempatTanggalLahir" text,
     "updatedBy" text,
     "userData" text,
-    "userStatus" text
+    "userStatus" text,
+    "statusAktif" boolean DEFAULT false NOT NULL
 );
 
 
-ALTER TABLE benefita."Pegawai" OWNER TO postgres;
-
 --
--- Name: PengajuanIzin; Type: TABLE; Schema: benefita; Owner: postgres
+-- Name: PengajuanIzin; Type: TABLE; Schema: benefita; Owner: -
 --
 
 CREATE TABLE benefita."PengajuanIzin" (
@@ -244,10 +407,8 @@ CREATE TABLE benefita."PengajuanIzin" (
 );
 
 
-ALTER TABLE benefita."PengajuanIzin" OWNER TO postgres;
-
 --
--- Name: Proper; Type: TABLE; Schema: benefita; Owner: postgres
+-- Name: Proper; Type: TABLE; Schema: benefita; Owner: -
 --
 
 CREATE TABLE benefita."Proper" (
@@ -263,10 +424,8 @@ CREATE TABLE benefita."Proper" (
 );
 
 
-ALTER TABLE benefita."Proper" OWNER TO postgres;
-
 --
--- Name: Proper_id_seq; Type: SEQUENCE; Schema: benefita; Owner: postgres
+-- Name: Proper_id_seq; Type: SEQUENCE; Schema: benefita; Owner: -
 --
 
 CREATE SEQUENCE benefita."Proper_id_seq"
@@ -278,17 +437,15 @@ CREATE SEQUENCE benefita."Proper_id_seq"
     CACHE 1;
 
 
-ALTER SEQUENCE benefita."Proper_id_seq" OWNER TO postgres;
-
 --
--- Name: Proper_id_seq; Type: SEQUENCE OWNED BY; Schema: benefita; Owner: postgres
+-- Name: Proper_id_seq; Type: SEQUENCE OWNED BY; Schema: benefita; Owner: -
 --
 
 ALTER SEQUENCE benefita."Proper_id_seq" OWNED BY benefita."Proper".id;
 
 
 --
--- Name: RefreshToken; Type: TABLE; Schema: benefita; Owner: postgres
+-- Name: RefreshToken; Type: TABLE; Schema: benefita; Owner: -
 --
 
 CREATE TABLE benefita."RefreshToken" (
@@ -301,10 +458,8 @@ CREATE TABLE benefita."RefreshToken" (
 );
 
 
-ALTER TABLE benefita."RefreshToken" OWNER TO postgres;
-
 --
--- Name: SertifikasiBnsp; Type: TABLE; Schema: benefita; Owner: postgres
+-- Name: SertifikasiBnsp; Type: TABLE; Schema: benefita; Owner: -
 --
 
 CREATE TABLE benefita."SertifikasiBnsp" (
@@ -325,10 +480,8 @@ CREATE TABLE benefita."SertifikasiBnsp" (
 );
 
 
-ALTER TABLE benefita."SertifikasiBnsp" OWNER TO postgres;
-
 --
--- Name: SertifikasiBnsp_id_seq; Type: SEQUENCE; Schema: benefita; Owner: postgres
+-- Name: SertifikasiBnsp_id_seq; Type: SEQUENCE; Schema: benefita; Owner: -
 --
 
 CREATE SEQUENCE benefita."SertifikasiBnsp_id_seq"
@@ -340,17 +493,15 @@ CREATE SEQUENCE benefita."SertifikasiBnsp_id_seq"
     CACHE 1;
 
 
-ALTER SEQUENCE benefita."SertifikasiBnsp_id_seq" OWNER TO postgres;
-
 --
--- Name: SertifikasiBnsp_id_seq; Type: SEQUENCE OWNED BY; Schema: benefita; Owner: postgres
+-- Name: SertifikasiBnsp_id_seq; Type: SEQUENCE OWNED BY; Schema: benefita; Owner: -
 --
 
 ALTER SEQUENCE benefita."SertifikasiBnsp_id_seq" OWNED BY benefita."SertifikasiBnsp".id;
 
 
 --
--- Name: TabPerusahaan; Type: TABLE; Schema: benefita; Owner: postgres
+-- Name: TabPerusahaan; Type: TABLE; Schema: benefita; Owner: -
 --
 
 CREATE TABLE benefita."TabPerusahaan" (
@@ -467,10 +618,8 @@ CREATE TABLE benefita."TabPerusahaan" (
 );
 
 
-ALTER TABLE benefita."TabPerusahaan" OWNER TO postgres;
-
 --
--- Name: TableJenisBiaya; Type: TABLE; Schema: benefita; Owner: postgres
+-- Name: TableJenisBiaya; Type: TABLE; Schema: benefita; Owner: -
 --
 
 CREATE TABLE benefita."TableJenisBiaya" (
@@ -480,10 +629,8 @@ CREATE TABLE benefita."TableJenisBiaya" (
 );
 
 
-ALTER TABLE benefita."TableJenisBiaya" OWNER TO postgres;
-
 --
--- Name: TableJenisBiaya_id_seq; Type: SEQUENCE; Schema: benefita; Owner: postgres
+-- Name: TableJenisBiaya_id_seq; Type: SEQUENCE; Schema: benefita; Owner: -
 --
 
 CREATE SEQUENCE benefita."TableJenisBiaya_id_seq"
@@ -495,17 +642,15 @@ CREATE SEQUENCE benefita."TableJenisBiaya_id_seq"
     CACHE 1;
 
 
-ALTER SEQUENCE benefita."TableJenisBiaya_id_seq" OWNER TO postgres;
-
 --
--- Name: TableJenisBiaya_id_seq; Type: SEQUENCE OWNED BY; Schema: benefita; Owner: postgres
+-- Name: TableJenisBiaya_id_seq; Type: SEQUENCE OWNED BY; Schema: benefita; Owner: -
 --
 
 ALTER SEQUENCE benefita."TableJenisBiaya_id_seq" OWNED BY benefita."TableJenisBiaya".id;
 
 
 --
--- Name: TableNeraca; Type: TABLE; Schema: benefita; Owner: postgres
+-- Name: TableNeraca; Type: TABLE; Schema: benefita; Owner: -
 --
 
 CREATE TABLE benefita."TableNeraca" (
@@ -525,10 +670,8 @@ CREATE TABLE benefita."TableNeraca" (
 );
 
 
-ALTER TABLE benefita."TableNeraca" OWNER TO postgres;
-
 --
--- Name: TableNeraca_id_seq; Type: SEQUENCE; Schema: benefita; Owner: postgres
+-- Name: TableNeraca_id_seq; Type: SEQUENCE; Schema: benefita; Owner: -
 --
 
 CREATE SEQUENCE benefita."TableNeraca_id_seq"
@@ -540,17 +683,15 @@ CREATE SEQUENCE benefita."TableNeraca_id_seq"
     CACHE 1;
 
 
-ALTER SEQUENCE benefita."TableNeraca_id_seq" OWNER TO postgres;
-
 --
--- Name: TableNeraca_id_seq; Type: SEQUENCE OWNED BY; Schema: benefita; Owner: postgres
+-- Name: TableNeraca_id_seq; Type: SEQUENCE OWNED BY; Schema: benefita; Owner: -
 --
 
 ALTER SEQUENCE benefita."TableNeraca_id_seq" OWNED BY benefita."TableNeraca".id;
 
 
 --
--- Name: User; Type: TABLE; Schema: benefita; Owner: postgres
+-- Name: User; Type: TABLE; Schema: benefita; Owner: -
 --
 
 CREATE TABLE benefita."User" (
@@ -567,10 +708,8 @@ CREATE TABLE benefita."User" (
 );
 
 
-ALTER TABLE benefita."User" OWNER TO postgres;
-
 --
--- Name: _prisma_migrations; Type: TABLE; Schema: benefita; Owner: postgres
+-- Name: _prisma_migrations; Type: TABLE; Schema: benefita; Owner: -
 --
 
 CREATE TABLE benefita._prisma_migrations (
@@ -585,10 +724,8 @@ CREATE TABLE benefita._prisma_migrations (
 );
 
 
-ALTER TABLE benefita._prisma_migrations OWNER TO postgres;
-
 --
--- Name: berita; Type: TABLE; Schema: benefita; Owner: postgres
+-- Name: berita; Type: TABLE; Schema: benefita; Owner: -
 --
 
 CREATE TABLE benefita.berita (
@@ -600,10 +737,8 @@ CREATE TABLE benefita.berita (
 );
 
 
-ALTER TABLE benefita.berita OWNER TO postgres;
-
 --
--- Name: contact_person_perusahaan; Type: TABLE; Schema: benefita; Owner: postgres
+-- Name: contact_person_perusahaan; Type: TABLE; Schema: benefita; Owner: -
 --
 
 CREATE TABLE benefita.contact_person_perusahaan (
@@ -623,10 +758,8 @@ CREATE TABLE benefita.contact_person_perusahaan (
 );
 
 
-ALTER TABLE benefita.contact_person_perusahaan OWNER TO postgres;
-
 --
--- Name: daily_activity; Type: TABLE; Schema: benefita; Owner: postgres
+-- Name: daily_activity; Type: TABLE; Schema: benefita; Owner: -
 --
 
 CREATE TABLE benefita.daily_activity (
@@ -646,10 +779,60 @@ CREATE TABLE benefita.daily_activity (
 );
 
 
-ALTER TABLE benefita.daily_activity OWNER TO postgres;
+--
+-- Name: evaluasi_pelatihan; Type: TABLE; Schema: benefita; Owner: -
+--
+
+CREATE TABLE benefita.evaluasi_pelatihan (
+    id integer NOT NULL,
+    "pesertaTrainingId" integer NOT NULL,
+    "nilaiSistematikaMateri" integer NOT NULL,
+    "nilaiTampilanSlide" integer NOT NULL,
+    "nilaiAlokasiWaktu" integer NOT NULL,
+    "nilaiPenerapanMateri" integer NOT NULL,
+    "nilaiPeningkatanKompetensi" integer NOT NULL,
+    "nilaiTrainer" integer NOT NULL,
+    "manfaatUntukPeserta" text,
+    "manfaatUntukPerusahaan" text,
+    "divisiDisarankan" text,
+    "prosedurPengajuan" text,
+    "createdAt" timestamp(3) without time zone DEFAULT CURRENT_TIMESTAMP NOT NULL,
+    "updatedAt" timestamp(3) without time zone NOT NULL
+);
+
 
 --
--- Name: hotel; Type: TABLE; Schema: benefita; Owner: postgres
+-- Name: evaluasi_pelatihan_diminati; Type: TABLE; Schema: benefita; Owner: -
+--
+
+CREATE TABLE benefita.evaluasi_pelatihan_diminati (
+    "evaluasiId" integer NOT NULL,
+    "judulTrainingId" integer NOT NULL
+);
+
+
+--
+-- Name: evaluasi_pelatihan_id_seq; Type: SEQUENCE; Schema: benefita; Owner: -
+--
+
+CREATE SEQUENCE benefita.evaluasi_pelatihan_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: evaluasi_pelatihan_id_seq; Type: SEQUENCE OWNED BY; Schema: benefita; Owner: -
+--
+
+ALTER SEQUENCE benefita.evaluasi_pelatihan_id_seq OWNED BY benefita.evaluasi_pelatihan.id;
+
+
+--
+-- Name: hotel; Type: TABLE; Schema: benefita; Owner: -
 --
 
 CREATE TABLE benefita.hotel (
@@ -667,10 +850,8 @@ CREATE TABLE benefita.hotel (
 );
 
 
-ALTER TABLE benefita.hotel OWNER TO postgres;
-
 --
--- Name: jadwal_training; Type: TABLE; Schema: benefita; Owner: postgres
+-- Name: jadwal_training; Type: TABLE; Schema: benefita; Owner: -
 --
 
 CREATE TABLE benefita.jadwal_training (
@@ -704,10 +885,39 @@ CREATE TABLE benefita.jadwal_training (
 );
 
 
-ALTER TABLE benefita.jadwal_training OWNER TO postgres;
+--
+-- Name: jadwal_training_hari; Type: TABLE; Schema: benefita; Owner: -
+--
+
+CREATE TABLE benefita.jadwal_training_hari (
+    id integer NOT NULL,
+    "jadwalId" integer NOT NULL,
+    tanggal date NOT NULL
+);
+
 
 --
--- Name: jadwal_training_id_seq; Type: SEQUENCE; Schema: benefita; Owner: postgres
+-- Name: jadwal_training_hari_id_seq; Type: SEQUENCE; Schema: benefita; Owner: -
+--
+
+CREATE SEQUENCE benefita.jadwal_training_hari_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: jadwal_training_hari_id_seq; Type: SEQUENCE OWNED BY; Schema: benefita; Owner: -
+--
+
+ALTER SEQUENCE benefita.jadwal_training_hari_id_seq OWNED BY benefita.jadwal_training_hari.id;
+
+
+--
+-- Name: jadwal_training_id_seq; Type: SEQUENCE; Schema: benefita; Owner: -
 --
 
 CREATE SEQUENCE benefita.jadwal_training_id_seq
@@ -719,17 +929,15 @@ CREATE SEQUENCE benefita.jadwal_training_id_seq
     CACHE 1;
 
 
-ALTER SEQUENCE benefita.jadwal_training_id_seq OWNER TO postgres;
-
 --
--- Name: jadwal_training_id_seq; Type: SEQUENCE OWNED BY; Schema: benefita; Owner: postgres
+-- Name: jadwal_training_id_seq; Type: SEQUENCE OWNED BY; Schema: benefita; Owner: -
 --
 
 ALTER SEQUENCE benefita.jadwal_training_id_seq OWNED BY benefita.jadwal_training.id;
 
 
 --
--- Name: judul_training; Type: TABLE; Schema: benefita; Owner: postgres
+-- Name: judul_training; Type: TABLE; Schema: benefita; Owner: -
 --
 
 CREATE TABLE benefita.judul_training (
@@ -747,10 +955,8 @@ CREATE TABLE benefita.judul_training (
 );
 
 
-ALTER TABLE benefita.judul_training OWNER TO postgres;
-
 --
--- Name: judul_training_id_seq; Type: SEQUENCE; Schema: benefita; Owner: postgres
+-- Name: judul_training_id_seq; Type: SEQUENCE; Schema: benefita; Owner: -
 --
 
 CREATE SEQUENCE benefita.judul_training_id_seq
@@ -762,17 +968,61 @@ CREATE SEQUENCE benefita.judul_training_id_seq
     CACHE 1;
 
 
-ALTER SEQUENCE benefita.judul_training_id_seq OWNER TO postgres;
-
 --
--- Name: judul_training_id_seq; Type: SEQUENCE OWNED BY; Schema: benefita; Owner: postgres
+-- Name: judul_training_id_seq; Type: SEQUENCE OWNED BY; Schema: benefita; Owner: -
 --
 
 ALTER SEQUENCE benefita.judul_training_id_seq OWNED BY benefita.judul_training.id;
 
 
 --
--- Name: kontak; Type: TABLE; Schema: benefita; Owner: postgres
+-- Name: konfirmasi; Type: TABLE; Schema: benefita; Owner: -
+--
+
+CREATE TABLE benefita.konfirmasi (
+    id integer NOT NULL,
+    "noKonfirmasi" text NOT NULL,
+    "tanggalKonfirmasi" timestamp(3) without time zone DEFAULT CURRENT_TIMESTAMP NOT NULL,
+    "tanggalPelatihan" timestamp(3) without time zone,
+    metode text NOT NULL,
+    kepada text,
+    "kodePelatihan" text,
+    "namaPeserta" text NOT NULL,
+    jabatan text,
+    kontak text,
+    "filePath" text,
+    "noIndukInstansi" text,
+    "instansiNama" text,
+    "noJadwal" text NOT NULL,
+    "pesertaTrainingId" integer NOT NULL,
+    "dibuatOlehId" text NOT NULL,
+    "createdAt" timestamp(3) without time zone DEFAULT CURRENT_TIMESTAMP NOT NULL,
+    "updatedAt" timestamp(3) without time zone NOT NULL
+);
+
+
+--
+-- Name: konfirmasi_id_seq; Type: SEQUENCE; Schema: benefita; Owner: -
+--
+
+CREATE SEQUENCE benefita.konfirmasi_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: konfirmasi_id_seq; Type: SEQUENCE OWNED BY; Schema: benefita; Owner: -
+--
+
+ALTER SEQUENCE benefita.konfirmasi_id_seq OWNED BY benefita.konfirmasi.id;
+
+
+--
+-- Name: kontak; Type: TABLE; Schema: benefita; Owner: -
 --
 
 CREATE TABLE benefita.kontak (
@@ -791,14 +1041,13 @@ CREATE TABLE benefita.kontak (
     "noTelpKantor" text,
     "createdAt" timestamp(3) without time zone DEFAULT CURRENT_TIMESTAMP NOT NULL,
     "updatedAt" timestamp(3) without time zone NOT NULL,
-    "CV_Trainer" text
+    "CV_Trainer" text,
+    "statusAktif" boolean DEFAULT true NOT NULL
 );
 
 
-ALTER TABLE benefita.kontak OWNER TO postgres;
-
 --
--- Name: kontak_id_seq; Type: SEQUENCE; Schema: benefita; Owner: postgres
+-- Name: kontak_id_seq; Type: SEQUENCE; Schema: benefita; Owner: -
 --
 
 CREATE SEQUENCE benefita.kontak_id_seq
@@ -810,17 +1059,15 @@ CREATE SEQUENCE benefita.kontak_id_seq
     CACHE 1;
 
 
-ALTER SEQUENCE benefita.kontak_id_seq OWNER TO postgres;
-
 --
--- Name: kontak_id_seq; Type: SEQUENCE OWNED BY; Schema: benefita; Owner: postgres
+-- Name: kontak_id_seq; Type: SEQUENCE OWNED BY; Schema: benefita; Owner: -
 --
 
 ALTER SEQUENCE benefita.kontak_id_seq OWNED BY benefita.kontak.id;
 
 
 --
--- Name: lini_bisnis; Type: TABLE; Schema: benefita; Owner: postgres
+-- Name: lini_bisnis; Type: TABLE; Schema: benefita; Owner: -
 --
 
 CREATE TABLE benefita.lini_bisnis (
@@ -831,10 +1078,8 @@ CREATE TABLE benefita.lini_bisnis (
 );
 
 
-ALTER TABLE benefita.lini_bisnis OWNER TO postgres;
-
 --
--- Name: lini_bisnis_id_seq; Type: SEQUENCE; Schema: benefita; Owner: postgres
+-- Name: lini_bisnis_id_seq; Type: SEQUENCE; Schema: benefita; Owner: -
 --
 
 CREATE SEQUENCE benefita.lini_bisnis_id_seq
@@ -846,17 +1091,15 @@ CREATE SEQUENCE benefita.lini_bisnis_id_seq
     CACHE 1;
 
 
-ALTER SEQUENCE benefita.lini_bisnis_id_seq OWNER TO postgres;
-
 --
--- Name: lini_bisnis_id_seq; Type: SEQUENCE OWNED BY; Schema: benefita; Owner: postgres
+-- Name: lini_bisnis_id_seq; Type: SEQUENCE OWNED BY; Schema: benefita; Owner: -
 --
 
 ALTER SEQUENCE benefita.lini_bisnis_id_seq OWNED BY benefita.lini_bisnis.id;
 
 
 --
--- Name: lini_bisnis_training; Type: TABLE; Schema: benefita; Owner: postgres
+-- Name: lini_bisnis_training; Type: TABLE; Schema: benefita; Owner: -
 --
 
 CREATE TABLE benefita.lini_bisnis_training (
@@ -867,10 +1110,8 @@ CREATE TABLE benefita.lini_bisnis_training (
 );
 
 
-ALTER TABLE benefita.lini_bisnis_training OWNER TO postgres;
-
 --
--- Name: lini_bisnis_training_id_seq; Type: SEQUENCE; Schema: benefita; Owner: postgres
+-- Name: lini_bisnis_training_id_seq; Type: SEQUENCE; Schema: benefita; Owner: -
 --
 
 CREATE SEQUENCE benefita.lini_bisnis_training_id_seq
@@ -882,17 +1123,15 @@ CREATE SEQUENCE benefita.lini_bisnis_training_id_seq
     CACHE 1;
 
 
-ALTER SEQUENCE benefita.lini_bisnis_training_id_seq OWNER TO postgres;
-
 --
--- Name: lini_bisnis_training_id_seq; Type: SEQUENCE OWNED BY; Schema: benefita; Owner: postgres
+-- Name: lini_bisnis_training_id_seq; Type: SEQUENCE OWNED BY; Schema: benefita; Owner: -
 --
 
 ALTER SEQUENCE benefita.lini_bisnis_training_id_seq OWNED BY benefita.lini_bisnis_training.id;
 
 
 --
--- Name: log_perubahan_perusahaan; Type: TABLE; Schema: benefita; Owner: postgres
+-- Name: log_perubahan_perusahaan; Type: TABLE; Schema: benefita; Owner: -
 --
 
 CREATE TABLE benefita.log_perubahan_perusahaan (
@@ -906,10 +1145,8 @@ CREATE TABLE benefita.log_perubahan_perusahaan (
 );
 
 
-ALTER TABLE benefita.log_perubahan_perusahaan OWNER TO postgres;
-
 --
--- Name: penawaran; Type: TABLE; Schema: benefita; Owner: postgres
+-- Name: penawaran; Type: TABLE; Schema: benefita; Owner: -
 --
 
 CREATE TABLE benefita.penawaran (
@@ -921,10 +1158,8 @@ CREATE TABLE benefita.penawaran (
 );
 
 
-ALTER TABLE benefita.penawaran OWNER TO postgres;
-
 --
--- Name: pengajuan_judul_training; Type: TABLE; Schema: benefita; Owner: postgres
+-- Name: pengajuan_judul_training; Type: TABLE; Schema: benefita; Owner: -
 --
 
 CREATE TABLE benefita.pengajuan_judul_training (
@@ -944,10 +1179,8 @@ CREATE TABLE benefita.pengajuan_judul_training (
 );
 
 
-ALTER TABLE benefita.pengajuan_judul_training OWNER TO postgres;
-
 --
--- Name: permintaan_nomor_surat; Type: TABLE; Schema: benefita; Owner: postgres
+-- Name: permintaan_nomor_surat; Type: TABLE; Schema: benefita; Owner: -
 --
 
 CREATE TABLE benefita.permintaan_nomor_surat (
@@ -964,10 +1197,8 @@ CREATE TABLE benefita.permintaan_nomor_surat (
 );
 
 
-ALTER TABLE benefita.permintaan_nomor_surat OWNER TO postgres;
-
 --
--- Name: permintaan_nomor_surat_id_seq; Type: SEQUENCE; Schema: benefita; Owner: postgres
+-- Name: permintaan_nomor_surat_id_seq; Type: SEQUENCE; Schema: benefita; Owner: -
 --
 
 CREATE SEQUENCE benefita.permintaan_nomor_surat_id_seq
@@ -979,17 +1210,15 @@ CREATE SEQUENCE benefita.permintaan_nomor_surat_id_seq
     CACHE 1;
 
 
-ALTER SEQUENCE benefita.permintaan_nomor_surat_id_seq OWNER TO postgres;
-
 --
--- Name: permintaan_nomor_surat_id_seq; Type: SEQUENCE OWNED BY; Schema: benefita; Owner: postgres
+-- Name: permintaan_nomor_surat_id_seq; Type: SEQUENCE OWNED BY; Schema: benefita; Owner: -
 --
 
 ALTER SEQUENCE benefita.permintaan_nomor_surat_id_seq OWNED BY benefita.permintaan_nomor_surat.id;
 
 
 --
--- Name: permohonan_hak_akses; Type: TABLE; Schema: benefita; Owner: postgres
+-- Name: permohonan_hak_akses; Type: TABLE; Schema: benefita; Owner: -
 --
 
 CREATE TABLE benefita.permohonan_hak_akses (
@@ -1002,10 +1231,8 @@ CREATE TABLE benefita.permohonan_hak_akses (
 );
 
 
-ALTER TABLE benefita.permohonan_hak_akses OWNER TO postgres;
-
 --
--- Name: peserta_training; Type: TABLE; Schema: benefita; Owner: postgres
+-- Name: peserta_training; Type: TABLE; Schema: benefita; Owner: -
 --
 
 CREATE TABLE benefita.peserta_training (
@@ -1071,10 +1298,8 @@ CREATE TABLE benefita.peserta_training (
 );
 
 
-ALTER TABLE benefita.peserta_training OWNER TO postgres;
-
 --
--- Name: peserta_training_id_seq; Type: SEQUENCE; Schema: benefita; Owner: postgres
+-- Name: peserta_training_id_seq; Type: SEQUENCE; Schema: benefita; Owner: -
 --
 
 CREATE SEQUENCE benefita.peserta_training_id_seq
@@ -1086,17 +1311,15 @@ CREATE SEQUENCE benefita.peserta_training_id_seq
     CACHE 1;
 
 
-ALTER SEQUENCE benefita.peserta_training_id_seq OWNER TO postgres;
-
 --
--- Name: peserta_training_id_seq; Type: SEQUENCE OWNED BY; Schema: benefita; Owner: postgres
+-- Name: peserta_training_id_seq; Type: SEQUENCE OWNED BY; Schema: benefita; Owner: -
 --
 
 ALTER SEQUENCE benefita.peserta_training_id_seq OWNED BY benefita.peserta_training.id;
 
 
 --
--- Name: tabposperusahaan; Type: TABLE; Schema: benefita; Owner: postgres
+-- Name: tabposperusahaan; Type: TABLE; Schema: benefita; Owner: -
 --
 
 CREATE TABLE benefita.tabposperusahaan (
@@ -1109,10 +1332,8 @@ CREATE TABLE benefita.tabposperusahaan (
 );
 
 
-ALTER TABLE benefita.tabposperusahaan OWNER TO postgres;
-
 --
--- Name: trainer_on_jadwal; Type: TABLE; Schema: benefita; Owner: postgres
+-- Name: trainer_on_jadwal; Type: TABLE; Schema: benefita; Owner: -
 --
 
 CREATE TABLE benefita.trainer_on_jadwal (
@@ -1121,10 +1342,18 @@ CREATE TABLE benefita.trainer_on_jadwal (
 );
 
 
-ALTER TABLE benefita.trainer_on_jadwal OWNER TO postgres;
+--
+-- Name: trainer_on_jadwal_hari; Type: TABLE; Schema: benefita; Owner: -
+--
+
+CREATE TABLE benefita.trainer_on_jadwal_hari (
+    "jadwalHariId" integer NOT NULL,
+    "trainerKode" text NOT NULL
+);
+
 
 --
--- Name: umk; Type: TABLE; Schema: benefita; Owner: postgres
+-- Name: umk; Type: TABLE; Schema: benefita; Owner: -
 --
 
 CREATE TABLE benefita.umk (
@@ -1144,10 +1373,8 @@ CREATE TABLE benefita.umk (
 );
 
 
-ALTER TABLE benefita.umk OWNER TO postgres;
-
 --
--- Name: umk_id_seq; Type: SEQUENCE; Schema: benefita; Owner: postgres
+-- Name: umk_id_seq; Type: SEQUENCE; Schema: benefita; Owner: -
 --
 
 CREATE SEQUENCE benefita.umk_id_seq
@@ -1159,101 +1386,120 @@ CREATE SEQUENCE benefita.umk_id_seq
     CACHE 1;
 
 
-ALTER SEQUENCE benefita.umk_id_seq OWNER TO postgres;
-
 --
--- Name: umk_id_seq; Type: SEQUENCE OWNED BY; Schema: benefita; Owner: postgres
+-- Name: umk_id_seq; Type: SEQUENCE OWNED BY; Schema: benefita; Owner: -
 --
 
 ALTER SEQUENCE benefita.umk_id_seq OWNED BY benefita.umk.id;
 
 
 --
--- Name: Proper id; Type: DEFAULT; Schema: benefita; Owner: postgres
+-- Name: Proper id; Type: DEFAULT; Schema: benefita; Owner: -
 --
 
 ALTER TABLE ONLY benefita."Proper" ALTER COLUMN id SET DEFAULT nextval('benefita."Proper_id_seq"'::regclass);
 
 
 --
--- Name: SertifikasiBnsp id; Type: DEFAULT; Schema: benefita; Owner: postgres
+-- Name: SertifikasiBnsp id; Type: DEFAULT; Schema: benefita; Owner: -
 --
 
 ALTER TABLE ONLY benefita."SertifikasiBnsp" ALTER COLUMN id SET DEFAULT nextval('benefita."SertifikasiBnsp_id_seq"'::regclass);
 
 
 --
--- Name: TableJenisBiaya id; Type: DEFAULT; Schema: benefita; Owner: postgres
+-- Name: TableJenisBiaya id; Type: DEFAULT; Schema: benefita; Owner: -
 --
 
 ALTER TABLE ONLY benefita."TableJenisBiaya" ALTER COLUMN id SET DEFAULT nextval('benefita."TableJenisBiaya_id_seq"'::regclass);
 
 
 --
--- Name: TableNeraca id; Type: DEFAULT; Schema: benefita; Owner: postgres
+-- Name: TableNeraca id; Type: DEFAULT; Schema: benefita; Owner: -
 --
 
 ALTER TABLE ONLY benefita."TableNeraca" ALTER COLUMN id SET DEFAULT nextval('benefita."TableNeraca_id_seq"'::regclass);
 
 
 --
--- Name: jadwal_training id; Type: DEFAULT; Schema: benefita; Owner: postgres
+-- Name: evaluasi_pelatihan id; Type: DEFAULT; Schema: benefita; Owner: -
+--
+
+ALTER TABLE ONLY benefita.evaluasi_pelatihan ALTER COLUMN id SET DEFAULT nextval('benefita.evaluasi_pelatihan_id_seq'::regclass);
+
+
+--
+-- Name: jadwal_training id; Type: DEFAULT; Schema: benefita; Owner: -
 --
 
 ALTER TABLE ONLY benefita.jadwal_training ALTER COLUMN id SET DEFAULT nextval('benefita.jadwal_training_id_seq'::regclass);
 
 
 --
--- Name: judul_training id; Type: DEFAULT; Schema: benefita; Owner: postgres
+-- Name: jadwal_training_hari id; Type: DEFAULT; Schema: benefita; Owner: -
+--
+
+ALTER TABLE ONLY benefita.jadwal_training_hari ALTER COLUMN id SET DEFAULT nextval('benefita.jadwal_training_hari_id_seq'::regclass);
+
+
+--
+-- Name: judul_training id; Type: DEFAULT; Schema: benefita; Owner: -
 --
 
 ALTER TABLE ONLY benefita.judul_training ALTER COLUMN id SET DEFAULT nextval('benefita.judul_training_id_seq'::regclass);
 
 
 --
--- Name: kontak id; Type: DEFAULT; Schema: benefita; Owner: postgres
+-- Name: konfirmasi id; Type: DEFAULT; Schema: benefita; Owner: -
+--
+
+ALTER TABLE ONLY benefita.konfirmasi ALTER COLUMN id SET DEFAULT nextval('benefita.konfirmasi_id_seq'::regclass);
+
+
+--
+-- Name: kontak id; Type: DEFAULT; Schema: benefita; Owner: -
 --
 
 ALTER TABLE ONLY benefita.kontak ALTER COLUMN id SET DEFAULT nextval('benefita.kontak_id_seq'::regclass);
 
 
 --
--- Name: lini_bisnis id; Type: DEFAULT; Schema: benefita; Owner: postgres
+-- Name: lini_bisnis id; Type: DEFAULT; Schema: benefita; Owner: -
 --
 
 ALTER TABLE ONLY benefita.lini_bisnis ALTER COLUMN id SET DEFAULT nextval('benefita.lini_bisnis_id_seq'::regclass);
 
 
 --
--- Name: lini_bisnis_training id; Type: DEFAULT; Schema: benefita; Owner: postgres
+-- Name: lini_bisnis_training id; Type: DEFAULT; Schema: benefita; Owner: -
 --
 
 ALTER TABLE ONLY benefita.lini_bisnis_training ALTER COLUMN id SET DEFAULT nextval('benefita.lini_bisnis_training_id_seq'::regclass);
 
 
 --
--- Name: permintaan_nomor_surat id; Type: DEFAULT; Schema: benefita; Owner: postgres
+-- Name: permintaan_nomor_surat id; Type: DEFAULT; Schema: benefita; Owner: -
 --
 
 ALTER TABLE ONLY benefita.permintaan_nomor_surat ALTER COLUMN id SET DEFAULT nextval('benefita.permintaan_nomor_surat_id_seq'::regclass);
 
 
 --
--- Name: peserta_training id; Type: DEFAULT; Schema: benefita; Owner: postgres
+-- Name: peserta_training id; Type: DEFAULT; Schema: benefita; Owner: -
 --
 
 ALTER TABLE ONLY benefita.peserta_training ALTER COLUMN id SET DEFAULT nextval('benefita.peserta_training_id_seq'::regclass);
 
 
 --
--- Name: umk id; Type: DEFAULT; Schema: benefita; Owner: postgres
+-- Name: umk id; Type: DEFAULT; Schema: benefita; Owner: -
 --
 
 ALTER TABLE ONLY benefita.umk ALTER COLUMN id SET DEFAULT nextval('benefita.umk_id_seq'::regclass);
 
 
 --
--- Data for Name: BuktiIzin; Type: TABLE DATA; Schema: benefita; Owner: postgres
+-- Data for Name: BuktiIzin; Type: TABLE DATA; Schema: benefita; Owner: -
 --
 
 COPY benefita."BuktiIzin" (id, "pengajuanIzinId", nama, url, key, "createdAt") FROM stdin;
@@ -1262,7 +1508,7 @@ cmq6frd5u000ijc4s4c3tysm7	cmq6frd5u000hjc4squm7zwia	WhatsApp Image 2026-02-21 at
 
 
 --
--- Data for Name: DeviceTrusted; Type: TABLE DATA; Schema: benefita; Owner: postgres
+-- Data for Name: DeviceTrusted; Type: TABLE DATA; Schema: benefita; Owner: -
 --
 
 COPY benefita."DeviceTrusted" (id, "userId", "deviceHash", label, "createdAt") FROM stdin;
@@ -1278,7 +1524,7 @@ cmslkdd6e000ljcvspyw6l4h0	cmslk73pe0009jcvs8c27p76q	01f6d231-472f-439f-b591-f01d
 
 
 --
--- Data for Name: DokumenPegawai; Type: TABLE DATA; Schema: benefita; Owner: postgres
+-- Data for Name: DokumenPegawai; Type: TABLE DATA; Schema: benefita; Owner: -
 --
 
 COPY benefita."DokumenPegawai" (id, "pegawaiId", nama, url, key, tipe, "createdAt") FROM stdin;
@@ -1287,7 +1533,7 @@ cmq67a4yn001pjc1coceqftc6	cmq67a4yn001ojc1chcom9uxp	PORTOFOLIO.pdf	/uploads/pega
 
 
 --
--- Data for Name: HakAksesKaryawan; Type: TABLE DATA; Schema: benefita; Owner: postgres
+-- Data for Name: HakAksesKaryawan; Type: TABLE DATA; Schema: benefita; Owner: -
 --
 
 COPY benefita."HakAksesKaryawan" (id, "perusahaanId", "pegawaiId", "jenisAkses", status, "tanggalDibuat") FROM stdin;
@@ -1304,7 +1550,7 @@ cmslny4px001zjchctvvyy63y	PR00001	cmqs4v48a001ejcqga3a9ucjg	EPM	-	2026-08-09 10:
 
 
 --
--- Data for Name: OtpCode; Type: TABLE DATA; Schema: benefita; Owner: postgres
+-- Data for Name: OtpCode; Type: TABLE DATA; Schema: benefita; Owner: -
 --
 
 COPY benefita."OtpCode" (id, "userId", code, "deviceHash", "expiresAt", used, "createdAt") FROM stdin;
@@ -1322,92 +1568,92 @@ cmslkgeb3000rjcvsi5ks9jzu	cmslk73pe0009jcvs8c27p76q	826387	405a135c-b17b-45a3-b2
 
 
 --
--- Data for Name: Pegawai; Type: TABLE DATA; Schema: benefita; Owner: postgres
+-- Data for Name: Pegawai; Type: TABLE DATA; Schema: benefita; Owner: -
 --
 
-COPY benefita."Pegawai" (id, nama, jabatan, kode, prefix, departemen, "fotoKey", "fotoUrl", nip, "akunInfo", alamat, instansi, "jenisKelamin", "kodeDepartemen", nik, "pendidikanTerakhir", remark, "sisaCuti", "statusDate", "statusHarian", "statusKaryawan", "statusPerkawinan", "tanggalMasuk", "tempatTanggalLahir", "updatedBy", "userData", "userStatus") FROM stdin;
-cmq66v8cx0001jc78fzjhjab8	Siti Rahayu	Staff Keuangan	\N	\N	Finance	\N	\N	NIP002	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N
-cmq66v8d10002jc78j8ujs5tg	Ahmad Fauzi	Admin Harian	\N	\N	Admin	\N	\N	NIP003	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N
-cmq66v8d30003jc78r7p2h35d	Dewi Lestari	Staff Marketing	\N	\N	Marketing	\N	\N	NIP004	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N
-cmq66v8d50004jc78hue5rieb	Rizky Pratama	Super Admin	\N	\N	IT	\N	\N	NIP005	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N
-cmq66v8cq0000jc78h1xi5ccz	Budi Santoso	Manager Marketing	\N	\N	Marketing	\N	\N	NIP001	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N
-cmq67bagu001rjc1chivx3ch4	Wulan	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N
-cmqs8yo7f0006jcgsim4cn651	Acepi	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N
-cmq67a4yn001ojc1chcom9uxp	Axel Putra	Super Admin	AXL	AXL	Programming	1780982978015-969701130.jpeg	/uploads/pegawai/1780982978015-969701130.jpeg	2491324235	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N
-cmq67eg2w0023jc1cq2v2qets	Sylva	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N
-cmslk73pe0008jcvsx9wyvr0k	AE Testing	Account Executive	TST	\N	Marketing	\N	\N	928242	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N
-cmq67feia0027jc1chy4j53k6	Zirah	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N
-cmq67jqy60002jcs8cejwgbhd	Ghifari	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N
-cmq67m7fm0000jc4wafuhw4j6	Nanang	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N
-cmq67oa800004jc4wzfnrwspn	Muhammad Habibie Musy	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N
-cmq67p4o30006jc4w3vp1um2l	Syukraini Suswita	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N
-cmq67px7v0008jc4wr1hcindk	Arief	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N
-cmq6c75ey0006jc3o8tmwwoho	User	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N
-cmq67qist000cjc4wq0nz96c3	Eni	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N
-cmq6fpfsr000cjc4szmv7b2kc	Contoh User	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N
-cmqs494nq002qjct84tw98wmg	Jeane Geraldine	Account Executive	\N	\N	Marketing	\N	\N	2508062	YA	\N	BTE	\N	 MKT	0	\N	1 Agustus 2025	\N	\N	0	Pegawai	\N	2025-07-31 17:00:00	\N	ADMIN	JG	Aktif
-cmqs494nt002rjct881nzu383	Milda Ayu El Rahmah	Account Executive	\N	\N	Marketing	\N	\N	2512063	YA	\N	BTE	\N	 MKT	0	\N	16 Desember  2025	\N	\N	0	Freelance	\N	2025-12-15 17:00:00	\N	ADMIN	EL	Aktif
-cmqs494lk000yjct8rglynesq	Muhammad\r\n Salman Musy	MIS	\N	\N	Operational	\N	\N	2501027	\N	\N	BTE	\N	VIT	0	\N	22 Januari 2018	12	\N	0	Pegawai	\N	2017-12-31 17:00:00	\N	\N	ALL	Aktif
-cmqs494n8002kjct8t7fbx1ki	Nurul Fadila Arista	Account Executive	\N	\N	Marketing	\N	\N	2507056	YA	\N	BTE	\N	 MKT	0	\N	1 Agustus 2025	\N	\N	0	Pegawai	\N	2025-07-31 17:00:00	\N	ADMIN	FA	Aktif
-cmqs494nb002ljct8zm1tfps0	Gempita Erlintiana	Account Executive	\N	\N	Marketing	\N	\N	2507057	YA	\N	BTE	\N	 MKT	0	\N	1 Agustus 2025	\N	\N	0	Pegawai	\N	2025-07-31 17:00:00	\N	ADMIN	GE	Aktif
-cmqs494nw002sjct857qjyeed	Rizkitha Widiawati	Account Executive	\N	\N	Marketing	\N	\N	2512064	YA	\N	BTE	\N	 MKT	0	\N	16 Desember  2025	\N	\N	0	Magang	\N	2025-12-15 17:00:00	\N	ADMIN	RW	\N
-cmqs494o2002vjct8q4p92r9f	Euis Zahra Nurhalimah	Account Executive	\N	\N	Marketing	\N	\N	2512065	YA	\N	BTE	\N	 MKT	0	\N	16 Desember  2025	\N	\N	0	Freelance	\N	2025-12-15 17:00:00	\N	ADMIN	EZ	Aktif
-cmqs494o5002yjct85pqlk8yw	Riski Lesmana	Account Executive	\N	\N	Marketing	\N	\N	2512066	YA	\N	BTE	\N	 MKT	0	\N	16 Desember  2025	\N	\N	0	Magang	\N	2025-12-15 17:00:00	\N	ADMIN	RL	\N
-cmqs494nf002mjct8usizhlcn	Calvin Vadhya Fajar	Account Executive	\N	\N	Marketing	\N	\N	2507058	YA	\N	BTE	\N	 MKT	0	\N	1 Agustus 2025	\N	\N	0	Pegawai	\N	2025-07-31 17:00:00	\N	ADMIN	CF	Aktif
-cmqs494nh002njct8ctgqss52	Biyan Shandika	Account Executive	\N	\N	Marketing	\N	\N	2508059	YA	\N	BTE	\N	 MKT	0	\N	1 Agustus 2025	\N	\N	0	Freelance	\N	2025-07-31 17:00:00	\N	ADMIN	SB	Aktif
-cmqs494nk002ojct8tvpafqqa	Moch Rifqy Nurfaza	Account Executive	\N	\N	Marketing	\N	\N	2508060	YA	\N	BTE	\N	 MKT	0	\N	1 Agustus 2025	\N	\N	0	Pegawai	\N	2025-07-31 17:00:00	\N	ADMIN	RN	Aktif
-cmqs494nn002pjct8vxklqnn7	Trenaldy Abdafanza	Account Executive	\N	\N	Marketing	\N	\N	2508061	YA	\N	BTE	\N	 MKT	0	\N	1 Agustus 2025	\N	\N	0	Freelance	\N	2025-07-31 17:00:00	\N	ADMIN	TA	Aktif
-cmqs4ganl0026jcd0cg46nb6e	Habibie	Keuangan	\N	\N	Operational	\N	\N	2301010	\N	\N	\N	\N	VIT	0	\N	2 Nov 2020	12	\N	5	Pegawai	\N	\N	\N	\N	ALL	Aktif
-cmqs49x4g003bjcuouozl20q8	Exel	\N	\N	\N	\N	\N	\N	\N	\N	\N	BTE	\N	MIS	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	ALL	Aktif
-cmqs4gakf000cjcd0ykjc31bw	Ahmad Arief D.	Manager	\N	\N	Operational	\N	pas poto aa merah.png	0809006	\N	Jalan Cemara F No. 52 - Rancabolang - Gedebage - Bandung 40294	BTE	Laki-Laki	MIS	0	\N	\N	10	\N	3	Pegawai	Menikah	2008-08-31 17:00:00	\N	\N	ALL	Aktif
-cmqs4gakj000fjcd0pnbh5kpw	Radian	Administrasi	\N	\N	Operational	\N	\N	1102008	\N	\N	BTE	\N	ADM	0	\N	\N	9	\N	5	Pegawai	\N	2011-01-31 17:00:00	\N	tes1	RD	Aktif
-cmqs4gako000ijcd0fugwthx7	Mulyadi Afmar	Director	\N	\N	Commissioner	\N	\N	9804009	YA	Perumahan Telaga Sakinah - Jl Sunan Kalijaga CD 7 No 16 , Cikarang Barat, Kabupaten Bekasi	\N	Laki-Laki	VIT	0	\N	\N	12	\N	1	Pegawai	Menikah	1998-03-31 17:00:00	Tanah Datar / 6 September 1966	\N	MA	Aktif
-cmqs4gal1000ojcd0wf1gmv1q	Sylvania Permata Sari	Account Executive	\N	\N	Marketing	\N	\N	0704013	YA	\N	BTE	\N	MKT	0	\N	\N	2	\N	4	Pegawai	\N	2007-03-31 17:00:00	\N	ADMIN	SL	Aktif
-cmqs494kh000hjct8ts4fpfb9	Rita Zulbetti	Manager	\N	\N	Finance	\N	\N	9804010	\N	\N	BTE	\N	Finance	0	\N	\N	12	\N	0	Pegawai	\N	1098-03-31 16:52:48	\N	ADMIN	ALL	Aktif
-cmqs4gala000ujcd0i3glommm	Syukraini	Direktur Keuangan	\N	\N	Operational	\N	\N	1601006	\N	Perumahan Telaga Sakinah - Jl Sunan Kalijaga CD 7 No 16 , Cikarang Barat, Kabupaten Bekasi	\N	Perempuan	VIT	2147483647	\N	\N	12	\N	2	Pegawai	Menikah	2016-09-30 17:00:00	Bukittinggi / 7 Maret 1967	Admin	ALL	Aktif
-cmqs4gamg001ijcd0rv0suu5j	Endang	Staff	\N	\N	MIS	\N	WhatsApp Image 2024-09-27 at 08.32.58.jpeg	1904023	\N	\N	BTE	\N	MIS	0	\N	29 Jan 2019	9	\N	5	Pegawai	\N	2019-01-18 17:00:00	\N	ADMIN	ES	Aktif
-cmqs4gant002cjcd0976dafmv	Nofliyani	Teknik	\N	\N	Teknik	\N	\N	2201032	\N	\N	BTE	\N	TEK	0	\N	1 Januari 2022	9	\N	5	Pegawai	\N	2021-12-31 17:00:00	\N	NANANG	YN	Aktif
-cmqs4gaoy0039jcd0etxcvgqn	Muhammad Ghifari	Teknik	\N	\N	Teknik	\N	\N	2211044	\N	\N	BTE	\N	TEK	0	\N	1 Desember 2022	9	\N	5	Pegawai	\N	2022-11-30 17:00:00	\N	ADMIN	MG	Aktif
-cmqs4gap5003fjcd05xlop67f	Siti Nazirah	Administr	\N	\N	Finance	\N	\N	2308049	\N	\N	BTE	\N	ADM	0	\N	14 Agustus 2023	8	\N	5	Pegawai	\N	2024-08-13 17:00:00	\N	ADMIN	ALL	Aktif
-cmqs4gaph003ojcd0b6tf3ysk	Razif	Account Executive	\N	\N	Marketing	\N	\N	2301248	\N	p	BTE	Laki-Laki	MIS	3	\N	25 JULI 2023	\N	\N	0	Pegawai	Belum Menikah	2024-07-24 17:00:00	Bali	\N	RF	Aktif
-cmqs4gapp003ujcd02t2lxk43	Muhammad Rifqi Pambudi	Account Executive	\N	\N	 MIS	\N	\N	2505055	YA	\N	BTE	\N	MIS	0	\N	18 April 2024	\N	\N	6	Pegawai	\N	2024-04-17 17:00:00	\N	ADMIN	RQ	Aktif
-cmqs4gapx0040jcd0khj3da1w	Nuriyah Wulandari	Account Executive	\N	\N	Marketing	\N	\N	2404019	YA	\N	BTE	\N	MKT	0	\N	18 April 2024	6	\N	6	Pegawai	\N	2024-04-17 17:00:00	\N	ADMIN	NW	Aktif
-cmqs4gak60006jcd0m2yt7ric	Nanang Santoso	MIS	\N	\N	Operational	\N	\N	0409004	\N	\N	BTE	\N	MIS	0	\N	\N	8	\N	4	Pegawai	\N	2004-09-26 17:00:00	\N	ADMIN	NN	Aktif
-cmqs4gakb0009jcd0wrpu7n4l	Herlina Susilowati	Teknik	\N	\N	Teknik	\N	\N	0406025	\N	\N	BTE	\N	TEK	0	\N	1 Desember 2016	8	\N	4	Pegawai	\N	2016-12-15 17:00:00	\N	ADMIN	HS	Aktif
-cmqs4gajg0000jcd0evfyeg79	Eni Endri Yeni	Account Executive	\N	\N	Marketing	\N	\N	0001002	YA	\N	BTE	Perempuan	MKT	0	\N	10-02-2017	12	\N	4	Pegawai	\N	1999-12-31 17:00:00	\N	\N	EE	Aktif
-cmqs4v40n0001jcqgdsnit2bq	Marwati	Administrasi	\N	\N	Operational	\N	\N	\N	\N	\N	BTE	\N	RESIGN	0	\N	\N	12	\N	5	\N	\N	\N	\N	NANANG	...	\N
-cmqs4v42v000fjcqg281l8qc4	Asmeldi	Manager	\N	\N	Logistic	\N	\N	\N	\N	\N	\N	\N	BCS	0	\N	\N	12	\N	4	\N	\N	\N	\N	\N	ALL	\N
-cmqs4v431000gjcqgziu0mpsp	Salsabila	Magang	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	VIT	0	\N	\N	12	\N	0	\N	\N	\N	\N	ADMIN	ALL	\N
-cmqs4v435000hjcqg4cotxent	Ekho Kurniawan	Staff	\N	\N	Teknik	\N	\N	\N	\N	\N	BTE	\N	TEK	0	\N	1 februari 2015	7	\N	0	\N	\N	\N	\N	ADMIN	ALL	\N
-cmqs4v43g000jjcqg5gvpx40d	Dody Irawan	Operator	\N	\N	BCS	\N	\N	\N	\N	\N	BTE	\N	MKT	0	\N	3 Agustus 2015	12	\N	5	\N	\N	\N	\N	ADMIN	DI	\N
-cmqs4v43m000kjcqgwsli3jig	Nandik Sufaryono	Teknik	\N	\N	Teknik	\N	\N	\N	\N	\N	CSR	\N	MKT	0	\N	1 September 2016	\N	\N	4	\N	\N	\N	\N	ADMIN	ND	\N
-cmqs4v43v000mjcqgykusf5zu	Tri Dewi Selase	Administrasi	\N	\N	Finance	\N	\N	\N	\N	\N	BTE	\N	ADM	0	\N	29 Jan 2019	12	\N	5	\N	\N	\N	\N	NANANG	ALL	\N
-cmqs4v440000njcqgaqc910m5	Rizki Qadriadi Putra Deas	\N	\N	\N	\N	\N	\N	\N	\N	\N	CSR	\N	MKT	0	\N	1 september 2020	4	\N	5	\N	\N	\N	\N	NANANG	\N	\N
-cmqs4v445000ojcqgkxn4xmgd	Iqbal Pratomo	Marketing	\N	\N	Marketing	\N	\N	\N	\N	\N	BTE	\N	MKT	0	\N	14 September 2020	1	\N	5	\N	\N	\N	\N	NANANG	IQ	\N
-cmqs4v44d000pjcqgfj3caqjy	Yogi	\N	\N	\N	\N	\N	\N	\N	\N	\N	MKT	\N	\N	0	\N	1 september 2020	10	\N	5	\N	\N	\N	\N	NANANG	YM	\N
-cmqs4v44o000rjcqgpfkxuk1y	Halimah Halim	Account Executive	\N	\N	Marketing	\N	\N	\N	\N	\N	BTE	\N	MKT	0	\N	12 Sept 2022	\N	\N	5	\N	\N	\N	\N	ADMIN	HH	\N
-cmqs4v44w000tjcqguswk6f3d	Restu	\N	\N	\N	Operational	\N	\N	\N	\N	\N	BTE	\N	MIS	0	\N	\N	\N	\N	4	\N	\N	\N	\N	NANANG	MR	\N
-cmqs4v455000ujcqgqrso300g	Riski Amelia	\N	\N	\N	\N	\N	\N	\N	\N	\N	BTE	\N	ADM	0	\N	14 Maret 2022	6	\N	5	\N	\N	\N	\N	ADMIN	ALL	\N
-cmqs4v45b000vjcqge3c2fgkq	Afifah Nurul	\N	\N	\N	\N	\N	\N	\N	\N	\N	BTE	\N	MKT	0	\N	1 Maret 2022	\N	\N	5	\N	\N	\N	\N	ADMIN	AN	\N
-cmqs4v45h000wjcqgsgoyebje	Yayang Aulia Nuzul	Account Executive	\N	\N	Marketing	\N	\N	\N	\N	\N	BTE	\N	MKT	0	\N	12 Sept 2022	\N	\N	5	\N	\N	\N	\N	ADMIN	YA	\N
-cmqs4v45u000xjcqgzzp7in7u	Nurhidayah Wulansari	Account Executive	\N	\N	Marketing	\N	\N	\N	\N	\N	BTE	\N	MKT	0	\N	12 Sept 2022	\N	\N	5	\N	\N	\N	\N	ADMIN	\N	\N
-cmqs4v461000yjcqg737l0qce	Supriono	Account Executive	\N	\N	Marketing	\N	\N	\N	\N	\N	BTE	\N	MKT	0	\N	12 Sept 2022	\N	\N	5	\N	\N	\N	\N	ADMIN	SP	\N
-cmqs4v467000zjcqg5xmz07k6	Rara Kencana	Account Executive	\N	\N	Marketing	\N	\N	\N	\N	\N	BTE	\N	MKT	0	\N	12 Sept 2022	\N	\N	5	\N	\N	\N	\N	ADMIN	RK	\N
-cmqs4v46c0010jcqgnw4fnerx	Wildan Fathul Rizqi	Account Executive	\N	\N	Marketing	\N	\N	\N	\N	\N	BTE	\N	MKT	0	\N	12 Sept 2022	\N	\N	5	\N	\N	\N	\N	ADMIN	WF	\N
-cmqs4v46i0011jcqg0yhjn1ho	Tari Asni	Account Executive	\N	\N	Marketing	\N	\N	\N	\N	\N	BTE	\N	MKT	0	\N	12 Sept 2022	\N	\N	5	\N	\N	\N	\N	ADMIN	TA	\N
-cmqs4v46m0012jcqgwfb6rx95	Oki Matsurina One Chikarani	Account Executive	\N	\N	Marketing	\N	\N	\N	\N	\N	BTE	\N	MKT	0	\N	12 Sept 2022	\N	\N	5	\N	\N	\N	\N	ADMIN	CK	\N
-cmqs4v46w0014jcqg8bnkoit7	Yahya Ramadhana	Teknik	\N	\N	Teknik	\N	\N	\N	\N	\N	BTE	\N	TEK	0	\N	1 Desember 2022	-2	\N	5	\N	\N	\N	\N	ADMIN	YR	\N
-cmqs4v4780016jcqg56wljage	Liana Sari	Teknik	\N	\N	Teknik	\N	\N	\N	\N	\N	BTE	\N	TEK	0	\N	26 Januari 2023	4	\N	5	\N	\N	\N	\N	\N	LS	\N
-cmqs4v47d0017jcqghdhqxaix	Ari Kurniawan	Account Executive	\N	\N	Marketing	\N	\N	\N	\N	\N	BTE	\N	MKT	0	\N	1 Maret 2023	\N	\N	5	\N	\N	\N	\N	\N	AK	\N
-cmqs4v47l0019jcqg0b5w3k48	Affan Marwan	Account Executive	\N	\N	Marketing	\N	\N	\N	\N	\N	BTE	\N	MKT	0	\N	\N	\N	\N	0	\N	\N	\N	\N	\N	AM	\N
-cmqs4v47w001bjcqgbxksegvj	Heru Agung Satrio 	Account Executive	\N	\N	Marketing	\N	\N	\N	\N	\N	BTE	\N	MKT	0	\N	18 April 2024	\N	\N	6	\N	\N	2024-04-17 17:00:00	\N	ADMIN	HR	\N
-cmqs4v485001djcqg3x63rbg1	Widia Wati	Account Executive	\N	\N	Marketing	\N	\N	\N	\N	\N	BTE	\N	MKT	0	\N	18 April 2024	-3	\N	6	\N	\N	2024-04-17 17:00:00	\N	ADMIN	WD	\N
-cmqs4v48a001ejcqga3a9ucjg	Ageng Rahmat Bachtiar	Account Executive	\N	\N	Marketing	\N	\N	\N	\N	\N	BTE	\N	MKT	0	\N	15 Juli 2024	\N	\N	6	\N	\N	2024-04-17 17:00:00	\N	ADMIN	AR	\N
+COPY benefita."Pegawai" (id, nama, jabatan, kode, prefix, departemen, "fotoKey", "fotoUrl", nip, "akunInfo", alamat, instansi, "jenisKelamin", "kodeDepartemen", nik, "pendidikanTerakhir", remark, "sisaCuti", "statusDate", "statusHarian", "statusKaryawan", "statusPerkawinan", "tanggalMasuk", "tempatTanggalLahir", "updatedBy", "userData", "userStatus", "statusAktif") FROM stdin;
+cmq66v8cx0001jc78fzjhjab8	Siti Rahayu	Staff Keuangan	\N	\N	Finance	\N	\N	NIP002	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	f
+cmq66v8d10002jc78j8ujs5tg	Ahmad Fauzi	Admin Harian	\N	\N	Admin	\N	\N	NIP003	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	f
+cmq66v8d30003jc78r7p2h35d	Dewi Lestari	Staff Marketing	\N	\N	Marketing	\N	\N	NIP004	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	f
+cmq66v8d50004jc78hue5rieb	Rizky Pratama	Super Admin	\N	\N	IT	\N	\N	NIP005	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	f
+cmq66v8cq0000jc78h1xi5ccz	Budi Santoso	Manager Marketing	\N	\N	Marketing	\N	\N	NIP001	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	f
+cmqs8yo7f0006jcgsim4cn651	Acepi	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	f
+cmq67a4yn001ojc1chcom9uxp	Axel Putra	Super Admin	AXL	AXL	Programming	1780982978015-969701130.jpeg	/uploads/pegawai/1780982978015-969701130.jpeg	2491324235	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	f
+cmslk73pe0008jcvsx9wyvr0k	AE Testing	Account Executive	TST	\N	Marketing	\N	\N	928242	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	f
+cmq67eg2w0023jc1cq2v2qets	Sylva	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	t
+cmq67feia0027jc1chy4j53k6	Zirah	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	t
+cmq67jqy60002jcs8cejwgbhd	Ghifari	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	t
+cmq67m7fm0000jc4wafuhw4j6	Nanang	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	t
+cmq6c75ey0006jc3o8tmwwoho	User	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	f
+cmq6fpfsr000cjc4szmv7b2kc	Contoh User	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	f
+cmq67oa800004jc4wzfnrwspn	Muhammad Habibie Musy	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	t
+cmq67p4o30006jc4w3vp1um2l	Syukraini Suswita	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	t
+cmq67px7v0008jc4wr1hcindk	Arief	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	t
+cmq67qist000cjc4wq0nz96c3	Eni	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	t
+cmqs494nq002qjct84tw98wmg	Jeane Geraldine	Account Executive	\N	\N	Marketing	\N	\N	2508062	YA	\N	BTE	\N	 MKT	0	\N	1 Agustus 2025	\N	\N	0	Pegawai	\N	2025-07-31 17:00:00	\N	ADMIN	JG	Aktif	t
+cmqs494nt002rjct881nzu383	Milda Ayu El Rahmah	Account Executive	\N	\N	Marketing	\N	\N	2512063	YA	\N	BTE	\N	 MKT	0	\N	16 Desember  2025	\N	\N	0	Freelance	\N	2025-12-15 17:00:00	\N	ADMIN	EL	Aktif	t
+cmqs494lk000yjct8rglynesq	Muhammad\r\n Salman Musy	MIS	\N	\N	Operational	\N	\N	2501027	\N	\N	BTE	\N	VIT	0	\N	22 Januari 2018	12	\N	0	Pegawai	\N	2017-12-31 17:00:00	\N	\N	ALL	Aktif	t
+cmqs494n8002kjct8t7fbx1ki	Nurul Fadila Arista	Account Executive	\N	\N	Marketing	\N	\N	2507056	YA	\N	BTE	\N	 MKT	0	\N	1 Agustus 2025	\N	\N	0	Pegawai	\N	2025-07-31 17:00:00	\N	ADMIN	FA	Aktif	t
+cmqs494nb002ljct8zm1tfps0	Gempita Erlintiana	Account Executive	\N	\N	Marketing	\N	\N	2507057	YA	\N	BTE	\N	 MKT	0	\N	1 Agustus 2025	\N	\N	0	Pegawai	\N	2025-07-31 17:00:00	\N	ADMIN	GE	Aktif	t
+cmqs494o2002vjct8q4p92r9f	Euis Zahra Nurhalimah	Account Executive	\N	\N	Marketing	\N	\N	2512065	YA	\N	BTE	\N	 MKT	0	\N	16 Desember  2025	\N	\N	0	Freelance	\N	2025-12-15 17:00:00	\N	ADMIN	EZ	Aktif	t
+cmqs494nf002mjct8usizhlcn	Calvin Vadhya Fajar	Account Executive	\N	\N	Marketing	\N	\N	2507058	YA	\N	BTE	\N	 MKT	0	\N	1 Agustus 2025	\N	\N	0	Pegawai	\N	2025-07-31 17:00:00	\N	ADMIN	CF	Aktif	t
+cmqs494nh002njct8ctgqss52	Biyan Shandika	Account Executive	\N	\N	Marketing	\N	\N	2508059	YA	\N	BTE	\N	 MKT	0	\N	1 Agustus 2025	\N	\N	0	Freelance	\N	2025-07-31 17:00:00	\N	ADMIN	SB	Aktif	t
+cmqs494nk002ojct8tvpafqqa	Moch Rifqy Nurfaza	Account Executive	\N	\N	Marketing	\N	\N	2508060	YA	\N	BTE	\N	 MKT	0	\N	1 Agustus 2025	\N	\N	0	Pegawai	\N	2025-07-31 17:00:00	\N	ADMIN	RN	Aktif	t
+cmqs494nn002pjct8vxklqnn7	Trenaldy Abdafanza	Account Executive	\N	\N	Marketing	\N	\N	2508061	YA	\N	BTE	\N	 MKT	0	\N	1 Agustus 2025	\N	\N	0	Freelance	\N	2025-07-31 17:00:00	\N	ADMIN	TA	Aktif	t
+cmq67bagu001rjc1chivx3ch4	Wulan	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	t
+cmqs494nw002sjct857qjyeed	Rizkitha Widiawati	Account Executive	\N	\N	Marketing	\N	\N	2512064	YA	\N	BTE	\N	 MKT	0	\N	16 Desember  2025	\N	\N	0	Magang	\N	2025-12-15 17:00:00	\N	ADMIN	RW	\N	f
+cmqs494o5002yjct85pqlk8yw	Riski Lesmana	Account Executive	\N	\N	Marketing	\N	\N	2512066	YA	\N	BTE	\N	 MKT	0	\N	16 Desember  2025	\N	\N	0	Magang	\N	2025-12-15 17:00:00	\N	ADMIN	RL	\N	f
+cmqs4ganl0026jcd0cg46nb6e	Habibie	Keuangan	\N	\N	Operational	\N	\N	2301010	\N	\N	\N	\N	VIT	0	\N	2 Nov 2020	12	\N	5	Pegawai	\N	\N	\N	\N	ALL	Aktif	t
+cmqs49x4g003bjcuouozl20q8	Exel	\N	\N	\N	\N	\N	\N	\N	\N	\N	BTE	\N	MIS	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	ALL	Aktif	t
+cmqs4gakf000cjcd0ykjc31bw	Ahmad Arief D.	Manager	\N	\N	Operational	\N	pas poto aa merah.png	0809006	\N	Jalan Cemara F No. 52 - Rancabolang - Gedebage - Bandung 40294	BTE	Laki-Laki	MIS	0	\N	\N	10	\N	3	Pegawai	Menikah	2008-08-31 17:00:00	\N	\N	ALL	Aktif	t
+cmqs4gakj000fjcd0pnbh5kpw	Radian	Administrasi	\N	\N	Operational	\N	\N	1102008	\N	\N	BTE	\N	ADM	0	\N	\N	9	\N	5	Pegawai	\N	2011-01-31 17:00:00	\N	tes1	RD	Aktif	t
+cmqs4gako000ijcd0fugwthx7	Mulyadi Afmar	Director	\N	\N	Commissioner	\N	\N	9804009	YA	Perumahan Telaga Sakinah - Jl Sunan Kalijaga CD 7 No 16 , Cikarang Barat, Kabupaten Bekasi	\N	Laki-Laki	VIT	0	\N	\N	12	\N	1	Pegawai	Menikah	1998-03-31 17:00:00	Tanah Datar / 6 September 1966	\N	MA	Aktif	t
+cmqs4gal1000ojcd0wf1gmv1q	Sylvania Permata Sari	Account Executive	\N	\N	Marketing	\N	\N	0704013	YA	\N	BTE	\N	MKT	0	\N	\N	2	\N	4	Pegawai	\N	2007-03-31 17:00:00	\N	ADMIN	SL	Aktif	t
+cmqs494kh000hjct8ts4fpfb9	Rita Zulbetti	Manager	\N	\N	Finance	\N	\N	9804010	\N	\N	BTE	\N	Finance	0	\N	\N	12	\N	0	Pegawai	\N	1098-03-31 16:52:48	\N	ADMIN	ALL	Aktif	t
+cmqs4gala000ujcd0i3glommm	Syukraini	Direktur Keuangan	\N	\N	Operational	\N	\N	1601006	\N	Perumahan Telaga Sakinah - Jl Sunan Kalijaga CD 7 No 16 , Cikarang Barat, Kabupaten Bekasi	\N	Perempuan	VIT	2147483647	\N	\N	12	\N	2	Pegawai	Menikah	2016-09-30 17:00:00	Bukittinggi / 7 Maret 1967	Admin	ALL	Aktif	t
+cmqs4gamg001ijcd0rv0suu5j	Endang	Staff	\N	\N	MIS	\N	WhatsApp Image 2024-09-27 at 08.32.58.jpeg	1904023	\N	\N	BTE	\N	MIS	0	\N	29 Jan 2019	9	\N	5	Pegawai	\N	2019-01-18 17:00:00	\N	ADMIN	ES	Aktif	t
+cmqs4gant002cjcd0976dafmv	Nofliyani	Teknik	\N	\N	Teknik	\N	\N	2201032	\N	\N	BTE	\N	TEK	0	\N	1 Januari 2022	9	\N	5	Pegawai	\N	2021-12-31 17:00:00	\N	NANANG	YN	Aktif	t
+cmqs4gaoy0039jcd0etxcvgqn	Muhammad Ghifari	Teknik	\N	\N	Teknik	\N	\N	2211044	\N	\N	BTE	\N	TEK	0	\N	1 Desember 2022	9	\N	5	Pegawai	\N	2022-11-30 17:00:00	\N	ADMIN	MG	Aktif	t
+cmqs4gap5003fjcd05xlop67f	Siti Nazirah	Administr	\N	\N	Finance	\N	\N	2308049	\N	\N	BTE	\N	ADM	0	\N	14 Agustus 2023	8	\N	5	Pegawai	\N	2024-08-13 17:00:00	\N	ADMIN	ALL	Aktif	t
+cmqs4gaph003ojcd0b6tf3ysk	Razif	Account Executive	\N	\N	Marketing	\N	\N	2301248	\N	p	BTE	Laki-Laki	MIS	3	\N	25 JULI 2023	\N	\N	0	Pegawai	Belum Menikah	2024-07-24 17:00:00	Bali	\N	RF	Aktif	t
+cmqs4gapp003ujcd02t2lxk43	Muhammad Rifqi Pambudi	Account Executive	\N	\N	 MIS	\N	\N	2505055	YA	\N	BTE	\N	MIS	0	\N	18 April 2024	\N	\N	6	Pegawai	\N	2024-04-17 17:00:00	\N	ADMIN	RQ	Aktif	t
+cmqs4gapx0040jcd0khj3da1w	Nuriyah Wulandari	Account Executive	\N	\N	Marketing	\N	\N	2404019	YA	\N	BTE	\N	MKT	0	\N	18 April 2024	6	\N	6	Pegawai	\N	2024-04-17 17:00:00	\N	ADMIN	NW	Aktif	t
+cmqs4gak60006jcd0m2yt7ric	Nanang Santoso	MIS	\N	\N	Operational	\N	\N	0409004	\N	\N	BTE	\N	MIS	0	\N	\N	8	\N	4	Pegawai	\N	2004-09-26 17:00:00	\N	ADMIN	NN	Aktif	t
+cmqs4gakb0009jcd0wrpu7n4l	Herlina Susilowati	Teknik	\N	\N	Teknik	\N	\N	0406025	\N	\N	BTE	\N	TEK	0	\N	1 Desember 2016	8	\N	4	Pegawai	\N	2016-12-15 17:00:00	\N	ADMIN	HS	Aktif	t
+cmqs4gajg0000jcd0evfyeg79	Eni Endri Yeni	Account Executive	\N	\N	Marketing	\N	\N	0001002	YA	\N	BTE	Perempuan	MKT	0	\N	10-02-2017	12	\N	4	Pegawai	\N	1999-12-31 17:00:00	\N	\N	EE	Aktif	t
+cmqs4v40n0001jcqgdsnit2bq	Marwati	Administrasi	\N	\N	Operational	\N	\N	\N	\N	\N	BTE	\N	RESIGN	0	\N	\N	12	\N	5	\N	\N	\N	\N	NANANG	...	\N	f
+cmqs4v42v000fjcqg281l8qc4	Asmeldi	Manager	\N	\N	Logistic	\N	\N	\N	\N	\N	\N	\N	BCS	0	\N	\N	12	\N	4	\N	\N	\N	\N	\N	ALL	\N	f
+cmqs4v431000gjcqgziu0mpsp	Salsabila	Magang	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	VIT	0	\N	\N	12	\N	0	\N	\N	\N	\N	ADMIN	ALL	\N	f
+cmqs4v435000hjcqg4cotxent	Ekho Kurniawan	Staff	\N	\N	Teknik	\N	\N	\N	\N	\N	BTE	\N	TEK	0	\N	1 februari 2015	7	\N	0	\N	\N	\N	\N	ADMIN	ALL	\N	f
+cmqs4v43g000jjcqg5gvpx40d	Dody Irawan	Operator	\N	\N	BCS	\N	\N	\N	\N	\N	BTE	\N	MKT	0	\N	3 Agustus 2015	12	\N	5	\N	\N	\N	\N	ADMIN	DI	\N	f
+cmqs4v43m000kjcqgwsli3jig	Nandik Sufaryono	Teknik	\N	\N	Teknik	\N	\N	\N	\N	\N	CSR	\N	MKT	0	\N	1 September 2016	\N	\N	4	\N	\N	\N	\N	ADMIN	ND	\N	f
+cmqs4v43v000mjcqgykusf5zu	Tri Dewi Selase	Administrasi	\N	\N	Finance	\N	\N	\N	\N	\N	BTE	\N	ADM	0	\N	29 Jan 2019	12	\N	5	\N	\N	\N	\N	NANANG	ALL	\N	f
+cmqs4v440000njcqgaqc910m5	Rizki Qadriadi Putra Deas	\N	\N	\N	\N	\N	\N	\N	\N	\N	CSR	\N	MKT	0	\N	1 september 2020	4	\N	5	\N	\N	\N	\N	NANANG	\N	\N	f
+cmqs4v445000ojcqgkxn4xmgd	Iqbal Pratomo	Marketing	\N	\N	Marketing	\N	\N	\N	\N	\N	BTE	\N	MKT	0	\N	14 September 2020	1	\N	5	\N	\N	\N	\N	NANANG	IQ	\N	f
+cmqs4v44d000pjcqgfj3caqjy	Yogi	\N	\N	\N	\N	\N	\N	\N	\N	\N	MKT	\N	\N	0	\N	1 september 2020	10	\N	5	\N	\N	\N	\N	NANANG	YM	\N	f
+cmqs4v44o000rjcqgpfkxuk1y	Halimah Halim	Account Executive	\N	\N	Marketing	\N	\N	\N	\N	\N	BTE	\N	MKT	0	\N	12 Sept 2022	\N	\N	5	\N	\N	\N	\N	ADMIN	HH	\N	f
+cmqs4v44w000tjcqguswk6f3d	Restu	\N	\N	\N	Operational	\N	\N	\N	\N	\N	BTE	\N	MIS	0	\N	\N	\N	\N	4	\N	\N	\N	\N	NANANG	MR	\N	f
+cmqs4v455000ujcqgqrso300g	Riski Amelia	\N	\N	\N	\N	\N	\N	\N	\N	\N	BTE	\N	ADM	0	\N	14 Maret 2022	6	\N	5	\N	\N	\N	\N	ADMIN	ALL	\N	f
+cmqs4v45b000vjcqge3c2fgkq	Afifah Nurul	\N	\N	\N	\N	\N	\N	\N	\N	\N	BTE	\N	MKT	0	\N	1 Maret 2022	\N	\N	5	\N	\N	\N	\N	ADMIN	AN	\N	f
+cmqs4v45h000wjcqgsgoyebje	Yayang Aulia Nuzul	Account Executive	\N	\N	Marketing	\N	\N	\N	\N	\N	BTE	\N	MKT	0	\N	12 Sept 2022	\N	\N	5	\N	\N	\N	\N	ADMIN	YA	\N	f
+cmqs4v45u000xjcqgzzp7in7u	Nurhidayah Wulansari	Account Executive	\N	\N	Marketing	\N	\N	\N	\N	\N	BTE	\N	MKT	0	\N	12 Sept 2022	\N	\N	5	\N	\N	\N	\N	ADMIN	\N	\N	f
+cmqs4v461000yjcqg737l0qce	Supriono	Account Executive	\N	\N	Marketing	\N	\N	\N	\N	\N	BTE	\N	MKT	0	\N	12 Sept 2022	\N	\N	5	\N	\N	\N	\N	ADMIN	SP	\N	f
+cmqs4v467000zjcqg5xmz07k6	Rara Kencana	Account Executive	\N	\N	Marketing	\N	\N	\N	\N	\N	BTE	\N	MKT	0	\N	12 Sept 2022	\N	\N	5	\N	\N	\N	\N	ADMIN	RK	\N	f
+cmqs4v46c0010jcqgnw4fnerx	Wildan Fathul Rizqi	Account Executive	\N	\N	Marketing	\N	\N	\N	\N	\N	BTE	\N	MKT	0	\N	12 Sept 2022	\N	\N	5	\N	\N	\N	\N	ADMIN	WF	\N	f
+cmqs4v46i0011jcqg0yhjn1ho	Tari Asni	Account Executive	\N	\N	Marketing	\N	\N	\N	\N	\N	BTE	\N	MKT	0	\N	12 Sept 2022	\N	\N	5	\N	\N	\N	\N	ADMIN	TA	\N	f
+cmqs4v46m0012jcqgwfb6rx95	Oki Matsurina One Chikarani	Account Executive	\N	\N	Marketing	\N	\N	\N	\N	\N	BTE	\N	MKT	0	\N	12 Sept 2022	\N	\N	5	\N	\N	\N	\N	ADMIN	CK	\N	f
+cmqs4v46w0014jcqg8bnkoit7	Yahya Ramadhana	Teknik	\N	\N	Teknik	\N	\N	\N	\N	\N	BTE	\N	TEK	0	\N	1 Desember 2022	-2	\N	5	\N	\N	\N	\N	ADMIN	YR	\N	f
+cmqs4v4780016jcqg56wljage	Liana Sari	Teknik	\N	\N	Teknik	\N	\N	\N	\N	\N	BTE	\N	TEK	0	\N	26 Januari 2023	4	\N	5	\N	\N	\N	\N	\N	LS	\N	f
+cmqs4v47d0017jcqghdhqxaix	Ari Kurniawan	Account Executive	\N	\N	Marketing	\N	\N	\N	\N	\N	BTE	\N	MKT	0	\N	1 Maret 2023	\N	\N	5	\N	\N	\N	\N	\N	AK	\N	f
+cmqs4v47l0019jcqg0b5w3k48	Affan Marwan	Account Executive	\N	\N	Marketing	\N	\N	\N	\N	\N	BTE	\N	MKT	0	\N	\N	\N	\N	0	\N	\N	\N	\N	\N	AM	\N	f
+cmqs4v47w001bjcqgbxksegvj	Heru Agung Satrio 	Account Executive	\N	\N	Marketing	\N	\N	\N	\N	\N	BTE	\N	MKT	0	\N	18 April 2024	\N	\N	6	\N	\N	2024-04-17 17:00:00	\N	ADMIN	HR	\N	f
+cmqs4v485001djcqg3x63rbg1	Widia Wati	Account Executive	\N	\N	Marketing	\N	\N	\N	\N	\N	BTE	\N	MKT	0	\N	18 April 2024	-3	\N	6	\N	\N	2024-04-17 17:00:00	\N	ADMIN	WD	\N	f
+cmqs4v48a001ejcqga3a9ucjg	Ageng Rahmat Bachtiar	Account Executive	\N	\N	Marketing	\N	\N	\N	\N	\N	BTE	\N	MKT	0	\N	15 Juli 2024	\N	\N	6	\N	\N	2024-04-17 17:00:00	\N	ADMIN	AR	\N	f
 \.
 
 
 --
--- Data for Name: PengajuanIzin; Type: TABLE DATA; Schema: benefita; Owner: postgres
+-- Data for Name: PengajuanIzin; Type: TABLE DATA; Schema: benefita; Owner: -
 --
 
 COPY benefita."PengajuanIzin" (id, "pegawaiId", "jenisIzin", "tanggalMulai", "tanggalSelesai", alasan, "alasanTolak", status, "createdAt", "updatedAt", "tanggalKonfirmasi") FROM stdin;
@@ -1416,7 +1662,7 @@ cmq6frd5u000hjc4squm7zwia	cmq67a4yn001ojc1chcom9uxp	CUTI	2026-06-10 00:00:00	202
 
 
 --
--- Data for Name: Proper; Type: TABLE DATA; Schema: benefita; Owner: postgres
+-- Data for Name: Proper; Type: TABLE DATA; Schema: benefita; Owner: -
 --
 
 COPY benefita."Proper" (id, tahun, "jenisIndustris", "namaPerusahaan", "noIndukPemda", "noIndukPerusahaan", "noIndukProvinsi", peringkat, "bidangIndustri") FROM stdin;
@@ -3249,6 +3495,7 @@ COPY benefita."Proper" (id, tahun, "jenisIndustris", "namaPerusahaan", "noIndukP
 1827	2014	Migas EP	ExxonMobil Oil Indonesia Inc. (EMOI)	PD01108	PR00696	PD01100	BIRU	Pertambangan, Energi dan Migas
 1828	2014	Hotel	Four Season Resort Bali at Jimbaran Bay	PD05103	\N	PD05100	BIRU	Manufaktur, Prasarana dan Jasa
 15855	2019		PT. Freetrend	PD03603	PR11725	PD03600	BIRU	Sepatu
+3118	2014	Sawit	PT. Rohul Sawit Indonesia	PD01407	\N	PD01400	BIRU	Agroindustri
 1829	2014	Hotel	Grand Nikko Bali Resort and Spa- PT. Caterison Sukses	PD05103	\N	PD05100	MERAH	Manufaktur, Prasarana dan Jasa
 1830	2014	Hotel	Grand Rocky Hotel	PD01375	PR10030	PD01300	MERAH	Manufaktur, Prasarana dan Jasa
 1831	2014	Hotel	Gumaya Tower Hotel	PD03374	PR06189	PD03300	MERAH	Manufaktur, Prasarana dan Jasa
@@ -3490,6 +3737,7 @@ COPY benefita."Proper" (id, tahun, "jenisIndustris", "namaPerusahaan", "noIndukP
 2065	2014	Komponen Otomotif	PT. Astra Nippon Gasket Indonesia	PD03215	PR08222	PD03200	BIRU	Manufaktur, Prasarana dan Jasa
 2066	2014	Industri Kimia	PT. Astrindo Lestari Kimia	PD03604	PR10792	PD03600	BIRU	Manufaktur, Prasarana dan Jasa
 2067	2014	Komponen Otomotif	PT. AT Indonesia	PD03215	PR00059	PD03200	BIRU	Manufaktur, Prasarana dan Jasa
+28738	2022		PT Graha Permata Hijau	PD01407	PR14053	PD01400	MERAH	Sawit
 2068	2014	Tekstil	PT. Ateja Multi Industri	PD03217	PR00635	PD03200	BIRU	Manufaktur, Prasarana dan Jasa
 2069	2014	Tekstil	PT. Ateja Tritunggal	PD03217	PR04351	PD03200	BIRU	Manufaktur, Prasarana dan Jasa
 2070	2014	Sawit	PT. Austindo Nusantara Jaya Agri	PD01220	PR06642	PD01200	BIRU	Agroindustri
@@ -4486,6 +4734,7 @@ COPY benefita."Proper" (id, tahun, "jenisIndustris", "namaPerusahaan", "noIndukP
 3057	2014	Energi PLTD	PT. PLN (Persero) Wilayah Kalsel dan Kalteng Sektor Barito Unit PLTD Kotabaru	PD06302	\N	PD06300	BIRU	Pertambangan, Energi dan Migas
 3058	2014	Energi PLTG	PT. PLN (Persero) Wilayah Kaltim Sektor Mahakam PLTG Samberah	PD06403	PR06268	PD06400	BIRU	Pertambangan, Energi dan Migas
 3059	2014	Energi PLTG	PT. PLN (Persero) Wilayah Kaltim Sektor Mahakam PLTGU Tanjung Batu	PD06403	PR06267	PD06400	BIRU	Pertambangan, Energi dan Migas
+12627	2017		PT. Bukit Perak	PD03374	PR03702	PD03300	BIRU	Sabun dan Kosmetik
 3060	2014	Energi PLTD	PT. PLN (Persero) Wilayah Kaltim Sektor Mahakam Proyek Kegiatan MFO-Nisasi PLTD Karang Asam	PD06472	\N	PD06400	MERAH	Pertambangan, Energi dan Migas
 3061	2014	Energi PLTD	PT. PLN (Persero) Wilayah Kaltim Sektor Mahakam Proyek Kegiatan MFO-Nisasi PLTD Keledang	PD06472	PR07208	PD06400	MERAH	Pertambangan, Energi dan Migas
 3062	2014	Energi PLTD	PT. PLN (Persero) Wilayah Sulsel dan Sultra Sektor Tello	PD07371	PR00439	PD07300	BIRU	Pertambangan, Energi dan Migas
@@ -4544,7 +4793,6 @@ COPY benefita."Proper" (id, tahun, "jenisIndustris", "namaPerusahaan", "noIndukP
 3115	2014	Sawit	PT. Rigunas Agri Utama PMKS Pranap	PD01402	\N	PD01400	MERAH	Agroindustri
 3116	2014	Kayu Lapis	PT. Rimba Raya Lestari	PD06472	PR07099	PD06400	MERAH	Agroindustri
 3117	2014	Petrokimia	PT. Rohm and Haas Indonesia	PD03672	PR00906	PD03600	BIRU	Manufaktur, Prasarana dan Jasa
-3118	2014	Sawit	PT. Rohul Sawit Indonesia	PD01407	\N	PD01400	BIRU	Agroindustri
 3119	2014	Bulu Mata, Kuku Palsu, Rambut palsu	PT. Royal Korindah	PD03303	PR04750	PD03300	MERAH	Manufaktur, Prasarana dan Jasa
 3120	2014	karet	PT. Rubber Hock Lie	PD01212	PR04505	PD01200	BIRU	Agroindustri
 3121	2014	Industri Kimia	PT. Rudolf Chemicals Indonesia	PD03216	PR01870	PD03200	MERAH	Manufaktur, Prasarana dan Jasa
@@ -4910,6 +5158,7 @@ COPY benefita."Proper" (id, tahun, "jenisIndustris", "namaPerusahaan", "noIndukP
 3481	2014	Industri Kimia	PT.Timuraya Tunggal	PD03603	\N	PD03600	MERAH	Manufaktur, Prasarana dan Jasa
 3482	2014	Kayu Lapis	PT.Tirta Mahakam Resources, Tbk	PD06472	\N	PD06400	MERAH	Agroindustri
 3483	2014	Sawit	PTPN (Persero) XIII Kebun PKR Tambarangan	PD06305	\N	PD06300	BIRU	Agroindustri
+12628	2017		PT. Damaitex	PD03374	PR10888	PD03300	BIRU	Tekstil
 3484	2014	Sawit	PTPN I (Persero) - PKS Pulau Tiga	PD01114	\N	PD01100	BIRU	Agroindustri
 3485	2014	Sawit	PTPN I (Persero) PKS Tanjung Seumantoh	PD01114	\N	PD01100	BIRU	Agroindustri
 3486	2014	Sawit	PTPN II (Persero) PKS Kebun Sawit Seberang	PD01213	\N	PD01200	BIRU	Agroindustri
@@ -5086,6 +5335,7 @@ COPY benefita."Proper" (id, tahun, "jenisIndustris", "namaPerusahaan", "noIndukP
 3657	2014	Hotel	Sheraton Hotel Bandung	PD03273	PR04649	PD03200	MERAH	Manufaktur, Prasarana dan Jasa
 3658	2014	Hotel	Sheraton Surabaya Hotel & Tower	PD03578	PR07189	PD03500	BIRU	Manufaktur, Prasarana dan Jasa
 3659	2014	Migas EP	Star Energy (Kakap) Ltd.	PD02006	\N	PD02000	HIJAU	Pertambangan, Energi dan Migas
+12629	2017		PT. Dan Liris	PD03311	PR00679	PD03300	BIRU	Tekstil
 3660	2014	Energi PLtp	Star Energy Geothermal (Wayang Windu)Ltd.	PD03204	\N	PD03200	EMAS	Pertambangan, Energi dan Migas
 3661	2014	Hotel	Swiss-Belhotel Borneo Banjarmasin	PD06372	PR09926	PD06300	BIRU	Manufaktur, Prasarana dan Jasa
 3662	2014	Migas EP	TAC Pertamina - Binawahana Petrindo Meruap Pte.Ltd	PD01503	\N	PD01500	BIRU	Pertambangan, Energi dan Migas
@@ -5444,6 +5694,7 @@ COPY benefita."Proper" (id, tahun, "jenisIndustris", "namaPerusahaan", "noIndukP
 10304	2016		PT. Cargill	PD01212	PR06196	PD01200	BIRU	Pakan Ternak
 10305	2016		PT. Cargill Indonesia	PD07371	PR04829	PD07300	BIRU	Industri Pakan Ternak
 10306	2016		PT. Cargill Indonesia - Plant Pasuruan	PD03514	PR04826	PD03500	BIRU	Pakan ternak
+28739	2022		PT Hutahaen Teluk Sono	PD01407	PR10016	PD01400	MERAH	Sawit
 10307	2016		PT. Cargill Indonesia - Sulawesi Utara	PD07105	PR05486	PD07100	BIRU	Minyak Goreng
 10308	2016		PT. Cargill Indonesia Serang	PD03604	PR04825	PD03600	BIRU	Pakan Ternak
 10309	2016		PT. Castrol Indonesia	PD03672	PR01178	PD03600	BIRU	Pelumas
@@ -6241,6 +6492,7 @@ COPY benefita."Proper" (id, tahun, "jenisIndustris", "namaPerusahaan", "noIndukP
 11100	2016		PT. Perkebunan Nusantara VII (Persero) Unit Usaha Musi Landas	PD01607	PR01763	PD01600	MERAH	Karet
 11101	2016		PT. Perkebunan Nusantara VII (Persero) Unit Usaha Padang Pelawi	PD01705	PR01764	PD01700	MERAH	Karet
 11102	2016		PT. Perkebunan Nusantara VII (Persero) Unit Usaha Pagaralam	PD01673	PR01767	PD01600	BIRU	The
+28740	2022		PT Kencana Utama Sejati	PD01407	PR14116	PD01400	MERAH	Sawit
 11103	2016		PT. Perkebunan Nusantara VII (Persero) Unit Usaha Talang Sawit	PD01607	PR01774	PD01600	BIRU	Sawit
 11104	2016		PT. Perkebunan Nusantara VII (Persero) Unit Usaha Tebenan	PD01607	PR01776	PD01600	HIJAU	Karet
 11105	2016		PT. Perkebunan Nusantara VII (Persero) Unit Way Berulu	PD01809	PR01778	PD01800	BIRU	Karet
@@ -7231,6 +7483,7 @@ COPY benefita."Proper" (id, tahun, "jenisIndustris", "namaPerusahaan", "noIndukP
 12062	2017		PT.  Indofood  CBP  Sukses Makmur, Tbk. - Pontianak	PD09916	PR08806	PD06100	HIJAU	Makanan dan Minuman
 12063	2017		PT. Pertamina (Persero) Marketing Operation Region VI TBBM Pontianak	PD06171	PR05505	PD06100	HIJAU	Migas Distribusi
 12064	2017		PT. Adaro Indonesia	PD06309	PR00009	PD06300	HIJAU	Tambang Batubara
+55948	2020		3M Indonesia, PT	PD03216	PR00001	PD03200	BIRU	Plastik
 12065	2017		PT. Pertamina EP Asset 5 - Tanjung Field	PD06309	PR00876	PD06300	HIJAU	Migas EP
 12066	2017		PT. PLN (Persero) PLTU Wilayah Kalselteng Sektor Asam-Asam	PD06301	PR00423	PD06300	HIJAU	Energi PLTU
 12067	2017		PT. Gunung Sejahtera Dua Indah	PD06201	PR02013	PD06200	HIJAU	Sawit
@@ -7721,6 +7974,7 @@ COPY benefita."Proper" (id, tahun, "jenisIndustris", "namaPerusahaan", "noIndukP
 12552	2017		PT. PG Rajawali II Unit PG Sindang Laut	PD03209	PR04811	PD03200	BIRU	Gula
 12553	2017		PT. PG Rajawali II Unit PG Subang Pasir Bungur	PD03213	PR00883	PD03200	BIRU	Gula
 12554	2017		PT. PG Rajawali II Unit PG Tersana Baru	PD03209	PR00884	PD03200	BIRU	Gula
+55949	2013		3M Indonesia, PT	PD03216	PR00001	PD03200	MERAH	Plastik
 12555	2017		PT. PGN (Persero), Tbk. - Offtake Cimanggis Wilayah Jawa Barat	PD03276	PR01368	PD03200	BIRU	Migas Distribusi
 12556	2017		PT. Pindad (Persero)	PD03273	PR06605	PD03200	BIRU	Peleburan Logam
 12557	2017		PT. Pindo Deli Pulp And Paper Mills - 1	PD03215	PR08579	PD03200	BIRU	Kertas
@@ -7793,9 +8047,6 @@ COPY benefita."Proper" (id, tahun, "jenisIndustris", "namaPerusahaan", "noIndukP
 12624	2017		PT. Apac Inti Corpora	PD03322	PR00029	PD03300	BIRU	Tekstil
 12625	2017		PT. Ara Shoes Indonesia	PD03374	PR07252	PD03300	BIRU	Sepatu
 12626	2017		PT. Bina Guna Kimia	PD03322	PR00081	PD03300	BIRU	Industri Kimia
-12627	2017		PT. Bukit Perak	PD03374	PR03702	PD03300	BIRU	Sabun dan Kosmetik
-12628	2017		PT. Damaitex	PD03374	PR10888	PD03300	BIRU	Tekstil
-12629	2017		PT. Dan Liris	PD03311	PR00679	PD03300	BIRU	Tekstil
 12630	2017		PT. Delta Merlin Dunia Tekstil	PD03309	PR11502	PD03300	BIRU	Tekstil
 12631	2017		PT. Dharmapala Usaha Sukses	PD03301	PR03036	PD03300	BIRU	Gula Rafinasi
 12632	2017		PT. Djarum, Tbk	PD03319	PR00130	PD03300	BIRU	Rokok
@@ -16539,6 +16790,7 @@ COPY benefita."Proper" (id, tahun, "jenisIndustris", "namaPerusahaan", "noIndukP
 51254	2025		PT Asahi Mas Flat Glass - Sidoarjo	PD03515	PR06287	PD03500	HIJAU	Kaca
 51255	2025		PT Petro Oxo Nusantara	PD03525	PR00406	PD03500	HIJAU	Kimia
 51256	2025		PT Amerta Indah Otsuka - Pasuruan	PD03514	PR07219	PD03500	HIJAU	Makanan dan Minuman
+51386	2025		PT Pertamina Hulu Energi - Ogan Komering	PD01601	PR00749	PD01600	HIJAU	Migas EP
 51257	2025		PT Pertamina Patra Niaga - Integrated Terminal Tanjung Wangi	PD03510	PR05634	PD03500	HIJAU	Migas Distribusi
 51258	2025		PT Pertamina Lubricant Production - Gresik	PD03525	PR10093	PD03500	HIJAU	Migas Distribusi
 51259	2025		PT Pertamina Patra Niaga - Aviation Fuel Terminal Juanda	PD03515	PR05632	PD03500	HIJAU	Migas Distribusi
@@ -16668,7 +16920,6 @@ COPY benefita."Proper" (id, tahun, "jenisIndustris", "namaPerusahaan", "noIndukP
 51383	2025		PT Pertamina Patra Niaga - Integrated Terminal Palembang	PD01671	PR00850	PD01600	HIJAU	Migas Distribusi
 51384	2025		PT Pertamina Hulu Energi - Jambi Merang	PD01606	PR01258	PD01600	HIJAU	Migas EP
 51385	2025		PT Pertamina EP Asset 1 - Field Ramba	PD01606	PR00747	PD01600	HIJAU	Migas EP
-51386	2025		PT Pertamina Hulu Energi - Ogan Komering	PD01601	PR00749	PD01600	HIJAU	Migas EP
 51387	2025		PT Pertamina EP Asset 2 - Field Pendopo	PD01612	PR00871	PD01600	HIJAU	Migas EP
 51388	2025		PT Pertamina Hulu Energi Raja Tempirai	PD01612	PR12260	PD01600	HIJAU	Migas EP
 51389	2025		PT Pertamina EP Asset 2 - Field Adera	PD01612	PR04537	PD01600	HIJAU	Migas EP
@@ -18976,6 +19227,7 @@ COPY benefita."Proper" (id, tahun, "jenisIndustris", "namaPerusahaan", "noIndukP
 33183	2023		PT Pertamina Patra Niaga - Regional Sumbagsel Fuel Terminal Pulau Baai	PD01771	PR05587	PD01700	BIRU	Migas Distribusi
 34489	2023		PT Kaltim Global	PD01703	PR08608	PD01700	BIRU	Pertambangan dan Penggalian
 33184	2023		PT Pertamina Patra Niaga - Regional Sumbagsel Integrated Terminal Panjang	PD01871	PR04524	PD01800	DITANGGUHKAN	Migas Distribusi
+24136	2021		PT Barata Indonesia (Persero)	PD03525	PR04303	PD03500	BIRU	Peleburan Logam
 33185	2023		PT Pertamina Patra Niaga - Regional Sumbagut Fuel Terminal Simeulue	PD01109	PR01117	PD01100	BIRU	Migas Distribusi
 33186	2023		PT Pertamina Patra Niaga Fuel Terminal Camplong	PD03527	PR08803	PD03500	DITANGGUHKAN	Migas Distribusi
 33187	2023		PT Perusahaan Gas Negara (Persero) Tbk - Offtake Stasiun Pasar IX	PD01212	PR13393	PD01200	BIRU	Migas Distribusi
@@ -21160,7 +21412,6 @@ COPY benefita."Proper" (id, tahun, "jenisIndustris", "namaPerusahaan", "noIndukP
 24133	2021		PT Wilmar Nabati Indonesia Gresik	PD03525	PR06582	PD03500	BIRU	Minyak Goreng
 24134	2021		PT Miwon Indonesia	PD03525	PR00795	PD03500	BIRU	MSG
 24135	2021		PT Timur Megah Steel	PD03525	PR00948	PD03500	BIRU	Pelapisan Logam
-24136	2021		PT Barata Indonesia (Persero)	PD03525	PR04303	PD03500	BIRU	Peleburan Logam
 24137	2021		PT Cargill Indonesia - Pabrik Pengolahan Kakao	PD03525	PR09364	PD03500	BIRU	Pengolahan kakao
 24138	2021		PT Perkebunan Nusantara XI PG Semboro	PD03509	PR01817	PD03500	BIRU	Gula
 24139	2021		PT Perkebunan Nusantara X - Unit Industri Bobbin	PD03509	PR07148	PD03500	BIRU	Rokok
@@ -24384,6 +24635,7 @@ COPY benefita."Proper" (id, tahun, "jenisIndustris", "namaPerusahaan", "noIndukP
 27354	2022		PT Tata Hamparan Eka Persada	PD01901	PR11809	PD01900	BIRU	Sawit
 27355	2022		PT Timah, Tbk. - Keteknikan dan Sarana (Balaikarya)	PD01901	PR06286	PD01900	BIRU	Jasa Kontraktor dan Pertambangan
 27356	2022		PT Timah, Tbk. - Unit Tambang Darat Sungailiat	PD01901	PR00536	PD01900	BIRU	Tambang Mineral
+28741	2022		PT Padasa Enam Utama - PMKS Kalianta Dua	PD01407	PR04813	PD01400	MERAH	Sawit
 27357	2022		PT Timah Tbk - Unit Penambangan Timah Primer Pemali	PD01901	PR13411	PD01900	BIRU	Tambang Mineral
 27358	2022		PT Bumi Permai Lestari	PD01905	PR08699	PD01900	BIRU	Sawit
 27359	2022		PT Gunung Sawit Bina Lestari	PD01905	PR04504	PD01900	BIRU	Sawit
@@ -25764,10 +26016,6 @@ COPY benefita."Proper" (id, tahun, "jenisIndustris", "namaPerusahaan", "noIndukP
 28735	2022		PT Mitrasari Prima	PD01404	PR12853	PD01400	MERAH	Sawit
 28736	2022		PT Serikat Putra PKS Lubuk Raja	PD01404	PR10118	PD01400	MERAH	Sawit
 28737	2022		PT Cipta Agro Sejati	PD01409	PR12852	PD01400	MERAH	Sawit
-28738	2022		PT Graha Permata Hijau	PD01407	PR14053	PD01400	MERAH	Sawit
-28739	2022		PT Hutahaen Teluk Sono	PD01407	PR10016	PD01400	MERAH	Sawit
-28740	2022		PT Kencana Utama Sejati	PD01407	PR14116	PD01400	MERAH	Sawit
-28741	2022		PT Padasa Enam Utama - PMKS Kalianta Dua	PD01407	PR04813	PD01400	MERAH	Sawit
 28742	2022		PT Padasa Enam Utama - PMKS Kalianta Satu	PD01407	PR10023	PD01400	MERAH	Sawit
 28743	2022		EMP Malacca Strait S.A - Lapangan Siak	PD01405	PR08380	PD01400	MERAH	Migas EP
 28744	2022		PT Dian Anggara Persada	PD01405	PR14030	PD01400	MERAH	Sawit
@@ -33651,11 +33899,28 @@ COPY benefita."Proper" (id, tahun, "jenisIndustris", "namaPerusahaan", "noIndukP
 49517	2024		PT Pinako Rotari Permai	PD03322	PR10485	PD03300	BIRU	Pengolahan kayu dan  fumiture
 49518	2024		PT Pinang Witmas Abadi - Estate	PD06112	PR11689	PD06100	DITANGGUHKAN	Perkebunan Sawit
 49519	2024		PT Pinang Witmas Sejati - Mill	PD01606	PR16463	PD01600	MERAH	Perkebunan dan Pabrik Kelapa Sawit
+55950	2020		Aqua Golden Mississippi, PT - Kantor Pusat 	PD03172	PR00030	PD03100	BIRU	Industri Minuman Kemasan
+55951	2012		Aqua Golden Mississippi, PT - Kantor Pusat 	PD03172	PR00030	PD03100	BIRU	Industri Minuman Kemasan
+55952	2011		Aqua Golden Mississippi, PT - Kantor Pusat 	PD03172	PR00030	PD03100	BIRU	Industri Minuman Kemasan
+55953	2020		Astra Honda Motor (AHM), PT - Cikarang Plant	PD03216	PR00056	PD03200	BIRU	Otomotif
+55954	2014		Astra Honda Motor (AHM), PT - Cikarang Plant	PD03216	PR00056	PD03200	BIRU	Otomotif
+55955	2013		Astra Honda Motor (AHM), PT - Cikarang Plant	PD03216	PR00056	PD03200	BIRU	Otomotif
+55956	2012		Astra Honda Motor (AHM), PT - Cikarang Plant	PD03216	PR00056	PD03200	BIRU	Otomotif
+55957	2020		AT Indonesia, PT	PD03215	PR00059	PD03200	BIRU	Komponen Otomotif
+55958	2013		AT Indonesia, PT	PD03215	PR00059	PD03200	MERAH	Manufaktur, Prasarana dan Jasa
+55959	2020		Bridgestone Tire Indonesia, PT - Bekasi	PD03275	PR00086	PD03200	BIRU	Ban
+55960	2014		Bridgestone Tire Indonesia, PT - Bekasi	PD03275	PR00086	PD03200	BIRU	Ban
+55961	2013		Bridgestone Tire Indonesia, PT - Bekasi	PD03275	PR00086	PD03200	MERAH	Ban
+55962	2012		Bridgestone Tire Indonesia, PT - Bekasi	PD03275	PR00086	PD03200	BIRU	Ban
+55963	2011		Bridgestone Tire Indonesia, PT - Bekasi	PD03275	PR00086	PD03200	BIRU	Ban
+55964	2010		Bridgestone Tire Indonesia, PT - Bekasi	PD03275	PR00086	PD03200	BIRU	Ban
+55965	2020		Bukaka Teknik Utama, PT - Kantor Pusat	PD03201	PR00088	PD03200	BIRU	Mesin
+55966	2013		Bukaka Teknik Utama, PT - Kantor Pusat	PD03201	PR00088	PD03200	MERAH	Mesin
 \.
 
 
 --
--- Data for Name: RefreshToken; Type: TABLE DATA; Schema: benefita; Owner: postgres
+-- Data for Name: RefreshToken; Type: TABLE DATA; Schema: benefita; Owner: -
 --
 
 COPY benefita."RefreshToken" (id, token, "userId", "deviceHash", "expiresAt", "createdAt") FROM stdin;
@@ -33683,11 +33948,12 @@ cmqs8ik880007jcq41ats9iic	2e00716cacf236559ca9fdf67642d61b54d2c3b3f8714abf4dc14c
 cms5uyqcx000djcvkk6l34ox5	713ccfc31d9ea32733fd14db9452b025843fb9d319b02f7b241f67e03505f113f40a7a55015c6db6e2b7d4c3c3aaaffe43a823501072bcbf5c895a9bb223878d	cmq67a4yn001qjc1cl7gitkyz	2b937963	2026-08-05 09:04:15.344	2026-07-29 09:04:15.346
 cmqz1282v000gjcl8vw6xehw7	afd66461db2fcaa8554f7f3ba2d996bf776b746ffe90f67055e8ccb422cfb301610d524584f417a8eef67e90a49b234a2c97906db930981e93b73a5b71b84f18	cmq67a4yn001qjc1cl7gitkyz	558a6b7	2026-07-06 09:40:50.405	2026-06-29 09:40:50.407
 cmsyggfxr0001jcskwggq7k20	0865c799ceb32f4dd918fdab60f30c657b7d9bff24310332e91747556f2e93f8ad91faa674964d5e2e0271b9c009ad2515e7ab2cfb43f9ce1940da8a134e59f4	cmq67a4yn001qjc1cl7gitkyz	405a135c-b17b-45a3-b2be-047fdbbe4221	2026-08-25 09:23:26.508	2026-08-18 09:23:26.51
+cmtj1bux5000bjchktyqpc35j	6403e8a2dea567d25f5a84f2f938254a6d6e2ea4cd555ecb210124bdf7f4723480f7b69b7bc2d49f2c661de03f06dc5dadc35f3d0cd74d7c638c14e3fdb3d5f8	cmq67a4yn001qjc1cl7gitkyz	405a135c-b17b-45a3-b2be-047fdbbe4221	2026-09-08 19:03:08.104	2026-09-01 19:03:08.106
 \.
 
 
 --
--- Data for Name: SertifikasiBnsp; Type: TABLE DATA; Schema: benefita; Owner: postgres
+-- Data for Name: SertifikasiBnsp; Type: TABLE DATA; Schema: benefita; Owner: -
 --
 
 COPY benefita."SertifikasiBnsp" (id, "perusahaanId", pppa, popal, pppu, poippu, "limbahB3", "tpsLb3", "sampah3R", "pSampah", "aEnergi", "mEnergi", pcua, lca) FROM stdin;
@@ -33695,7 +33961,7 @@ COPY benefita."SertifikasiBnsp" (id, "perusahaanId", pppa, popal, pppu, poippu, 
 
 
 --
--- Data for Name: TabPerusahaan; Type: TABLE DATA; Schema: benefita; Owner: postgres
+-- Data for Name: TabPerusahaan; Type: TABLE DATA; Schema: benefita; Owner: -
 --
 
 COPY benefita."TabPerusahaan" ("0NO_INDUK", "jenisInstansi", "1COMPANY", "2ALAMAT", "5TELP", "6FAX", "7EMAIL", "24KET", fasilitas, "ButuhTraining", "prioritasMa", "prioritasAe", "21GROUP", "idSimpel", "alamatWaktu", "alamatFactory", "alamatFactoryWaktu", iso9000, iso14000, ohsas18001smk3, "kategoriCpn", "lineOfBusiness", "lineBisnisSub", permodalan, "nilaiSubBidangProper", "batasEmas", "batasHijau", "infoKeu", "bdoAction", vendor, "cabangSite", pesaing, "prosedurPelatihan", "kotaKabupaten", provinsi, instansi, "sekilasLh", rsud, "indPengolahan", pertambangan, "listrikGasAirBersih", "hotelResto", "angkutTrans", bangunan, pertanian, keuangan, laut, jasa, kode, tender1, tender2, tender3, "pelatihanDiikuti", pemilik, yayasan, "subKategori", "cpSekolah", "dateInput", "dateUpdate", inputter, updatter, akreditasi, acc, "accCsr", "accEpm", "accTsm", "actionPareto", "dateRequestAcount", "expiredVendor", "groupInduk", ims, "indukKab", "indukProv", kd2, kd3, kd4, kd5, khusus, "kirimPos", "noGroup", "pesertaInh", "pesertaTot", "prioritasMaLama", produksi, region, "requestAcount", "subBidangProper", "tglInfoKeu", "tglRecord", "tglRecordCsr", "tglRecordEnv", "tglRecordEpm", "tglRecordTsm", costomer, golkar, "humasDanHukum", lain, pan, pdip, ppp, status, "statusDaerah", "tglRecordAdm", "noIndukProv", pelanggan, prioritas, "contakPerson", sertifikasi, "liniBisnisId", "liniBisnisNote") FROM stdin;
@@ -33746,6 +34012,7 @@ RS00011	RUMAH_SAKIT	RS TNI-AL Dr. Ramelan	Jl.Gadung No.1 \r\nSurabaya  - Jatim  
 PD07326	PEMDA	Kab. Parepare	Jl. Jend. Sudirman No.78, Parepare	0421- 21000	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	Sulsel	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	2013-09-11 05:25:21	\N	NANANG	\N	MA180124;LA130819;MA11	MA260305-;	MA260305-;	MA260305-;	\N	2013-08-18 17:00:00	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	NANANG	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N
 RS00028	RUMAH_SAKIT	RSUP Dr. Kariadi Semarang	Jl. Dr. Soetomo No. 16 \r\nSemarang - Jateng 50244	024- 8413993, 024  841 3289, 8454 681	024-8318617,  841 3305, 8454 681	rsdk@indosat.net.id; info@rskariadi.co.id	024- 8413993, 024  841 3289 sudah tidak aktif.	menangani Flu burung - 	CSR-01;	\N	210208	Kota Semarang	899	WIB	            \t    	 	\N	\N	\N	2-C-Proper	Rumah Sakit ;-;Pusat  ; skala A	\N	Kemkes	0	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	0	0	0	0	0	0	0	0	0	0	0	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	2025-12-19 03:27:47	\N	KITHA	\N	RW251219;MA220223-;SL210816;MA-210101;EE200127	MA210818-;ND201027	MA210506-;	MA210506-;	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	P2-C	\N	\N	0	3	 p120	\N	\N	\N	\N	\N	251219	210208-NANDIK	251219-KITHA	210816-SYLVA	210816-SYLVA	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	28	Pusat  ; skala A
 RS00042	RUMAH_SAKIT	RSUP Dr. Hasan Sadikin	Jl. Pasteur 38\r\n Bandung - Jabar	022-203 4953 - 54	022-203 2216	maudydirgahayu@yahoo.co.id;  perjan_rshs@yahoo.com;  humprorshs@gmail.com	\N	EPCM Jabar-2006; menangani Flu burung	\N	\N	201027	Kota Bandung	\N	WIB	\N	 	\N	\N	\N	2-C-Proper	Rumah Sakit ;-;Pusat  ; skala A	\N	Kemkes	0	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	0	0	0	0	0	0	0	0	0	0	0	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	2026-01-27 09:26:23	\N	WULAN	\N	NW240418;MA-210101;EE200127;MA180124;EE90210	MA260416-;NW250923;MA250703-;NW240618;MA210818-;N	MA	MA	\N	\N	\N	\N	RS07346	\N	\N	\N	\N	\N	\N	P6	\N	\N	0	1	 p120	\N	\N	\N	\N	\N	210222	250923-WULAN	260127-WULAN	0000-00-00	0000-00-00	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	28	Pusat  ; skala A
+PD01302	PEMDA	Kab. Pesisir Selatan  	Jl. H. Agus Salim No. 1 \r\nPainan 25611\t\t\t	0756-21200; 0756-21833 (R)	0756-21414	adm_pembangunan@yahoo.co.id, humas@pesisirselatan.go.id	2000	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	Sumbar	\N	Adipura23: KK (Kota Kecil) 	\N	12	1	0	22	3	4	32	4	\N	20	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	2023-02-28 05:51:40	\N	MULYADI	\N	MU230228; MA180124;EE-100120	MA260305-;	MA260305-;	MA260305-;	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	H. Rosman EffendiI, SE, SH, MM, MBA (Sekda) -91101;	\N	\N	\N	\N	\N	\N	160405	\N	\N	\N	\N	\N	\N	\N
 RS00044	RUMAH_SAKIT	RSUD Arjawinangun	Jl. By Pass Palimanan - Jakarta Km. 2 No. 1\r\nKebonturi, Arjawinangun\r\nCirebon - Jabar 45162	0231-358335; 357045	0231-359090	rsudarjawinangun@cirebonkab.go.id	\N	 	\N	\N	201027	Kab. Cirebon	\N	WIB	            \t    	 	\N	\N	\N	4-C	Rumah Sakit ;-;Kab ; skala B	\N	pemkab	0	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	0	0	0	0	0	0	0	0	0	0	0	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	2026-01-13 04:48:46	\N	MILDA	\N	EL260113;MA210506-;RQ201027;MA-201027;RQ201027	MA	MA	MA	\N	\N	\N	\N	RS07421	\N	\N	\N	\N	\N	\N	P4-C	\N	\N	0	1	 p120	\N	Jabar	\N	\N	\N	260113	\N	260511-MILDA	0000-00-00	0000-00-00	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	28	Kab ; skala B
 PD01113	PEMDA	Kab. Gayo Lues	Kompleks Perkantoran Pemda Kab. Gayo Lues\r\nJl. Kong Bur  Arul Batin\r\nBlangkejeren\t\t	0642-21399	0642-21388	www.gayolueskab.go.id	BPS Prop. NAD 2004; Aceh Tenggara 2002	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	NAD	\N	\N	\N	5	0	1	9	2	6	69	2	\N	6	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	2015-09-24 05:45:30	\N	MULYADI	\N	MA110301	MA260305-;	MA260305-;	MA260305-;	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	1	\N	PKB 4; PBR 5	3	\N	2	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N
 RS00057	RUMAH_SAKIT	RS FK UKI	Jl. Letjen. Soetoyo - Cawang,\r\nJakarta Timur 13630	021-8092317, 8092831	021-8092445	rsuuki@gmail.com	\N	>120 	\N	\N	221118	\N	4403	WIB	            \t    	 	\N	\N	\N	\N	Rumah Sakit ;-;OrgPros ; skala B	\N	\N	0	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	0	0	0	0	0	0	0	0	0	0	0	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	2026-01-23 02:59:29	\N	MILDA	\N	EL260123;MA180124;EE-90210	MA	MA	MA	\N	\N	1969-12-31 17:00:00	\N	\N	\N	\N	\N	\N	\N	\N	P4-C	\N	\N	0	0	\N	minatEM06	DKI Jakarta	\N	\N	\N	260123	\N	260123-MILDA	0000-00-00	0000-00-00	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	28	OrgPros ; skala B
@@ -33790,6 +34057,7 @@ PD01210	PEMDA	Kab. Dairi	Jl. Sisingamangaraja No. 127 \r\nSidikalang\t	0627-2101
 PD01211	PEMDA	Kab. Karo	Jl. Djamin Ginting No. 17 \r\nKabanjahe\t	0628-20130; 0628-20560 (R)	\N	\N	2001	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	Sumut	\N	\N	\N	2	0	0	13	4	2	66	2	\N	10	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	2016-03-15 09:00:20	\N	DIAN	\N	MA130429;EE-100120-	MA260305-;	MA260305-;	MA260305-;	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	NANANG	\N	\N	\N	\N	\N	\N	\N	\N	2	\N	PDS 3; Patriot Pancasila 4; Demokrat 5	\N	1	\N	\N	\N	160315	\N	\N	\N	\N	\N	\N	\N
 PD01510	PEMDA	Kota Sungai Penuh	Komplek Pemda\r\nSungai Penuh	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	Jambi	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	2015-09-24 07:38:50	\N	MULYADI	\N	MA180124;EE140502;MA13	MA260305-;	MA260305-;	MA260305-;	\N	2014-05-02 02:08:09	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	NANANG	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N
 PD01212	PEMDA	Kab. Deli Serdang 	Jl. Negara No. 11 \r\nLubuk Pakam\t\t	061-795 2000. ; 061-795 2600 (R)	061-795 4252, 795 2007	pemkab@deliserdang.go.id, www.deliserdang.go.id	fax-2000	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	Sumut	\N	Adipura23: KK (Kota Kecil) 	\N	35	1	0	16	2	3	37	2	\N	4	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	2023-02-28 05:36:13	\N	MULYADI	\N	Mu230228; MA180124;SL-91011	MA260305-;	MA260305-;	MA260305-;	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N
+PD01303 	PEMDA	Kab. Solok	Jl. Raya Kotobaru No. 7 \r\nSolok\t	0755-20011; 0755-20001 (R)	0752-20128	\N	2001	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	Sumbar	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	2018-01-29 07:12:20	\N	MULYADI	\N	MA180124;AN150203;MA13	MA260305-;	MA260305-;	MA260305-;	\N	2015-07-29 02:16:17	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	NANANG	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	180129	\N	\N	\N	\N	\N	\N	\N
 PD01213	PEMDA	Kab. Langkat	Jl. T. Amir Hamzah No. 1 \r\nStabat\t	0622-891 0200, 891 0201; 0622-891 0300, (061) 8910202	0622-8910202, (061) 8910603	www.langkatkab.go.id, sekretariat@langkatkab.go.id	fax	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	Sumut	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	2016-01-18 05:00:23	\N	ENI	\N	MA180124;EE-100120-	MA260305-;	MA260305-;	MA260305-;	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	1	\N	Patriot pancasila 4; Demokrat 5	\N	2	3	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N
 PD01214	PEMDA	Kab. Nias Selatan 	Jl. Baloho Indah Kec. Teluk Dalam \r\nTeluk Dalam\t	\N	\N	\N	BPS Kab. Nias 2003; Nias 2003	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	Sumut	\N	\N	\N	2	1	1	21	4	12	48	5	\N	8	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	2020-12-11 08:39:38	\N	MULYADI	\N	MA130328;EE-100120	MA260305-;	MA260305-;	MA260305-;	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	NANANG	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	DT17	160314	\N	\N	\N	\N	\N	\N	\N
 PD01215	PEMDA	Kab. Humbang Hasundutan 	Kompleks Perkantoran Bukit Inspirasi,  \r\nDolok Sanggul\t	0633-31115.,	\N	www.humbanghasundutankab.go.id; kpde@humbanghasundutankab.go.id	BPS kab. Tapanuli Utara 2004; Toba Samosir 2003	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	Sumut	\N	Adipura23: KK (Kota Kecil) 	\N	0	0	0	14	3	4	67	2	\N	9	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	2023-02-28 06:15:30	\N	MULYADI	\N	MU230228; MA180124;LA130819;MA13	MA260305-;	MA260305-;	MA260305-;	\N	2013-08-18 17:00:00	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	NANANG	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	dr. R Siburian, MM (Dir  RSU Dolok Sanggul )	\N	160308	\N	\N	\N	\N	\N	\N	\N
@@ -33815,8 +34083,6 @@ PD01278	PEMDA	Kota Kisaran	Jl. H. O.S. Cokrominoto No. 6 Kisaran	\N	\N	\N	\N	\N	
 PD01279	PEMDA	Kota Gunung Sitoli	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	sumut	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	2020-12-11 08:36:37	\N	MULYADI	\N	MA130429;EE-100120-	MA260305-;	MA260305-;	MA260305-;	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	NANANG	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	160315	\N	\N	\N	\N	\N	\N	\N
 PD01300	PEMDA	Prov. Sumatera Barat   	Jl. Jend. Sudirman No. 51 \r\nPadang\t\t\t	0751- 810291-810292, 34425.	0751-71549, 34671.	biro_humas@sumbarprov.go.id 	fax-Gub. periode 2005 - 2010	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	Sumbar	\N	2025 - Sawit 555.075 Ha (No. 9 Indonesia);  Sawit 12: 379.185 Ha	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	2025-12-02 05:51:13	\N	MULYADI	\N	MA260101	MA260305-;	MA260305-;	MA260305-;	\N	2012-11-21 17:00:00	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	260101-ADMIN	\N	\N	\N	\N	\N	\N	\N	\N	\N	Dinas Pertambangan dan Energi, Dinas Perindustrian da Perdagangan, Dinas Kehutanan, Dinas Kelautan dan Perikanan, Dinas Pariwisata, Seni dan Budaya, Badan Koordinasi Promosi dan Penanaman Modal	\N	200219	\N	\N	\N	\N	\N	\N	\N
 PD01301	PEMDA	Kab. Kepulauan Mentawai 	Jl. Tuapejat, Sipora\t\t	0759-320 223., 320 005	0759-320 223.,	\N	Padang Pariaman 1999	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	Sumbar	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	2017-06-09 07:36:43	\N	NANANG	\N	MA180124;EE110925; MA1	MA260305-;	MA260305-;	MA260305-;	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	Kabupaten Kepulauan (Luas Wilayah 6.011 km -Penduduk 66.003 (2010))	DT17	170524	\N	\N	\N	\N	\N	\N	\N
-PD01302	PEMDA	Kab. Pesisir Selatan  	Jl. H. Agus Salim No. 1 \r\nPainan 25611\t\t\t	0756-21200; 0756-21833 (R)	0756-21414	adm_pembangunan@yahoo.co.id, humas@pesisirselatan.go.id	2000	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	Sumbar	\N	Adipura23: KK (Kota Kecil) 	\N	12	1	0	22	3	4	32	4	\N	20	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	2023-02-28 05:51:40	\N	MULYADI	\N	MU230228; MA180124;EE-100120	MA260305-;	MA260305-;	MA260305-;	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	H. Rosman EffendiI, SE, SH, MM, MBA (Sekda) -91101;	\N	\N	\N	\N	\N	\N	160405	\N	\N	\N	\N	\N	\N	\N
-PD01303 	PEMDA	Kab. Solok	Jl. Raya Kotobaru No. 7 \r\nSolok\t	0755-20011; 0755-20001 (R)	0752-20128	\N	2001	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	Sumbar	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	2018-01-29 07:12:20	\N	MULYADI	\N	MA180124;AN150203;MA13	MA260305-;	MA260305-;	MA260305-;	\N	2015-07-29 02:16:17	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	NANANG	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	180129	\N	\N	\N	\N	\N	\N	\N
 PD01304	PEMDA	Kab. Sijunjung	Jl. Moh. Yamin, SH No. 17 \r\nMuaro Sijunjung\t	0754-20002; 0754-20009 (R)	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	Sumbar	\N	\N	\N	6	12	2	12	6	8	32	4	\N	17	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	2016-02-27 02:16:38	\N	MULYADI	\N	MA130328;EE-100120	MA260305-;	MA260305-;	MA260305-;	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	NANANG	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	160227	\N	\N	\N	\N	\N	\N	\N
 PD01305	PEMDA	Kab. Tanah Datar 	Jl. Sultan Alam Bagagarsyah, Pagaruyung\r\nBatu Sangkar 27281\t\t\t	0752-71301, 71201; 0752-71601 (R)	0752-71201. 	http://www.tanahdatar.go.id/	2001	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	Sumbar	\N	Adipura23: KK (Kota Kecil); Praja 2004	\N	11	2	1	13	6	7	37	5	\N	18	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	2023-08-16 03:56:18	\N	MULYADI	\N	MU230228; MA130328;EE-100120	MA260305-;	MA260305-;	MA260305-;	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	NANANG	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	190815	\N	\N	\N	\N	\N	\N	\N
 PD01306	PEMDA	Kab. Padang Pariaman	Jl. Moh. Syafei No. 10 \r\nPariaman\t	0751-91101; 0751-91201 (R)	0751-91195	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	Sumbar	\N	\N	\N	14	4	1	15	\N	6	30	4	\N	20	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	2021-06-30 22:55:56	\N	MULYADI	\N	MA180124;EE140502;MA13	MA260305-;	MA260305-;	MA260305-;	\N	2014-05-02 02:07:52	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	NANANG	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	160227	\N	\N	\N	\N	\N	\N	\N
@@ -33839,6 +34105,7 @@ PD01402	PEMDA	Kab. Indragiri Hulu	Jl. Lintas Timur  Pematang Reba\r\nRengat\t	07
 PD07324	PEMDA	Kab. Mamuju Utara	Jl. Poros Trans Sulawesi, Pasangkayu	\N	\N	\N	BPS Kab Mamuju 2003 (kab. Induk)	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	Sulbar	\N	\N	\N	15	0	0	2	1	1	78	2	\N	1	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	2016-03-14 09:39:14	\N	MARWATI	\N	MA180124;EE-101001	MA260305-;	MA260305-;	MA260305-;	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	1	\N	\N	PDK 3; PKS 5	2	4	\N	\N	160314	\N	\N	\N	\N	\N	\N	\N
 PD01403	PEMDA	Kab. Indragiri Hilir	Jl. Akasia No. 1 Tembilahan	0768-325500, 321002, 21010; 0768-21001 ®	0768-321555	www.inhil.go.id; pemkab@inhil.go.id;	fax-negri seribu parit	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	Riau	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	2018-05-15 03:59:50	\N	MULYADI	\N	MA180124;EE-91030	MA260305-;	MA260305-;	MA260305-;	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	C	1	\N	PBR 3	5	4	2	Dinas Lingkungan Hidup, Pertambangan dan Energi	\N	160121-ENI	\N	\N	\N	\N	\N	\N	\N
 PD01404	PEMDA	Kab. Pelalawan	Jl. Raya Lintas Timur\r\nPangkalan Kerinci 28381\t	0761-95017 - 8; 0761-35704 (R)	0761-94317, 493 172	pde@pelalawankab.go.id	fax-BPS Kab. 2002; Kampar 1999	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	Riau	\N	\N	\N	19	0	0	5	3	4	56	5	\N	7	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	2016-01-22 02:09:53	\N	ENI	\N	MA180124;EE-91030	MA260305-;	MA260305-;	MA260305-;	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	C	1	\N	PDK3; PKS 5	4	2	\N	Bapedalda	\N	160122-ENI	\N	\N	\N	\N	\N	\N	\N
+PD07374	PEMDA	Kota Watampone	Jl. WR. Monginsidi No. 5 Watampone	0481-21020, 21023; 0481-21166 (R)	0481-23559	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	Sulsel	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	MA180124;SL130328;MA	MA260305-;	MA260305-;	MA260305-;	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	NANANG	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N
 PD01405	PEMDA	Kab. Siak 	Jl. Sultan Ismail No. 117\r\nSiak Sri Indrapura\t\t\t	0764-20010, 20200	0764-33166, 20294.	www.siak.go.id	fax-BPS Kab. 2003; Bengkalis 1999	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	Riau	\N	Adipura23: KK (Kota Kecil) 	\N	45	2	0	8	2	1	32	3	\N	7	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	2023-02-28 06:01:26	\N	MULYADI	\N	MU230228; MA180124;EE-91030	MA260305-;	MA260305-;	MA260305-;	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	Bapedalda	\N	\N	\N	\N	\N	\N	\N	\N	\N
 PD01406	PEMDA	Kab. Kampar	Jl. HR. Soebrantas\r\nBangkinang\t\t	0762-20016, 20358, 20048	0762-20689	http://www.kamparkab.go.id	fax2000	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	Riau	\N	Bangun Praja 2004	\N	6	8	0	13	3	5	50	3	\N	11	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	2017-05-24 05:22:22	\N	NANANG	\N	MA180124;EE-91030	MA260305-;	MA260305-;	MA260305-;	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	C	1	Nasruni (Kabag. Humas) -110401	PKS 5	4	2	3	Bapedalda, Dinas Perkebunan, DPRD	\N	170524	\N	\N	\N	\N	\N	\N	\N
 PD01407	PEMDA	Kab. Rokan Hulu	Pematang Berangan\r\nRambah 28558\r\n	(0762) 91516	0762-91029, 076291517 	suratwarga@rokanhulukab.go.id, bag.humas@rokanhulukab.go.id	fax-Bup periode 2006 - 2011; 2002; Kampar 1999	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	Riau	\N	\N	\N	6	1	0	6	3	4	64	4	\N	11	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	2016-04-27 10:38:25	\N	MULYADI	\N	MA180124;EE-91030	MA260305-;	MA260305-;	MA260305-;	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	C	1	\N	PKS 3	4	2	5	Badan Lingkungan Hidup, Kantor Pariwisata	\N	160427	\N	\N	\N	\N	\N	\N	\N
@@ -33879,6 +34146,7 @@ PD01700	PEMDA	Prov. Bengkulu	Jl. Pembangunan No. 1 Padang Harapan\r\nBengkulu\t	
 PD01701	PEMDA	Kab. Bengkulu Selatan	Jl. Raya Padang Panjang No. 1 \r\nManna\t	0739-21001, 21016; 0739-21002, 21700	0739-21069, 21990, 22444, 21396	humas@bengkuluselatankab.go.id	2001	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	Bengkulu	\N	\N	\N	2	1	0	13	14	9	38	4	\N	18	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	2016-05-25 07:09:35	\N	MULYADI	\N	MA180124;EE-100120-	MA260305-;	MA260305-;	MA260305-;	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	2	\N	PKS 4; Demokrat 5	3	1	\N	Sub Bagian Lingkungan Hidup	\N	160525	\N	\N	\N	\N	\N	\N	\N
 PD01702	PEMDA	Kab. Rejang Lebong	Jl. Sukowati  No. 52 \r\nCurup 39112\t	0732-21410, 21503; 0732-21351 (R)	0732-21350 	\N	2000	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	Bengkulu	\N	Bangun Praja 2004	\N	3	0	1	10	6	4	58	3	\N	15	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	2016-03-21 07:29:20	\N	DIAN	\N	MA180124;EE-91011	MA260305-;	MA260305-;	MA260305-;	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	C	1	\N	PKS 4; Demokrat 5	2	3	\N	Bapedalda	\N	160321	\N	\N	\N	\N	\N	\N	\N
 PD03101	PEMDA	Kab. Kepulauan Seribu	Jl. Baracuda No. 9 Pulau Pramuka	021-7078 7270.,	0217043 4446.,	bepekab@kepulauanseribu.net;   bapekab_seribu@yahoo.com	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	DKI Jakarta	\r\nSuku Dinas Kebersihan\r\nBPLHD	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	2016-06-16 06:57:26	\N	MULYADI	\N	MA180124;SL-91011	MA260305-;	MA260305-;	MA260305-;	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	Kabupaten Kepulauan (Luas Wilayah 10,18 km -Penduduk 21.439 (2010))	\N	160616	\N	\N	\N	\N	\N	\N	\N
+PD03213	PEMDA	Kab. Subang	Jl. Dewi Sartika No. 2 Subang 41211	0260-411 005, 420 663 ; 0260-411 009 (R)	0260-411 003., 420 590., 411 002	\N	2001	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	Jabar	\N	\N	\N	5	1	1	28	3	3	44	1	\N	13	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	2014-06-04 10:55:47	\N	MULYADI	\N	MA180124;SL-80624	MA260305-;	MA260305-;	MA260305-;	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	C	2	\N	PKB 3; PKS 4; Demokrat 5	\N	1	\N	Badan Pengelola Lingkungan Hidup (BPLH)	\N	\N	\N	\N	\N	\N	\N	\N	\N
 PD01703	PEMDA	Kab. Bengkulu Utara 	Jl. Jend. Sudirman No. 1  \r\nArgamakmur 38611\t\t	0737-521 466., 522 521, 62737-521018, (0737) 21472 	0737-521 073. (0737) 522049	www.bengkulu-utara.go.id; admin@bengkuluutarakab.go.id	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	Bengkulu	\N	Adipura23: KK (Kota Kecil); Bangun Praja 2004	\N	4	11	0	11	8	7	36	4	\N	17	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	2023-02-28 06:00:50	\N	MULYADI	\N	MU230228; MA180124;EE-100120-	MA260305-;	MA260305-;	MA260305-;	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	Kantor Pengendalian Dampak Lingkungan (Pedal)	\N	160321	\N	\N	\N	\N	\N	\N	\N
 PD01704	PEMDA	Kab. Kaur	Jl. Merdeka Barat No. 08 Bintuhan	0739-61481	0739-61477	\N	Bup periode 2005 - 2010; BPS Kab. Bengkulu Selatan 2003	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	Bengkulu	\N	\N	\N	2	2	0	14	14	9	38	4	\N	18	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	2016-03-21 07:36:06	\N	DIAN	\N	MA130429;SL130328;MA1103	MA260305-;	MA260305-;	MA260305-;	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	NANANG	\N	\N	\N	\N	\N	\N	\N	\N	1	\N	Pelopor 4; PBB 5	2	3	\N	\N	\N	160321	\N	\N	\N	\N	\N	\N	\N
 PD01705	PEMDA	Kab. Seluma 	Jl. Mereka Pasar, Seluma\t	0736-91243	\N	www.seluma.go.id/	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	Bengkulu	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	2017-06-09 07:37:34	\N	NANANG	\N	MA180124;AN140109;SM13	MA260305-;	MA260305-;	MA260305-;	\N	2013-08-18 17:00:00	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	NANANG	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	DT17	160122-ENI	\N	\N	\N	\N	\N	\N	\N
@@ -33945,7 +34213,6 @@ PD03210	PEMDA	Kab. Majalengka	Jl. Jend. A. Yani No.1 Majalengka 45418	0233-281 0
 PD03211	PEMDA	Kab. Sumedang	Jl. Prabu Geusan Ulun 36 Sumedang 45311	0261-201 236, 201 670; 0261-201 362 (R)	0261-201 236, 202 001.	http://www.sumedang.go.id	 	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	Jabar	\N	\N	\N	16	0	1	27	4	3	33	4	\N	11	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	2020-10-30 12:03:28	\N	MULYADI	\N	MA140903;RA130819;MA1304	MA260305-;	MA260305-;	MA260305-;	\N	2014-09-03 04:33:16	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	NANANG	\N	\N	\N	\N	\N	\N	\N	C	1	\N	PKS 4; Demokrat 5	\N	2	3	Dinas perindustrian dan Perdagangan	\N	160329	\N	\N	\N	\N	\N	\N	\N
 PD03212 	PEMDA	Kab. Indramayu	Jl. Mayjen Sutoyo No. I/E Indramayu 45212	0234-272 454; 0234-272 008 (R)	0234-272 797	http://indramayukab.go.id/	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	Jabar	\N	FAX-ok-	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	2016-03-06 02:39:22	\N	MULYADI	\N	MA180124;LA150203;MA14	MA260305-;	MA260305-;	MA260305-;	\N	2015-07-29 02:08:16	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	NANANG	\N	\N	\N	\N	\N	\N	\N	\N	\N	Wawan Idris (Kabag. Humas) -121114	\N	\N	\N	\N	Dinas Pertambangan dan lingkungan Hidup, Bappeda	\N	160306	\N	\N	\N	\N	\N	\N	\N
 PD03521 	PEMDA	Kab. Ngawi	Jl. Teuku Umar No. 12 Ngawi 63211	0351-749 001; 0351-749 047 (R)	0351-749 047; 0351-749 047 (R)	http://www.ngawikab.go.i	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	Jatim	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	2016-04-06 05:15:50	\N	MARWATI	\N	MA180124;LA150729;MA13	MA260305-;	MA260305-;	MA260305-;	\N	2015-07-29 02:11:13	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	NANANG	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	160406	\N	\N	\N	\N	\N	\N	\N
-PD03213	PEMDA	Kab. Subang	Jl. Dewi Sartika No. 2 Subang 41211	0260-411 005, 420 663 ; 0260-411 009 (R)	0260-411 003., 420 590., 411 002	\N	2001	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	Jabar	\N	\N	\N	5	1	1	28	3	3	44	1	\N	13	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	2014-06-04 10:55:47	\N	MULYADI	\N	MA180124;SL-80624	MA260305-;	MA260305-;	MA260305-;	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	C	2	\N	PKB 3; PKS 4; Demokrat 5	\N	1	\N	Badan Pengelola Lingkungan Hidup (BPLH)	\N	\N	\N	\N	\N	\N	\N	\N	\N
 PD03214 	PEMDA	Kab. Purwakarta	Jl. Ganda Negara No. 25 \r\nPurwakarta 41111\t	0264-200 435; 0264-203 414, 022-730 2467, 0811221519 (R)	0264-200 037, 210 121.	www.purwakarta.go.id	2001	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	Jabar	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	2016-09-04 01:36:43	\N	MULYADI	\N	MA180124;AN150203;MA14	MA260305-;	MA260305-;	MA260305-;	\N	2015-07-29 02:16:07	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	NANANG	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	Dinas Lingkungan Hidup dan Pertambangan, Bappeda	\N	160904	\N	\N	\N	\N	\N	\N	\N
 PD03215	PEMDA	Kab. Karawang 	Jl. A. Yani 1 \r\nKarawang\t\t	0267-402 310; 0267-406 081 (R)	0267-411 923	\N	2020 PDRB Kabupaten Bekasi mencapai 230.986 milyar	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	Jabar	\N	FAX-ok-	\N	31	7	2	27	5	3	18	1	\N	6	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	2021-02-07 06:46:17	\N	MULYADI	\N	MA180124;LA130819;MA11	MA260305-;	MA260305-;	MA260305-;	\N	2013-08-18 17:00:00	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	NANANG	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	Dinas Lingkungan Hidup, Dinas Kehutanan dan Perkebunan dan  Pertanian	\N	160904	\N	\N	\N	\N	\N	\N	\N
 PD03216	PEMDA	Kab. Bekasi 	Jl. A. Yani No. 1, Desa Sukamahi, Cikarang Pusat Bekasi 17144\t	021-884 1336; 021-884 1642 (R)	021-884 1166	www.kab-bekasi.go.id;	Bup periode 2003 - 2008; 2000\r\n2020 PDRB Kabupaten Bekasi mencapai Rp327.730 miliar.	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	Jabar	\N	\N	\N	69	0	1	16	2	2	4	2	\N	3	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	2021-02-07 06:44:04	\N	MULYADI	\N	RW260505;MA260101	MA260305-;	MA260305-;	MA260305-;	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	260505-KITHA	\N	\N	\N	\N	\N	\N	\N	\N	\N	Dinas Pengendalian Dampak Lingkungan dan Pertambangan, Bappeda 	\N	190613	\N	\N	\N	\N	\N	\N	\N
@@ -33966,6 +34233,7 @@ PD03302	PEMDA	Kab. Banyumas 	Jl. Kabupaten No. 1 \r\nPurwokerto 53115\t	0281-636
 PD03303	PEMDA	Kab. Purbalingga	Jl. Onje No. 18 Purbalingga 53311	0281-91271	0281-91271	www.purbalinggakab.go.id	50300	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	Jateng	\r\nSuku Dinas Kebersihan\r\nBPLHD	\N	\N	10	0	0	18	4	5	39	4	\N	18	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	2016-04-01 06:21:57	\N	MARWATI	\N	MA180124;LA131127;MA13	MA260305-;	MA260305-;	MA260305-;	\N	2013-11-27 07:13:29	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	NANANG	\N	\N	\N	\N	\N	\N	\N	\N	2	\N	PKB 3	4	1	5	Kantor Lingkungan Hidup	\N	160401	\N	\N	\N	\N	\N	\N	\N
 PD03304	PEMDA	Kab. Banjarnegara	Jl. Praja No. 2 Banjarnegara 53414	0286-591 212; 0286-91183, 0286-591218 	0286-591 187	pemda@banjarnegarakab.go.id, bag_humas@banjarnegarakab.go.id	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	Jateng	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	2017-07-07 06:53:10	\N	DODY	\N	MA180124;EE-91030	MA260305-;	MA260305-;	MA260305-;	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	2	\N	PKB 5	3	1	4	Bagian Pembangunan dan Lingkungan Hidup	\N	170707	\N	\N	\N	\N	\N	\N	\N
 SK00148	SEKOLAH	Universitas Syiahkuala (hapus)	\N	\N	\N	\N	\N	\N	\N	\N	\N	Universitas Syiahkuala (Unsyiah)	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	0	0	0	0	0	0	0	0	0	0	0	\N	\N	\N	\N	\N	Samsul Rizal -120901; 	\N	\N	\N	\N	2014-03-12 02:19:56	\N	MULYADI	\N	MA	MA260305-;	MA260305-;	MA260305-;	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	130610	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N
+PD07373	PEMDA	Kota Palopo 	Jl. Sult. Hasanuddin No. 17 \r\nPalopo\t	0471-21150 (R)	\N	http://www.palopokota.go.id/?page=profil&prof=1&chose=second	BPD Kab. Luwu 2003	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	Sulsel	\N	Adipura23: KS (Kota Sedang); Bangun Praja 2004	\N	5	0	2	20	12	12	37	6	\N	6	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	2023-02-28 08:19:15	\N	MULYADI	\N	MU230228; MA180124;SL130328;MA	MA260305-;	MA260305-;	MA260305-;	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	NANANG	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N
 PD03305	PEMDA	Kab. Kebumen	Jl. Veteran No. 2 Kebumen 54316	0287-381 144, 381 205; 0287-381 626 (R)	0287-381 424., 381 423	www.kebumen.go.id; 	Periode 2005 - 2010 (sudah dilantik 50805)	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	Jateng	\N	Bangun Praja 2004	\N	9	4	1	16	4	1	46	5	\N	14	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	2016-04-01 07:35:25	\N	MARWATI	\N	MA180124;SL110925; MA1	MA260305-;	MA260305-;	MA260305-;	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	3	\N	PKB 2; Demokrat 5	\N	1	4	Instansi\tAlamat1\tTelp\tKepala\tPengembangan SDM\r\nDr. H. Suprayitno (Dir) - 90105\tAnna Ratnawati, S.Km. M.Si (Bagian Tata Usaha) - 90105; Rumah Sakit Umum Daerah \tJl. Rumah Sakit No. 13 Kebumen\t0287 381101	\N	160401	\N	\N	\N	\N	\N	\N	\N
 PD03306	PEMDA	Kab. Purworejo	Jl. Proklamasi No. 2 Purworejo 	0275-321 012; 0275-21001 (R)	0275-321 666	\N	51000	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	Jateng	\N	\N	\N	9	2	1	17	6	5	37	4	\N	19	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	2016-04-01 08:03:36	\N	MARWATI	\N	MA-90210	MA260305-;	MA260305-;	MA260305-;	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	2	\N	PKB 3; Demokrat 4	\N	1	5	Dinas Pekerjaan Umum dan Lingkungan Hidup	\N	160401	\N	\N	\N	\N	\N	\N	\N
 PD03307	PEMDA	Kab. Wonosobo	Jl. Merdeka No. 1 Wonosobo	0286321345 ; 0286-321 001; 0286-321 009 (R)	0286321183; 	www.wonosobokab.go.id	51000;telp,email	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	Jateng	\N	\N	\N	9	1	1	16	5	4	54	3	\N	8	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	2016-04-01 06:50:05	\N	MARWATI	\N	MA180124;LA130819;MA13	MA260305-;	MA260305-;	MA260305-;	\N	2013-08-18 17:00:00	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	NANANG	\N	\N	\N	\N	\N	\N	\N	\N	3	humas@wonosobokab.go.id	PKB 2	5	1	4	Kantor Lingkungan Hidup	\N	160401	\N	\N	\N	\N	\N	\N	\N
@@ -34212,8 +34480,6 @@ PD07319	PEMDA	Kab. Polewali Mamasa	Jl. Manunggal No.11 Polmas	0428 21422	\N	\N	2
 PD07320	PEMDA	Kab. Majene	Jl. Gatot Subroto No. 59 Majene 	 0422-21809	0422-22053	humas@majenekab.go.id	2001	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	Sulbar	\N	\N	\N	4	0	0	12	4	4	59	5	\N	11	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	2016-03-14 09:45:34	\N	MARWATI	\N	MA180124;EE-91030	MA260305-;	MA260305-;	MA260305-;	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	1	\N	PDK 2; PKS 3	4	\N	5	Bapedalda	\N	160314	\N	\N	\N	\N	\N	\N	\N
 PD07321	PEMDA	Kab. Mamuju	Jl. Jend. A. Yani No. 4 Mamuju	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	Sulbar	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	2016-03-14 09:27:24	\N	MARWATI	\N	MA180124;EE-91030	MA260305-;	MA260305-;	MA260305-;	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	1	\N	PDK 2; PKS 4	\N	5	3	Bapedalda	\N	160314	\N	\N	\N	\N	\N	\N	\N
 PD07322	PEMDA	Kab. Luwu Utara	Jl. Sipurusiang No. 27 Masamba	0471-21003.,	0471-21538.,	\N	Bup periode 2005 - 2010; 2001	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	Sulsel	\N	\N	\N	1	58	0	2	1	1	34	1	\N	2	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	2016-03-30 07:52:02	\N	MULYADI	\N	MA180124;SL-91011	MA260305-;	MA260305-;	MA260305-;	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	1	Syahruddin (Kabag. Humas) -101012	PDK 2; PKS 3	4	\N	5	Bappeda	\N	160330	\N	\N	\N	\N	\N	\N	\N
-PD07373	PEMDA	Kota Palopo 	Jl. Sult. Hasanuddin No. 17 \r\nPalopo\t	0471-21150 (R)	\N	http://www.palopokota.go.id/?page=profil&prof=1&chose=second	BPD Kab. Luwu 2003	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	Sulsel	\N	Adipura23: KS (Kota Sedang); Bangun Praja 2004	\N	5	0	2	20	12	12	37	6	\N	6	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	2023-02-28 08:19:15	\N	MULYADI	\N	MU230228; MA180124;SL130328;MA	MA260305-;	MA260305-;	MA260305-;	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	NANANG	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N
-PD07374	PEMDA	Kota Watampone	Jl. WR. Monginsidi No. 5 Watampone	0481-21020, 21023; 0481-21166 (R)	0481-23559	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	Sulsel	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	MA180124;SL130328;MA	MA260305-;	MA260305-;	MA260305-;	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	NANANG	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N
 PD07400	PEMDA	Prov. Sulawesi Tenggara	Kompleks bumi Pradja Anduonouhu Kendari 93232	0401-391 600 - 1, 391 609, 391 613 - 4	0401-391 614	humas@sulawesitenggaraprov.go.id	Kemiskinan dan perekonomian rakyat 29; Pengangguran 18; Keamanan 12; Pendidikan 8; Tingginya harga barang 6; Korupsi 5; Penegakkan hukum 3; Pembangunan infrastruktur 2: Kompas 40607	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	Sultra	\N	Sawit 12: 27.341 Ha	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	2023-09-05 04:48:39	\N	MULYADI	\N	MA180124;EE-91011	MA260305-;	MA260305-;	MA260305-;	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	37	\N	PNBK 7; PBB 6; PKS 4; PBR 3; PKB 2; Demokrat 2	7	8	11	Bapedalda, Dinas Pertambangan, Dinas Perindustrian dan Perdagangan, Dinas Kehutanan, Dinas Kelautan dan Perikanan, Bappeda, Balai Konservasi Sumber Daya Alam, Dinas UKM dan Penanaman Modal Daerah	\N	200128	\N	\N	\N	\N	\N	\N	\N
 PD07401	PEMDA	Kab. Buton	Jl. Balai Kota  No. 1 Bau Bau	0402-21010	\N	pemda@butonkab.go.id	E	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	Sultra	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	2017-07-10 02:41:16	\N	DODY	\N	MA180124;EE-91030	MA260305-;	MA260305-;	MA260305-;	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	1	\N	PNBK 3	4	5	2	Bapedalda, Dinas Kelautan dan Perikanan	\N	170710	\N	\N	\N	\N	\N	\N	\N
 PD07402	PEMDA	Kab. Muna	Jl. M.H. Thamrin  16 Raha 93613	0403-21018; 0403-22547 (R)	0403-22025. 	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	Sultra	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	2020-12-11 08:24:20	\N	MULYADI	\N	MA180124;EE-91030	MA260305-;	MA260305-;	MA260305-;	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	C	1	\N	PNBK 4	5	3	2	Bapedalda	\N	160315	\N	\N	\N	\N	\N	\N	\N
@@ -34946,7 +35212,7 @@ PR00001	PERUSAHAAN	3M Indonesia, PT	Perkantoran Hijau Arkadia Menara F Lt. 8 \nJ
 
 
 --
--- Data for Name: TableJenisBiaya; Type: TABLE DATA; Schema: benefita; Owner: postgres
+-- Data for Name: TableJenisBiaya; Type: TABLE DATA; Schema: benefita; Owner: -
 --
 
 COPY benefita."TableJenisBiaya" (id, kode, ket) FROM stdin;
@@ -34998,7 +35264,7 @@ COPY benefita."TableJenisBiaya" (id, kode, ket) FROM stdin;
 
 
 --
--- Data for Name: TableNeraca; Type: TABLE DATA; Schema: benefita; Owner: postgres
+-- Data for Name: TableNeraca; Type: TABLE DATA; Schema: benefita; Owner: -
 --
 
 COPY benefita."TableNeraca" (id, tanggal, "jenisBiayaId", uraian, bukti, debit, kredit, saldo, periode, "userInputId", "tanggalInput", "userUpdateId", "tanggalUpdate") FROM stdin;
@@ -35562,6 +35828,7 @@ COPY benefita."TableNeraca" (id, tanggal, "jenisBiayaId", uraian, bukti, debit, 
 1098	2023-07-29 17:00:00	59	UANG SAKU DAN TRANSPORT INSTRUKTUR DAN STAFF U/ PEL. KEHATI TGL 19/06/23	029/UMK-VI/23	0	2250000	-2250000	202306	cmqs4gal1000ojcd0wf1gmv1q	2023-07-29 23:27:46	\N	\N
 1099	2023-07-29 17:00:00	59	UANG SAKU DAN TRANSPORT INSTRUKTUR DAN HOST U/ PEL. LCA TGL 22/06/23	029/UMK-VI/23	0	2250000	-2250000	202306	cmqs4gal1000ojcd0wf1gmv1q	2023-07-29 23:28:41	\N	\N
 1100	2023-07-29 17:00:00	59	UANG SAKU DAN TRANSPORT INSTRUKTUR DAN HOST U/ PEL. 3R SAMPAH TGL 26/06/23	029/UMK-VI/23	0	2250000	-2250000	202306	cmqs4gal1000ojcd0wf1gmv1q	2023-07-29 23:29:51	\N	\N
+2131	2024-03-26 17:00:00	81	PEMBELIAN PULPEN, STABILO, MAP FILE, DLL	019/UMK-II/2024	0	682500	282107308	202403	cmqs4gal1000ojcd0wf1gmv1q	2024-04-02 02:11:20	\N	\N
 1101	2023-07-29 17:00:00	59	SEWA HOTEL SWISS BELL INN U/ UJIAN TPS, PPPA, PLB3, DAN PPPU TGL 22/06/23	029/UMK-VI/23	0	7350000	-7350000	202306	cmqs4gal1000ojcd0wf1gmv1q	2023-07-29 23:31:55	\N	\N
 1102	2023-07-29 17:00:00	59	UANG SAKU, TRANSPORT, DAN PENGINAPAN ASESOR DAN TIM TEKNIS U/ UJIAN TPS, PPPA, PLB3, DAN PPPU TGL 22/06/2023	029/UMK-VI/23	0	3250000	-3250000	202306	cmqs4gal1000ojcd0wf1gmv1q	2023-07-29 23:34:04	\N	\N
 1103	2023-07-19 17:00:00	94	UANG DARI REK MDR2 BENEFITA	002/KWT-VII/2023	3000000	0	3000000	202307	cmqs4gal1000ojcd0wf1gmv1q	2023-07-23 03:05:17	\N	\N
@@ -35760,6 +36027,7 @@ COPY benefita."TableNeraca" (id, tanggal, "jenisBiayaId", uraian, bukti, debit, 
 1296	2023-09-18 17:00:00	52	UANG SAKU TRAINER DAN HOST UTK PEL POIPPU TGL 11-13 SEP 2023	020/UMK-IX/2023	0	700000	729300001	202309	cmqs4gal1000ojcd0wf1gmv1q	2023-09-19 03:13:52	\N	\N
 1297	2023-09-18 17:00:00	66	TRANSPORT TRAINER DAN HOST UTK PEL LCA TGL 11-14 SEP 2023	020/UMK-IX/2023	0	1200000	728800001	202309	cmqs4gal1000ojcd0wf1gmv1q	2023-09-19 03:14:45	\N	\N
 1298	2023-09-18 17:00:00	52	UANG SAKU TRAINER DAN HOST UTK PEL LCA GL 11-14 SEP 2023	020/UMK-IX/2023	0	1600000	728400001	202309	cmqs4gal1000ojcd0wf1gmv1q	2023-09-19 03:15:20	\N	\N
+2132	2024-03-26 17:00:00	62	PEMBAYARAN BPKS KESEHATAN SDRI SITI NAZIRAH	019/UMK-II/2024	0	100000	282689808	202403	cmqs4gal1000ojcd0wf1gmv1q	2024-04-02 02:11:59	\N	\N
 1299	2023-09-18 17:00:00	54	PAKET MEETING HOTEL IBIS CKRG UTK UJIAN PPPU DAN POIPPU TGL 14 SEP 2023	020/UMK-IX/2023	0	2340000	727660001	202309	cmqs4gal1000ojcd0wf1gmv1q	2023-09-19 03:16:29	\N	\N
 1300	2023-09-18 17:00:00	66	TRANSPORT ASESOR DAN TIM TEKNIS UTK UJIAN POIPPU DAN PPPU TGL 14 SEP 2023	020/UMK-IX/2023	0	750000	729250001	202309	cmqs4gal1000ojcd0wf1gmv1q	2023-09-19 03:17:32	\N	\N
 1301	2023-09-18 17:00:00	52	UANG SAKU ASESOSR DAN TIM TEKNIS UTK UJIAN POIPPU DAN PPPU TGL 14 SEP 2023	020/UMK-IX/2023	0	1250000	728750001	202309	cmqs4gal1000ojcd0wf1gmv1q	2023-09-19 03:19:49	\N	\N
@@ -36353,6 +36621,7 @@ COPY benefita."TableNeraca" (id, tanggal, "jenisBiayaId", uraian, bukti, debit, 
 1887	2023-12-26 17:00:00	52	UANG SAKU INSTRUKTUR DAN HOST UTK PEL TPS LB3 TGL 11 DES 2023	032/UMK-XII/2023	0	1200000	622074923	202312	cmqs4gal1000ojcd0wf1gmv1q	2024-01-17 02:54:58	\N	\N
 1888	2023-12-26 17:00:00	52	UANG SAKU INSTRUKTUR DAN HOST UTK PEL POIPPU TGL 18 DES 2023	033/UMK-XII/2023	0	700000	622574923	202312	cmqs4gal1000ojcd0wf1gmv1q	2024-01-17 03:17:09	\N	\N
 1889	2023-12-28 17:00:00	61	BONUS TAHUN 2023	017/UMK-XII/2023	0	184787500	438487423	202312	cmqs4gal1000ojcd0wf1gmv1q	2024-01-17 03:27:31	\N	\N
+2128	2024-04-01 17:00:00	85	PEMBELIAN KAPASITOR, FREON DAN SERVICE AC	008/UMK-IV/24	0	920000	-920000	202404	cmqs4gal1000ojcd0wf1gmv1q	2024-04-01 22:34:39	cmqs4gal1000ojcd0wf1gmv1q	2024-04-02 03:23:19
 1890	2023-12-28 17:00:00	56	UANG MAKAN INSTRUKTUR DAN HOST UTK PEL LCA TGL 28 DES 2023 - 4 HARI 	016/UMK-XII/2023	0	1200000	622074923	202312	cmqs4gal1000ojcd0wf1gmv1q	2024-01-18 04:33:05	cmqs4gal1000ojcd0wf1gmv1q	2024-01-18 04:34:02
 1891	2023-12-28 17:00:00	52	UANG SAKU ISNTRUKTUR DAN HOST UTK PEL LCA TGL 18 DES 2023 - 4 HARI	016/UMK-XII/2023	0	1600000	621674923	202312	cmqs4gal1000ojcd0wf1gmv1q	2024-01-18 04:33:48	\N	\N
 1892	2023-12-28 17:00:00	56	UANG MAKAN INSTRUKTUR DAN HOST UTK PEL CSR UTK PROPER TGL 18 DES 2023	016/UMK-XII/2023	0	900000	622374923	202312	cmqs4gal1000ojcd0wf1gmv1q	2024-01-18 04:35:09	\N	\N
@@ -36433,6 +36702,7 @@ COPY benefita."TableNeraca" (id, tanggal, "jenisBiayaId", uraian, bukti, debit, 
 1966	2023-12-26 17:00:00	63	BBM MOTOR	028/UMK-XII/2023	0	50000	623224923	202312	cmqs4gal1000ojcd0wf1gmv1q	2024-02-17 02:32:11	\N	\N
 1967	2024-02-19 17:00:00	90	BIAYA PELATIHAN GTM 10 ATAS NAMA MA DAN MHM TGL 15-19 JAN 2024 DI MALANG	017/UMK-II/2024	0	7000000	473000000	202402	cmqs4gal1000ojcd0wf1gmv1q	2024-02-19 19:39:17	\N	\N
 1968	2024-02-19 17:00:00	68	PEMBELIAN TIKET UTK MA DAN MHM JKT - MALANG (PP) UTK PELATIHAN GTM TGL 15-19 JAN 2024	017/UMK-II/2024	0	2712000	477288000	202402	cmqs4gal1000ojcd0wf1gmv1q	2024-02-19 19:40:31	\N	\N
+2129	2024-03-26 17:00:00	67	BIAYA KIRIM DOKUMEN	019/UMK-II/2024	0	1165000	281624808	202403	cmqs4gal1000ojcd0wf1gmv1q	2024-04-02 02:09:21	\N	\N
 1969	2024-02-19 17:00:00	66	TRANSPORT LOKAL DAN TRANSPORT RUMAH BANDARA (PP) UTK MA DAN MHM UTK IKUT PELATIHAN GTM 10 TGL 14-20 JAN 2024	017/UMK-II/2024	0	2700000	477300000	202402	cmqs4gal1000ojcd0wf1gmv1q	2024-02-19 19:42:43	\N	\N
 1970	2024-02-19 17:00:00	59	BIAYA PENGINAPAN UTK MA DAN MHM UTK IKUT PELATIHAN GTM 1O TGL 15-20 JAN 2024	017/UMK-II/2024	0	2176000	477824000	202402	cmqs4gal1000ojcd0wf1gmv1q	2024-02-19 19:44:02	\N	\N
 1971	2024-02-19 17:00:00	52	UANG SAKU DAN UANG MAKAN MA DAN MHM UTK IKUT PELATIHAN GTM 10 DI MALANG TGL 14-20 JAN 2024	017/UMK-II/2024	0	3500000	476500000	202402	cmqs4gal1000ojcd0wf1gmv1q	2024-02-19 19:44:57	\N	\N
@@ -36551,6 +36821,7 @@ COPY benefita."TableNeraca" (id, tanggal, "jenisBiayaId", uraian, bukti, debit, 
 2085	2024-02-28 17:00:00	52	FEE INSTRUKTUR UTK PEL PPPA TGL 26-28 FEB 24	029/UMK-II/2024	0	2500000	185151166	202402	cmqs4gal1000ojcd0wf1gmv1q	2024-03-11 19:30:31	\N	\N
 2086	2024-02-28 17:00:00	56	UANG MAKAN ISNTRUKTUR DAN HOST UTK PEL PPPA TGL 26-28 FEB 24	030/UMK-II/2024	0	900000	186751166	202402	cmqs4gal1000ojcd0wf1gmv1q	2024-03-11 19:31:18	\N	\N
 2087	2024-02-28 17:00:00	66	TRANSPORT INSTRUKTUR DAN STAF UTK PEL DRKPL DI SMART TGL 26-28 FEB 2024	030/UMK-II/2024	0	1800000	185851166	202402	cmqs4gal1000ojcd0wf1gmv1q	2024-03-11 19:32:28	\N	\N
+2130	2024-03-26 17:00:00	81	PEMBELIAN MATERAI 	019/UMK-II/2024	0	537000	282252808	202403	cmqs4gal1000ojcd0wf1gmv1q	2024-04-02 02:10:17	\N	\N
 2088	2024-02-28 17:00:00	59	PENGINAPAN, UANG MAKAN DAN UANG SAKU ISNTRUKTUR DAN STAF UTK PEL DRKPL TGL 26-28 FEB 24 DI SMART	030/UMK-II/2024	0	1602250	186048916	202402	cmqs4gal1000ojcd0wf1gmv1q	2024-03-11 19:35:18	\N	\N
 2089	2024-02-28 17:00:00	52	FEE ASESOR UTKUJI AUDITR ENERGI GL 29 FEB 2024	030/UMK-II/2024	0	2500000	185151166	202402	cmqs4gal1000ojcd0wf1gmv1q	2024-03-11 19:36:07	\N	\N
 2090	2024-02-28 17:00:00	66	TARNSPORT ASESOR DAN TIM TEKNIS UTK UJIAN AUDITOR ENERGI TGL 29 FEB 2024	030/UMK-II/2024	0	600000	187051166	202402	cmqs4gal1000ojcd0wf1gmv1q	2024-03-11 19:37:08	\N	\N
@@ -36591,11 +36862,6 @@ COPY benefita."TableNeraca" (id, tanggal, "jenisBiayaId", uraian, bukti, debit, 
 2125	2024-04-01 17:00:00	53	BIAYA UJIAN PELAKSANA SAMPAH, PPPU DAN POIPPU TGL 21 MARET 2024 DGN DAIMARU	006/UMK-IV/2024	0	10800000	328708202	202404	cmqs4gal1000ojcd0wf1gmv1q	2024-04-01 22:28:36	cmqs4gal1000ojcd0wf1gmv1q	2025-02-23 02:36:07
 2126	2024-04-01 17:00:00	85	PEMBAYARAN PBB BANGUNAN	007/UMK-IV/2024	0	1086813	-1086813	202404	cmqs4gal1000ojcd0wf1gmv1q	2024-04-01 22:31:42	cmqs4gal1000ojcd0wf1gmv1q	2024-04-01 22:32:29
 2127	2024-04-01 17:00:00	63	BBM MOTOR	007/UMK-IV/2024	0	22000	-22000	202404	cmqs4gal1000ojcd0wf1gmv1q	2024-04-01 22:32:17	\N	\N
-2128	2024-04-01 17:00:00	85	PEMBELIAN KAPASITOR, FREON DAN SERVICE AC	008/UMK-IV/24	0	920000	-920000	202404	cmqs4gal1000ojcd0wf1gmv1q	2024-04-01 22:34:39	cmqs4gal1000ojcd0wf1gmv1q	2024-04-02 03:23:19
-2129	2024-03-26 17:00:00	67	BIAYA KIRIM DOKUMEN	019/UMK-II/2024	0	1165000	281624808	202403	cmqs4gal1000ojcd0wf1gmv1q	2024-04-02 02:09:21	\N	\N
-2130	2024-03-26 17:00:00	81	PEMBELIAN MATERAI 	019/UMK-II/2024	0	537000	282252808	202403	cmqs4gal1000ojcd0wf1gmv1q	2024-04-02 02:10:17	\N	\N
-2131	2024-03-26 17:00:00	81	PEMBELIAN PULPEN, STABILO, MAP FILE, DLL	019/UMK-II/2024	0	682500	282107308	202403	cmqs4gal1000ojcd0wf1gmv1q	2024-04-02 02:11:20	\N	\N
-2132	2024-03-26 17:00:00	62	PEMBAYARAN BPKS KESEHATAN SDRI SITI NAZIRAH	019/UMK-II/2024	0	100000	282689808	202403	cmqs4gal1000ojcd0wf1gmv1q	2024-04-02 02:11:59	\N	\N
 2133	2024-03-18 17:00:00	68	TIKET PESAWAT HSL DAN MGI KE LAMPUNG DALM RANGKA PEL PROPER 6-8 MARET 2024	004/UMK-III/2024	0	2539756	280250052	202403	cmqs4gal1000ojcd0wf1gmv1q	2024-04-02 03:06:24	cmqs4gal1000ojcd0wf1gmv1q	2024-04-02 03:24:04
 2134	2024-03-18 17:00:00	66	TRANSPORT LOKAL HSL DAN MGI DALAM RANGKA PEL PROPER DI LAMPUNG TGL 6-8 MARET 2024	004/UMK-III/2024	0	677500	282112308	202403	cmqs4gal1000ojcd0wf1gmv1q	2024-04-02 03:07:30	\N	\N
 2135	2024-03-18 17:00:00	55	UANG SAKU HSL DAN MGI DALAM RANGKA PEL PROPER KE LMAPUNG GL 6-8 MARET 2024	004/UMK-III/2024	0	2000000	282982728	202403	cmqs4gal1000ojcd0wf1gmv1q	2024-04-02 03:08:17	cmqs4gal1000ojcd0wf1gmv1q	2024-10-23 04:31:28
@@ -38796,7 +39062,7 @@ COPY benefita."TableNeraca" (id, tanggal, "jenisBiayaId", uraian, bukti, debit, 
 
 
 --
--- Data for Name: User; Type: TABLE DATA; Schema: benefita; Owner: postgres
+-- Data for Name: User; Type: TABLE DATA; Schema: benefita; Owner: -
 --
 
 COPY benefita."User" (id, "pegawaiId", phone, email, password, role, "createdAt", "lastIpAddress", "lastOnlineAt", "emailGmail") FROM stdin;
@@ -38868,12 +39134,12 @@ cmqs4gaqh004hjcd04511dp22	cmqs494nf002mjct8usizhlcn	0811 1108 8804	calvin@benefi
 cmqs4gaqk004kjcd07hl3vgxj	cmqs494nh002njct8ctgqss52	0811 1106 6044	biyan@benefita.com	$2b$12$tbQstwkXXTYH/5mzqHEahe.9JNiPJfpg7whD..LoDfP4XS6tzTJR.	MARKETING_STAFF	2026-06-24 13:41:22.652	\N	\N	marketingbenefita010@gmail.com
 cmslk73pe0009jcvs8c27p76q	cmslk73pe0008jcvsx9wyvr0k	081398125030	aetest@benefita.com	$2b$10$5CSYE289ndQw5nBt6zC7TuqBWRyYiSFNrPjeJznuqXh/LneaksQe.	MARKETING_STAFF	2026-08-09 08:47:08.93	::1	2026-08-09 09:27:15.13	\N
 cmq6c75ey0007jc3o1yni4d5u	cmq6c75ey0006jc3o8tmwwoho	0813981250302434	user@gmail.com	$2b$12$jsgpUuBpIhLZaT7lW/M/bOscxLfulxAAbTxw/NlILvboh7VyArEya	MARKETING_STAFF	2026-06-09 07:47:16.906	\N	\N	\N
-cmq67a4yn001qjc1cl7gitkyz	cmq67a4yn001ojc1chcom9uxp	08139812503000	axelsebayang456@gmail.com	$2b$12$2blEhVk.3cPEY2p5WwC73.uauRuAqtuhwBaNRHqEWSc8.DPar.oN2	SUPER_ADMIN	2026-06-09 05:29:38.207	::1	2026-08-17 11:16:35.317	\N
+cmq67a4yn001qjc1cl7gitkyz	cmq67a4yn001ojc1chcom9uxp	08139812503000	axelsebayang456@gmail.com	$2b$12$2blEhVk.3cPEY2p5WwC73.uauRuAqtuhwBaNRHqEWSc8.DPar.oN2	SUPER_ADMIN	2026-06-09 05:29:38.207	::1	2026-08-30 11:54:08.88	\N
 \.
 
 
 --
--- Data for Name: _prisma_migrations; Type: TABLE DATA; Schema: benefita; Owner: postgres
+-- Data for Name: _prisma_migrations; Type: TABLE DATA; Schema: benefita; Owner: -
 --
 
 COPY benefita._prisma_migrations (id, checksum, finished_at, migration_name, logs, rolled_back_at, started_at, applied_steps_count) FROM stdin;
@@ -38946,11 +39212,16 @@ b2165e17-cd42-490f-aa7e-3a8ea9ebdc49	e2e2f17ed5eb2b84c9faf43535d5c857c67ccff54bc
 71db580b-b372-4bff-ba6f-16068152dfdf	10950f363a3adfd37423f30b2b06960e7abfb100a8749f837f17d6f38871b955	2026-08-10 11:41:04.558908+07	20260810044104_permintaan_nomor_surat_tujuan_nullable	\N	\N	2026-08-10 11:41:04.506545+07	1
 f33b2bae-f01a-4ee0-b4b5-d9e8a710c7f6	a95146755c2fb0f36a050f8070837c13cd1f303c5e401cfe22fafc5efc718649	2026-08-09 17:46:42.839705+07	20260809104642_add_lini_bisnis	\N	\N	2026-08-09 17:46:42.732493+07	1
 d76fdd88-099f-4ff0-81c7-0bf1a270da3a	538869f7be2fa06d6c613ad3ce565e28e6e89a9927d32fdf9593a86cf0b4508b	2026-08-09 18:17:12.837559+07	20260809111712_add_lini_bisnis	\N	\N	2026-08-09 18:17:12.807532+07	1
+2adc5a40-0097-4df7-85dd-abdfde2e8d1e	d86e57240779df87978b214e9f3f34388257c4ddcbe2bd16bbf657a17741ae96	2026-08-30 20:25:49.88885+07	20260830132549_add_evaluasi_pelatihan	\N	\N	2026-08-30 20:25:49.809668+07	1
+c4d495d1-8786-44f2-9c1d-5eed9e460ced	b3ba23b45d198536b39e693affbb101f628783e4ed88347c071f7f3577bc1f8d	2026-09-01 23:40:24.786589+07	20260901164024_add_pegawai_status_aktif	\N	\N	2026-09-01 23:40:24.686357+07	1
+c4606bbc-7c36-4689-89d9-0012d8f33695	80c2e27afe74a624381842ebc0e8fe61197efde3b237eeb572034eb4c4e6af0d	2026-09-02 13:42:00.616128+07	20260902064200_add_konfirmasi	\N	\N	2026-09-02 13:42:00.596156+07	1
+3016f904-b67a-4f6e-86b6-23db7842cf6e	67392f4700ebb943d0bec974041dc87d993f3fe0528d4bf92c7252f44ad5be63	2026-09-02 14:08:37.866238+07	20260902070837_add_jadwal_training_hari_trainer	\N	\N	2026-09-02 14:08:37.844193+07	1
+e0780b6e-6451-41c8-8bd4-138bcdab3553	31ca00d24dd468b68409c2363d538ffcdad7d8a2f7c69a372847de157da64988	2026-09-02 14:26:01.665943+07	20260902072601_add_trainer_status_aktif	\N	\N	2026-09-02 14:26:01.649487+07	1
 \.
 
 
 --
--- Data for Name: berita; Type: TABLE DATA; Schema: benefita; Owner: postgres
+-- Data for Name: berita; Type: TABLE DATA; Schema: benefita; Owner: -
 --
 
 COPY benefita.berita (id, periode, isi, "createdAt", "updatedAt") FROM stdin;
@@ -38962,7 +39233,7 @@ cmq66v8hs000sjc78lspphjyg	2025-08-01 00:00:00	Pelatihan AMDAL batch kedua akan d
 
 
 --
--- Data for Name: contact_person_perusahaan; Type: TABLE DATA; Schema: benefita; Owner: postgres
+-- Data for Name: contact_person_perusahaan; Type: TABLE DATA; Schema: benefita; Owner: -
 --
 
 COPY benefita.contact_person_perusahaan ("KODE", "KODE_PERUSAHAAN", "NAMA", "TEKNIS_TERTINGGI", "JABATAN", "HP", "EMAIL", "POSISI", "KEUANGAN", "MINTA", "KET", created_at, updated_at) FROM stdin;
@@ -38981,7 +39252,7 @@ cmq6fwsgv001djc4srie2bflf	PRU003	Pak Hari	f	-	-	-	alamat-pusat	\N	\N	\N	2026-06-
 
 
 --
--- Data for Name: daily_activity; Type: TABLE DATA; Schema: benefita; Owner: postgres
+-- Data for Name: daily_activity; Type: TABLE DATA; Schema: benefita; Owner: -
 --
 
 COPY benefita.daily_activity ("ID", "PEGAWAI_ID", "PERUSAHAAN_ID", "KONTAK", "JENIS_TRAINING", "KETERANGAN", "KATEGORI", "INOUT", "TANGGAL", "PERUSAHAAN", created_at, updated_at, "DATE_TARGET") FROM stdin;
@@ -38990,11 +39261,34 @@ cmq66v8ho000qjc784gird7uy	cmq66v8d30003jc78r7p2h35d	PRU002	Rina Marlina	AMDAL Da
 cmq66vfbc000pjco89ebpb7wo	cmq66v8d30003jc78r7p2h35d	PRU001	Hendra Wijaya	K3 Umum	Follow up pendaftaran peserta	FOLLOW_UP	OUT	2025-07-01	PT Maju Bersama	2026-06-09 05:18:11.785	2026-06-09 05:18:11.785	\N
 cmq66vfbc000qjco8x61bw6n2	cmq66v8d30003jc78r7p2h35d	PRU002	Rina Marlina	AMDAL Dasar	Presentasi program training	PRESENTASI	OUT	2025-07-02	PT Karya Indah	2026-06-09 05:18:11.785	2026-06-09 05:18:11.785	\N
 cmq6fxlxa001fjc4s666i8cgw	cmq67oa800004jc4wzfnrwspn	PRU003	Pak Hari	INH_3	Keterangan	CSR	IN	2026-06-09	PRU003	2026-06-09 09:31:50.207	2026-06-09 09:31:50.207	2026-06-12
+cmtjub26f0001ijshdrxlngk4	cmq67a4yn001ojc1chcom9uxp	PR00001	Test	INH_2	Test	TSM	OUT	2026-09-02	PR00001	2026-09-02 08:34:19.719	2026-09-02 08:34:19.719	2026-09-14
 \.
 
 
 --
--- Data for Name: hotel; Type: TABLE DATA; Schema: benefita; Owner: postgres
+-- Data for Name: evaluasi_pelatihan; Type: TABLE DATA; Schema: benefita; Owner: -
+--
+
+COPY benefita.evaluasi_pelatihan (id, "pesertaTrainingId", "nilaiSistematikaMateri", "nilaiTampilanSlide", "nilaiAlokasiWaktu", "nilaiPenerapanMateri", "nilaiPeningkatanKompetensi", "nilaiTrainer", "manfaatUntukPeserta", "manfaatUntukPerusahaan", "divisiDisarankan", "prosedurPengajuan", "createdAt", "updatedAt") FROM stdin;
+1	7316	5	4	5	5	5	5	Sudah Sangat Baiiik, terimakasih atas pelatihan nya	sangat bermanfaat	Managerial Keelematan	Kontak HR	2026-08-30 13:41:43.05	2026-08-30 13:41:43.05
+\.
+
+
+--
+-- Data for Name: evaluasi_pelatihan_diminati; Type: TABLE DATA; Schema: benefita; Owner: -
+--
+
+COPY benefita.evaluasi_pelatihan_diminati ("evaluasiId", "judulTrainingId") FROM stdin;
+1	80
+1	21
+1	88
+1	60
+1	57
+\.
+
+
+--
+-- Data for Name: hotel; Type: TABLE DATA; Schema: benefita; Owner: -
 --
 
 COPY benefita.hotel (id, kode_hotel, nama_hotel, alamat, kota, telepon, fax, pub_rate, cor_rate, created_at, updated_at) FROM stdin;
@@ -39003,10 +39297,12 @@ cmrugngdc0004jc1ourmizrvx	HTL-BDG-001	Hilton Jakarta	Jakarta Sel	Jakarta	0813981
 
 
 --
--- Data for Name: jadwal_training; Type: TABLE DATA; Schema: benefita; Owner: postgres
+-- Data for Name: jadwal_training; Type: TABLE DATA; Schema: benefita; Owner: -
 --
 
 COPY benefita.jadwal_training (id, "noJadwal", "kodePelatihan", "tglMulai", "tglSelesai", "judulLengkap", "judulPendek", metode, "jenisTraining", kota, "lokasiDetail", biaya, catatan, "fileAgenda", "lastUpdate", "updateOleh", status, batch, durasi, penawaran, periode, "statusPrio", "statusTr", "tglRencana", tipe, trainer, "updTgl") FROM stdin;
+12849	2026859	CSR-02	2026-09-03 00:00:00	2026-09-10 00:00:00				UJI		\N	0	\N	\N	2026-09-01 18:14:29.474	cmq67a4yn001ojc1chcom9uxp	TERKONFIRMASI	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N
+12848	2026858	CSR-03	2026-09-04 00:00:00	2026-09-08 00:00:00	Pelatihan BoQ	PBOQ	Online	INH		\N	0	\N	\N	2026-09-01 18:14:57.983	cmq67a4yn001ojc1chcom9uxp	TERKONFIRMASI	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N
 8382	2020338	ENG-02	2020-11-08 17:00:00	2020-11-10 17:00:00	Auditor Energi 	Auditor Energi		REG	Online	Online	5500000	\N	\N	2026-06-29 08:33:12.246	cmqs4gak60006jcd0m2yt7ric	BATAL	0	0	\N	202011	\N	\N	\N	\N	\N	2020-11-11 17:00:00
 8383	2020339	HAZ-06	2020-10-20 17:00:00	2020-10-22 17:00:00	Pelaksanaan Operasional Tempat Penyimpanan Sementara Limbah\r\nBahan Berbahaya dan Beracun (B3)	Pelaksanaan TPS LB3		REG	Online	Online	5500000	\N	\N	2026-06-29 08:33:12.248	cmqs4gak60006jcd0m2yt7ric	BATAL	0	0	\N	202010	\N	\N	\N	\N	\N	2020-10-22 17:00:00
 8384	2020340	HAZ-08	2020-11-03 17:00:00	2020-11-05 17:00:00	Pelaksanaan Pengelolaan Sampah/Limbah Padat Non-B3    	Pelaksana Sampah/Limbah Padat Non B3		REG	Online	Online	5500000	\N	\N	2026-06-29 08:33:12.251	cmqs4gak60006jcd0m2yt7ric	BATAL	0	0	\N	202011	\N	\N	\N	\N	\N	2020-11-04 17:00:00
@@ -39190,6 +39486,7 @@ COPY benefita.jadwal_training (id, "noJadwal", "kodePelatihan", "tglMulai", "tgl
 6576	2013040	EM-04	2013-05-12 17:00:00	2013-05-14 17:00:00	Pemantauan Kualitas Laut    	Pemantauan Kualitas Laut		REG	Jakarta	MH	5400000	Modul belum siap. IS 30apr13	\N	2026-06-29 08:33:05.847	cmqs4gak60006jcd0m2yt7ric	BATAL	0	0	\N	201305	\N	\N	2013-05-12 17:00:00	\N	\N	2013-04-29 17:00:00
 6577	2013041	HAZ-02	2013-05-12 17:00:00	2013-05-14 17:00:00	Pengelolaan Bahan Kimia dan Bahan Berbahaya & Beracun (Bahan B3)    	Pengelolaan Bahan Kimia/B		REG	Bandung	Bandung	5400000	Peserta < minimal	\N	2026-06-29 08:33:05.849	cmqs4gak60006jcd0m2yt7ric	BATAL	0	0	\N	201305	\N	\N	2013-05-12 17:00:00	\N	\N	2013-05-07 17:00:00
 6578	2013042	EP-01	2013-05-14 17:00:00	2013-05-16 17:00:00	Peraturan Perundangan Lingkungan Hidup dan Cara Pemenuhannya	Peraturan Perundangan LH	Offline	REG	Jakarta	MH	5400000	\N	\N	2026-06-29 08:33:05.853	cmqs4gak60006jcd0m2yt7ric	TERKONFIRMASI	2	0	\N	201305	\N	\N	2013-05-14 17:00:00	\N	\N	2012-12-02 17:00:00
+7341	2017124	IMS-02	2017-04-02 17:00:00	2017-04-03 17:00:00	ISO 9001:2015 Sistem Manajemen Mutu     	ISO 9001:2015 SM Mutu		REG	Bandung	Bandung	5500000	\N	\N	2026-06-29 08:33:08.705	cmqs4gak60006jcd0m2yt7ric	BATAL	0	0	\N	201704	\N	\N	\N	\N	\N	2017-05-28 17:00:00
 6579	2013043	HAZ-01	2013-05-19 17:00:00	2013-05-21 17:00:00	Pengelolaan Limbah Bahan Berbahaya dan Beracun (Limbah B3)	Pengelolaan Limbah B3	Offline	REG	Jakarta	MH	5400000	\N	\N	2026-06-29 08:33:05.857	cmqs4gak60006jcd0m2yt7ric	TERKONFIRMASI	7	0	\N	201305	\N	\N	2013-05-19 17:00:00	\N	\N	2012-12-02 17:00:00
 6580	2013044	EP-02	2013-05-21 17:00:00	2013-05-23 17:00:00	Program Penilaian Peringkat Kinerja Perusahaan dalam Pengelolaan Lingkungan (PROPER)        	PROPER	Offline	REG	Jakarta	MH	5400000	Pindah dari BPN ke JKT	\N	2026-06-29 08:33:05.861	cmqs4gak60006jcd0m2yt7ric	TERKONFIRMASI	7	0	\N	201305	\N	\N	2013-05-21 17:00:00	\N	\N	2013-05-16 17:00:00
 6581	2013047	EP-03	2013-06-09 17:00:00	2013-06-11 17:00:00	Implementasi dan Pembuatan Laporan AMDAL        	Implementasi Lap.AMDAL	Offline	REG	Jakarta	MH             .. xxxxx	5400000	\N	\N	2026-06-29 08:33:05.867	cmqs4gak60006jcd0m2yt7ric	TERKONFIRMASI	3	0	\N	201306	\N	\N	2013-06-09 17:00:00	\N	\N	2013-06-12 17:00:00
@@ -39955,7 +40252,6 @@ COPY benefita.jadwal_training (id, "noJadwal", "kodePelatihan", "tglMulai", "tgl
 7338	2017121	IMS-01	2017-09-27 17:00:00	2017-09-28 17:00:00	ISO 14001:2015 Sistem Manajemen Lingkungan    	ISO 14001:2015 SM Lingkungan	Offline	REG	Bandung	Aston Braga	5500000	\N	\N	2026-06-29 08:33:08.694	cmqs4gak60006jcd0m2yt7ric	TERKONFIRMASI	18	0	\N	201709	\N	\N	\N	\N	\N	2017-09-24 17:00:00
 7339	2017122	IMS-01	2017-12-06 17:00:00	2017-12-07 17:00:00	ISO 14001:2015 Sistem Manajemen Lingkungan	ISO 14001:2015 SM Lingkungan	Offline	REG	Jakarta	MH	5500000	\N	\N	2026-06-29 08:33:08.697	cmqs4gak60006jcd0m2yt7ric	TERKONFIRMASI	19	0	\N	201712	\N	\N	\N	\N	\N	2016-11-15 17:00:00
 7340	2017123	IMS-02	2017-02-08 17:00:00	2017-02-09 17:00:00	ISO 9001:2015 Sistem Manajemen Mutu     	ISO 9001:2015 SM Mutu		REG	Jakarta	MH	5500000	\N	\N	2026-06-29 08:33:08.701	cmqs4gak60006jcd0m2yt7ric	BATAL	0	0	\N	201702	\N	\N	\N	\N	\N	2017-03-21 17:00:00
-7341	2017124	IMS-02	2017-04-02 17:00:00	2017-04-03 17:00:00	ISO 9001:2015 Sistem Manajemen Mutu     	ISO 9001:2015 SM Mutu		REG	Bandung	Bandung	5500000	\N	\N	2026-06-29 08:33:08.705	cmqs4gak60006jcd0m2yt7ric	BATAL	0	0	\N	201704	\N	\N	\N	\N	\N	2017-05-28 17:00:00
 7342	2017125	IMS-02	2017-08-13 17:00:00	2017-08-14 17:00:00	ISO 9001:2015 Sistem Manajemen Mutu     	ISO 9001:2015 SM Mutu		REG	Cikarang	Cikarang	5500000	\N	\N	2026-06-29 08:33:08.708	cmqs4gak60006jcd0m2yt7ric	BATAL	0	0	\N	201708	\N	\N	\N	\N	\N	2017-08-20 17:00:00
 7343	2017126	IMS-02	2017-11-28 17:00:00	2017-11-29 17:00:00	ISO 9001:2015 Sistem Manajemen Mutu     	ISO 9001:2015 SM Mutu		REG	Jakarta	MH	5500000	\N	\N	2026-06-29 08:33:08.713	cmqs4gak60006jcd0m2yt7ric	BATAL	0	0	\N	201711	\N	\N	\N	\N	\N	2017-12-11 17:00:00
 7344	2017127	IMS-03	2017-02-15 17:00:00	2017-02-16 17:00:00	OHSAS 18001:2007 Sistem Manajemen Kesehatan dan Keselamatan Kerja    	OHSAS 18001:2007 SM K3		REG	Cikarang	Cikarang	5500000	\N	\N	2026-06-29 08:33:08.716	cmqs4gak60006jcd0m2yt7ric	BATAL	0	0	\N	201702	\N	\N	\N	\N	\N	2017-03-21 17:00:00
@@ -40305,6 +40601,7 @@ COPY benefita.jadwal_training (id, "noJadwal", "kodePelatihan", "tglMulai", "tgl
 7688	2018225	ESG-03	2018-11-13 17:00:00	2018-11-15 17:00:00	Workshop Pembuatan Sustainability Report    	Workshop Sustainability Report		REG	Cikarang	Mcik	7900000	\N	\N	2026-06-29 08:33:09.988	cmqs4gak60006jcd0m2yt7ric	BATAL	0	0	\N	201811	\N	\N	\N	\N	\N	2018-11-13 17:00:00
 7689	2018226	EP-06	2018-11-20 17:00:00	2018-11-22 17:00:00	Workshop Industri Hijau untuk Efisiensi Sumberdaya            	Workshop Industri Hijau		REG	Jakarta	MH	7900000	\N	\N	2026-06-29 08:33:09.992	cmqs4gak60006jcd0m2yt7ric	BATAL	0	0	\N	201811	\N	\N	\N	\N	\N	2018-11-25 17:00:00
 7690	2018227	EP-09	2018-11-11 17:00:00	2018-11-13 17:00:00	Workshop Pembuatan DRKPL dan Dokumen Hijau PROPER 	Workshop Pembuatan DRKPL & Dok Hijau PROPER	Offline	REG	Jakarta	MH	7900000	\N	\N	2026-06-29 08:33:09.997	cmqs4gak60006jcd0m2yt7ric	TERKONFIRMASI	10	0	\N	201811	\N	\N	\N	\N	\N	2018-01-08 17:00:00
+8366	2020308	CSR-01	2020-07-14 17:00:00	2020-07-16 17:00:00	Workshop Social Mapping untuk PROPER dan CSR 	Workshop SosMap untuk PROPER & CSR		REG	Online	Online	5500000	\N	\N	2026-06-29 08:33:12.195	cmqs4gak60006jcd0m2yt7ric	BATAL	0	0	\N	202007	\N	\N	\N	\N	\N	2020-08-02 17:00:00
 7691	2018228	EP-12	2018-11-06 17:00:00	2018-11-08 17:00:00	Pengelolaan Lingkungan Rumah Sakit Berdasarkan PROPER dan Permenkes No. 1204    	Pengelolaan Lingkungan Rumah Sakit		REG	Bandung	Hotel	6900000	\N	\N	2026-06-29 08:33:09.999	cmqs4gak60006jcd0m2yt7ric	BATAL	0	0	\N	201811	\N	\N	\N	\N	\N	2018-11-11 17:00:00
 7692	2018229	EM-02	2018-11-20 17:00:00	2018-11-22 17:00:00	Pengelolaan dan Pemantauan Kualitas Udara Emisi dan Ambien    	Pengelolaan  Kualitas Udara Emisi & Ambien		REG	Cikarang	Mcik	6900000	\N	\N	2026-06-29 08:33:10.003	cmqs4gak60006jcd0m2yt7ric	BATAL	0	0	\N	201811	\N	\N	\N	\N	\N	2018-11-22 17:00:00
 7693	2018230	EM-04	2018-11-11 17:00:00	2018-11-13 17:00:00	Pemantauan Mangrove, Padang Lamun dan Terumbu Karang    	Pemantauan Mangrove		REG	Cikarang	Mcik	6900000	\N	\N	2026-06-29 08:33:10.006	cmqs4gak60006jcd0m2yt7ric	BATAL	0	0	\N	201811	\N	\N	\N	\N	\N	2018-11-12 17:00:00
@@ -40978,7 +41275,6 @@ COPY benefita.jadwal_training (id, "noJadwal", "kodePelatihan", "tglMulai", "tgl
 8363	2020305	EP-15	2020-05-10 17:00:00	2020-05-11 17:00:00	Workshop Pembuatan Laporan Publik AMDAL/UKL-UPL dan\r\nIzin Lingkungan	Pembuatan Laporan Publik AMDAL/UKL-UPL		REG	Online	Online	3900000	\N	\N	2026-06-29 08:33:12.186	cmqs4gak60006jcd0m2yt7ric	BATAL	0	0	\N	202005	\N	\N	\N	\N	\N	2020-06-30 17:00:00
 8364	2020306	EP-15	2020-07-15 17:00:00	2020-07-16 17:00:00	Workshop Pembuatan Laporan Publik AMDAL/UKL-UPL dan\r\nIzin Lingkungan	Pembuatan Laporan Publik AMDAL/UKL-UPL		REG	Online	Online	3900000	\N	\N	2026-06-29 08:33:12.188	cmqs4gak60006jcd0m2yt7ric	BATAL	0	0	\N	202007	\N	\N	\N	\N	\N	2020-07-27 17:00:00
 8365	2020307	CSR-01	2020-06-28 17:00:00	2020-06-30 17:00:00	Workshop Social Mapping untuk PROPER dan CSR 	Workshop SosMap untuk PROPER & CSR	Online	REG	Online	Online	5500000	\N	\N	2026-06-29 08:33:12.192	cmqs4gak60006jcd0m2yt7ric	TERKONFIRMASI	26	0	\N	202006	\N	\N	\N	\N	\N	2020-06-14 17:00:00
-8366	2020308	CSR-01	2020-07-14 17:00:00	2020-07-16 17:00:00	Workshop Social Mapping untuk PROPER dan CSR 	Workshop SosMap untuk PROPER & CSR		REG	Online	Online	5500000	\N	\N	2026-06-29 08:33:12.195	cmqs4gak60006jcd0m2yt7ric	BATAL	0	0	\N	202007	\N	\N	\N	\N	\N	2020-08-02 17:00:00
 8367	2020309	CSR-02	2020-07-05 17:00:00	2020-07-07 17:00:00	Program Pemberdayaan Ekonomi Masyarakat melalui CSR untuk PROPER Hijau - Emas	Pemberdayaan Ekonomi Masyarakat	Online	REG	Online	Online	5500000	\N	\N	2026-06-29 08:33:12.198	cmqs4gak60006jcd0m2yt7ric	TERKONFIRMASI	4	0	\N	202007	\N	\N	\N	\N	\N	2020-04-26 17:00:00
 8368	2020310	CSR-03	2020-08-30 17:00:00	2020-09-01 17:00:00	CSR/CD Officer Development Program 	CSR/CD Officer Development Program		REG	Online	Online	5500000	\N	\N	2026-06-29 08:33:12.201	cmqs4gak60006jcd0m2yt7ric	BATAL	0	0	\N	202008	\N	\N	\N	\N	\N	2020-09-02 17:00:00
 8369	2020311	SDG-01	2020-07-07 17:00:00	2020-07-09 17:00:00	Sustainable Development Goals (SDGs) dan Regulasinya untuk PROPER, CSR dan Pemerintah       	SDG		REG	Online	Online	5500000	\N	\N	2026-06-29 08:33:12.205	cmqs4gak60006jcd0m2yt7ric	BATAL	0	0	\N	202007	\N	\N	\N	\N	\N	2020-07-11 17:00:00
@@ -45432,7 +45728,18 @@ COPY benefita.jadwal_training (id, "noJadwal", "kodePelatihan", "tglMulai", "tgl
 
 
 --
--- Data for Name: judul_training; Type: TABLE DATA; Schema: benefita; Owner: postgres
+-- Data for Name: jadwal_training_hari; Type: TABLE DATA; Schema: benefita; Owner: -
+--
+
+COPY benefita.jadwal_training_hari (id, "jadwalId", tanggal) FROM stdin;
+2	12567	2026-09-01
+3	12567	2026-09-02
+4	12567	2026-09-03
+\.
+
+
+--
+-- Data for Name: judul_training; Type: TABLE DATA; Schema: benefita; Owner: -
 --
 
 COPY benefita.judul_training (id, kode, "judulTraining", tipe, hari, "biayaOffline", "biayaOnline", batch, brosur, "createdAt", "updatedAt") FROM stdin;
@@ -45555,139 +45862,148 @@ COPY benefita.judul_training (id, kode, "judulTraining", tipe, hari, "biayaOffli
 
 
 --
--- Data for Name: kontak; Type: TABLE DATA; Schema: benefita; Owner: postgres
+-- Data for Name: konfirmasi; Type: TABLE DATA; Schema: benefita; Owner: -
 --
 
-COPY benefita.kontak (id, kode, nama, referensi, alamat, "subjekKhusus", telp, keterangan, email, tugas, kantor, "alamatKantor", "noTelpKantor", "createdAt", "updatedAt", "CV_Trainer") FROM stdin;
-3	ISA	Imam Septana A	EM-02; EM-05; EM-01; EP-07; EP-01; EP-02; EP-03; EP-04; WM-01; EM-05; IMS-01 ; IMS-02;IMS-03;IMS-04;IMS-05;IMS-06;IMS-07;IMS-08; ET-02; EP-18; EP-15	\N	Peraturan Perundangan LH ; Kriteria PROPER ; Peraturan AMDAL, Implementasi AMDAL - UKL UPL,  dan pelaporannya; Penilain Potensi Penc. Udara dan pemantauan kualitas udara  ; Pengelolaan B3 dan LB3; Penilain Potensi Penc. Air, Minimisasi air limbah dan pemantauan air; ISO 14001, 18001, 26000	0811 1070 715	\N	imamseptana@gmail.com	\N	Private	\N	\N	2026-07-07 07:44:21.778	2026-07-07 07:44:21.778	\N
-4	PNR	Ir P. Nugro Rahardjo, MSc	WM-01, WM-02, WM-03; ET-03; WM-05; WM-04; WM-07; HAZ-01; HAZ-04; HAZ-06;HAZ-08; WM-08; WM-09; EP-18;EP-15	\N	Pengolahan Limbah Industri, Pengolahan Air	0816 115 9615; 021 316 9736 Fax 021 3169376	\N	inugardjoho@yahoo.com	\N	BPPT-UPTL Chief Engineer Program Kerekayasaan	Jl. MH Thamrin No. 8, Jakpus 10340	\N	2026-07-07 07:44:21.789	2026-07-07 07:44:21.789	\N
-5	ADA	Aryani Dwi Astuti	WM-03	Jl. Sakti III No. 71 Kemanggisan, Jakarta Barat 11480	Limbah Cair	021 549 4055 0816 135 1747	Bank Mandiri No. 117-000-202-1277 Cabang Universitas Trisakti Jakarta Barat	ariani-da@lead.or.id	\N	Kepala Jurusan Teknik Lingkungan USAKTI	\N	021 566 3232 ext 765;  021 560 2575	2026-07-07 07:44:21.791	2026-07-07 07:44:21.791	\N
-6	SYW	Syahrawardi	HAZ-02	\N	\N	\N	\N	\N	\N	\N	\N	+62 812-1948-5393	2026-07-07 07:44:21.792	2026-07-07 07:44:21.792	\N
-7	DAS	Drs Dasrul, MM	EP-01	\N	Kasus-kasus Pelanggaran Peraturan Perundangan Lingkungan	0812 811 5720	Belum bisa ngajar kalo di jakarta	\N	\N	KLH (Kepala PPPE Bali-Nusra)	Kementrian Lingkungan Hidup, Jl DI Panjaitan Kav 24	021 8590 4926 Fax 021 8590 4926	2026-07-07 07:44:21.793	2026-07-07 07:44:21.793	\N
-8	CSL	Cicilia Sulastri, SH	EP-01	\N	Peraturan Perundangan LH dan cara pemenuhannya	\N	Sudah tidak mengajar di Benefita dalam 6 tahun terakhir	\N	\N	KLH (Astep IV Penegakkan Hukum)	\N	Fax 859 04 926	2026-07-07 07:44:21.795	2026-07-07 07:44:21.795	\N
-9	KAR	Karliansyah	\N	\N	Kriteria PROPER dan Cara Pemenuhannya	\N	Ketua Sekretariat : Bp Sigit Reliantoro (Asdep Pengendalian pencemaran Pertambangan, energi dan Migas)	\N	\N	Fax 021 852 0886 021 852 0886 (Lala)	\N	\N	2026-07-07 07:44:21.797	2026-07-07 07:44:21.797	\N
-10	EMR	Emma Rahmawati	EP-02; EP-07	\N	Proper - Kriteria	0812 918 0113	Sementara tidak di PROPER	e_rachmawaty@yahoo.com	\N	Asdep IV Limbah B3 dan B3 Bidang Manufaktur dan Agroindustri	\N	021 859 04 932 Fax 021 859 04 932	2026-07-07 07:44:21.798	2026-07-07 07:44:21.798	\N
-11	LCP	Luckmi Purwandari, ST	EP-02; EP-07	\N	Proper	0813 166 17145	Sementara tidak di PROPER	Luckmip@gmail.com	\N	KLH	\N	021 859 04 932	2026-07-07 07:44:21.8	2026-07-07 07:44:21.8	\N
-12	pan	Direktur	Kunjungan Lapangan (EP-02)	\N	Kunjungan Lapangan Proper	\N	Kunjungan Lapangan	\N	\N	PT. Panasonic Gobel Battery Industry	Fax 021 883 245 70 Fax 021 883 250 33	\N	2026-07-07 07:44:21.801	2026-07-07 07:44:21.801	\N
-13	astra	Semara Wima	Kunjungan Lapangan (EP-02)	\N	Kunjungan Lapangan Proper	\N	Kunjungan Lapangan	\N	\N	PT Astra Daihatsu Motor	\N	Fax 651 0606	2026-07-07 07:44:21.802	2026-07-07 07:44:21.802	\N
-14	ASD	Ir. Ary Sudijanto	EP-03	\N	Kebijakan, penyusunan  dan Penilaian AMDAL dan UKL-UPL	0816 1181 801	\N	arysudijanto@menlh.go.id	\N	KLH (Asdep Urusan Kajian Dampak Lingkungan)	\N	021 851 7148 ext 242 021 8590 4925 (Heni)	2026-07-07 07:44:21.803	2026-07-07 07:44:21.803	\N
-15	DBS	Dadang Basuki	EP-03	\N	Implementasi AMDAL - UKL UPL	0812 811 8537	\N	dadangbasuki@gmail.com	\N	BPLH Tangerang	\N	Fax 557 68 703	2026-07-07 07:44:21.805	2026-07-07 07:44:21.805	\N
-16	EJS	Eka Jatnika Sundana	EP-03	\N	Implementasi AMDAL - UKL UPL	0812 143 0445	\N	kang.eka@gmail.com	\N	BLH Jabar	Bandung	\N	2026-07-07 07:44:21.806	2026-07-07 07:44:21.806	\N
-17	MFF	Dr. Melati Ferianita Fahrul	EP-04; EM-04; EM-01; WM-01	\N	Keanekaragaman Hayati dan Kerusakan laut; Studi Batimetri dan Pemantauan Kualitas Laut	0813 1065 6899	Mandiri 124-000-535-9600 a.n. Melati Ferianita Fahrul	melatif@hotmail.com	\N	Kepala Laboratorium USAKTI	\N	\N	2026-07-07 07:44:21.807	2026-07-07 07:44:21.807	\N
-18	TAF	Triyan Aidil Fitri	EP-04; IMS-01; IMS-02;	\N	Teknik Audit Lingkungan; ISO 9001, 14001 dan Audit Lingkungan	0816778022	\N	triyan@sucofindo.co.id	\N	SICS	Graha Sucofindo 1st floor Jl. Raya Pasar Minggu Kav. 34 Jakarta 12780	(021) 7983666 Ext. 1116 9minta disambungkan ke SiCS	2026-07-07 07:44:21.808	2026-07-07 07:44:21.808	\N
-19	IMR	Imamsyah Rusli	EP-05	\N	Komunikasi Lingkungan	0818 758 302	\N	roesli.imamsjah@palyja.co.id	\N	Palyja	Jl. Raya Bogor KM 29 Depok	021 871 0221 ext 2113	2026-07-07 07:44:21.809	2026-07-07 07:44:21.809	\N
-20	TS	Tulus Sibuea	EP-05	\N	Pengelolaan Lingkungan RS	0815 60 800 62	Bisa melalui pak Eka	\N	\N	BLH Jabar	\N	\N	2026-07-07 07:44:21.81	2026-07-07 07:44:21.81	\N
-21	BPLHD	Bu Ande dan Pak Didi	EP-05	\N	Pengelolaan Lingkungan RS	\N	\N	\N	\N	BPLHD Jabar	022 420 4871	\N	2026-07-07 07:44:21.811	2026-07-07 07:44:21.811	\N
-22	NOV	Novi Farhani	EM-01; EM-02	Komplek Batan Indah Blok K No. 66, Serpong, Tangerang	Pemantauan Udara	021 756 3839;  0815 815 4585	Kontak pertama untuk semua pemantauan di Pusarpedal	novyfarhani@yahoo.com	\N	Pusarpedal Puspitek Serpong (Ka. Lab)	\N	021 756 3114 ext 107	2026-07-07 07:44:21.812	2026-07-07 07:44:21.812	\N
-23	WIN	Winarti	EM-01; EM-02	\N	Kontak untuk permohonan kerjasama	\N	\N	Jasasarpedal@yahoo.com	\N	Pusarpedal Puspitek Serpong (Bagian Jasa)	021 7587 3337 Fax 021 7587 3338	\N	2026-07-07 07:44:21.815	2026-07-07 07:44:21.815	\N
-24	NTR	Niniek Triana	EM-01	\N	Pemantauan Air	0812 945 7703 ; 021 324 759 72	\N	ntriana@yahoo.com	\N	Pusarpedal Puspitek Serpong	\N	021 756 3114 ext 114 Fax 756 0981 Fax 756 3115	2026-07-07 07:44:21.816	2026-07-07 07:44:21.816	\N
-25	ERN	Ernawita Nazir	EM-01	\N	Pemantauan Air	0812 952 6757	\N	\N	\N	Pusarpedal Puspitek Serpong	\N	\N	2026-07-07 07:44:21.817	2026-07-07 07:44:21.817	\N
-26	SRH	Siti Rohmah	EM-01	Pamulang, Tangerang - Banten	Air	021 7470 0874	\N	\N	\N	Pusarpedal Puspitek Serpong	\N	021 756 3114 ext 114	2026-07-07 07:44:21.819	2026-07-07 07:44:21.819	\N
-27	EMA	Emalya	EM-02	\N	Pemantauan Udara	0812 967 1154	\N	\N	\N	Pusarpedal Puspitek Serpong	\N	\N	2026-07-07 07:44:21.82	2026-07-07 07:44:21.82	\N
-28	MHS	Moekti Handajani	EM-02	Teratai Putih 44, Rengas, Ciputat 15412	Udara	021 749 6823 ; 021 799 1912	\N	\N	\N	Deputi DirekturYayasan Pelangi	Jl. Danau Tondano A-4 Pejompongan	021 572 50202	2026-07-07 07:44:21.821	2026-07-07 07:44:21.821	\N
-29	ESH	Esrom Hamonangan	EM-02	\N	Pemantauan Kualitas Udara	0813 100 32 32 9	\N	\N	\N	Pusarpedal Puspitek Serpong	\N	\N	2026-07-07 07:44:21.821	2026-07-07 07:44:21.821	\N
-30	MIR	Mohammad Irsyad	EM-02	Jl. Menara Air No. 3, Sadangserang, Bandung	Pencemaran udara	022 250 7797	\N	\N	\N	Laboratorium Udara Departemen Teknik Lingkungan ITB,	Jl. Ganesha No. 10, Bandung 40132	022 253 4189	2026-07-07 07:44:21.822	2026-07-07 07:44:21.822	\N
-31	DRS	Dodi Rusjadi	EM-03	Kompleks Perumahan Puspitek Blok II/A3, Serpong, Tangerang	Kebisingan	021 471 8704	\N	dodirte@yahoo.com	\N	Laboratorium Akustik PUSKIM LIPI Puspitek Serpong	\N	021 756 0562 ext 3073	2026-07-07 07:44:21.823	2026-07-07 07:44:21.823	\N
-32	WEJ	Wisnu	EM-03	\N	Kebisingan, Getaran	0816 110 5597	\N	wisnueka@gmail.com	\N	Laboratorium Kebisingan dan Getara Sarpedal Puspitek Serpong	\N	021 756 3839 Fax 756 0981	2026-07-07 07:44:21.824	2026-07-07 07:44:21.824	\N
-33	JOS	Jozef Sandjaja	EM-05	BAndung	Jenis Bahan Bakar dan Pengendalian Pembakaran	0816 4605 6812	"- BCA:      233-146-7652 - Mandiri: 130-00-0789-3673. a.n. Jozef Sandjaja"	jozef@appli-epcm.com	\N	Plant Manager PLTU - Panasia	Bandung	\N	2026-07-07 07:44:21.824	2026-07-07 07:44:21.824	\N
-34	ZR	Zul Ramadhanie	ENG-02	\N	\N	081233661212	\N	\N	\N	BPPT	\N	\N	2026-07-07 07:44:21.825	2026-07-07 07:44:21.825	\N
-70	LSP	LSP PT Benefita Indonesia	WM-01;WM-07; EM-05; EM-06; ENG-01; ENG-02;HAZ-01;HAZ-06; HAZ-04; HAZ-08	Cikarang	uji Kompetensi	021-89111660	\N	info@benefita.com	\N	\N	\N	\N	2026-07-07 07:44:21.862	2026-07-07 07:44:21.862	\N
-35	HSL	Herlina Susilowati	HAZ-09; WM-02; HAZ-01; HAZ-06; EP-11; EP-07;WM-01,WM-07; HAZ-01; HAZ-02; HAZ-03; HAZ-04; HAZ-05; HAZ-06; HAZ-07; HAZ-08; EP-14; EM-05, EM-06;  EP-02; EP-04; EP-09; EM-01; EP-01; EP-15; EP-18; EP-19; EP-03; WM-08; WM-09; IMS-06; HAZ-10; HAZ-12; HAZ-15	\N	\N	\N	\N	\N	\N	\N	\N	\N	2026-07-07 07:44:21.826	2026-07-07 07:44:21.826	\N
-36	ISW	Iyan Suwargana	HAZ-01	\N	Pengelolaan LB3	08 777 017 5466	\N	isuwargana@yahoo.com	\N	KLH	\N	fax 859 04932	2026-07-07 07:44:21.827	2026-07-07 07:44:21.827	\N
-37	SLM	Suzanna Lumme	HAZ-01	Jl. Seroja I No. 54 Taman Yasmin, Bogor 16310	Pengelolaan dan Pengolahan LB3	0251 336 250 ; 0812 110 2722	\N	Suzanna.lumme@alsglobal.co.id	\N	ALS Australia	\N	\N	2026-07-07 07:44:21.829	2026-07-07 07:44:21.829	\N
-38	AHR	Agustina Haruki	HAZ-01	\N	Pengelolaan LB3	\N	\N	\N	\N	Kasubid Industri Hasil Hutan KLH	Fax 859 04 932	\N	2026-07-07 07:44:21.831	2026-07-07 07:44:21.831	\N
-39	ITA	Ita Sadono	Kunjungan Lapangan LB3 (HAZ-01)	\N	Kunjungan Lapangan LB3; Pengelolaan Limbah B3 (Pemanfaatan, Pengangkutan, STD)	0812 10 20 10 3 ; 0815 884 8838 (Shinta)	\N	ita.sadono@holcim.com	\N	Communication & Relations Manager PT. Holcim Indonesia	Jl. Raya Narogong Km. 7, Bogor 16820. Indonesia PO BOX 25 Bogor	021 823 1260 Fax 021 823 4057	2026-07-07 07:44:21.833	2026-07-07 07:44:21.833	\N
-40	SHM	Shinta Maryke	Kunjungan Lapangan LB3 (HAZ-01)	\N	Pengelolaan Limbah B3 (Pemanfaatan, Pengangkutan, STD)	0815 884 8838 (Shinta)	\N	Shinta.maryke@holcim.com	\N	Geocycle PT Holcim Inonesia	Jl. Raya Narogong Km. 7, Bogor 16820. Indonesia PO BOX 25 Bogor	\N	2026-07-07 07:44:21.834	2026-07-07 07:44:21.834	\N
-41	IDA	Farida Rohaeni	Kunjungan Lapangan LB3 (HAZ-01)	\N	\N	\N	\N	\N	\N	Geocycle PT Holcim Inonesia	Jl. Raya Narogong Km. 7, Bogor 16820. Indonesia PO BOX 25 Bogor	\N	2026-07-07 07:44:21.835	2026-07-07 07:44:21.835	\N
-42	ppli	Heni	Kunjungan Lapangan LB3 (HAZ-01)	\N	Kunjungan Lapangan Pengelolaan LB3	08 111 890 557	\N	\N	\N	Customer Service PPLI	\N	021 867 4042 Fax 867 4043	2026-07-07 07:44:21.836	2026-07-07 07:44:21.836	\N
-43	ind	Dedi/Martono atau Tomas Arista	Kunjungan Lapangan LB3 (HAZ-01)	\N	\N	\N	\N	\N	\N	PT Indocement Tunggal Perkasa, Tbk	Fax 86 89 9730 021 875 4343 ext 3748	\N	2026-07-07 07:44:21.837	2026-07-07 07:44:21.837	\N
-44	jmd	Tina	Kunjungan Lapangan LB3 (HAZ-01)	\N	\N	\N	\N	\N	\N	Jasa Medifest, PT	\N	\N	2026-07-07 07:44:21.838	2026-07-07 07:44:21.838	\N
-45	wgi	Rahmat Purba	Kunjungan Lapangan LB3 (HAZ-01)	\N	\N	\N	\N	\N	\N	\N	PT. Wiraswasta Gemilang Indonesia	Fax 883 0045	2026-07-07 07:44:21.838	2026-07-07 07:44:21.838	\N
-46	MSM	Maman Setiaman	HAZ-01; HAZ-03; HAZ-02	\N	Pengelolaan B3	08 111 785 36 ; 0813 1073 8494	\N	msetiaman@nalco.com	\N	\N	\N	021 875 3175	2026-07-07 07:44:21.839	2026-07-07 07:44:21.839	\N
-47	nalco	Timbul (Site Manager)	Kunjungan Lapangan Bahan B3 (HAZ-02)	\N	Kunjungan Lapangan Bahan B3	0817 9935 790	\N	msetiaman@nalco.com tksaputra@nalco.com	\N	PT. Nalco Indonesia	\N	Fax 021 875 3167	2026-07-07 07:44:21.84	2026-07-07 07:44:21.84	\N
-48	tifico	Bp. Josua (Manager EHS)	Kunjungan Lapangan Bahan B3 (HAZ-02)	\N	Kunjungan Lapangan Bahan B3	\N	\N	Josua@teijin.co.id	\N	PT. Tifico Indonesia	\N	021 539 8203 (ESH Dept) Fax 021 539 7560 ;021 539 7563/5 (front office)	2026-07-07 07:44:21.841	2026-07-07 07:44:21.841	\N
-49	clariant	Bp. Utun (Direktur)	Kunjungan Lapangan Bahan B3 (HAZ-02)	\N	\N	0815 924 8541	\N	\N	\N	PT. Clariant - Plant Cilegon	\N	025 439 6954 025 439 6956	2026-07-07 07:44:21.842	2026-07-07 07:44:21.842	\N
-50	SBS	Sri Bebasari	HAZ-04	\N	Peraturan dan Kebijakan persampahan	0811 825 241	Bank Mandiri No.  103-009-454-8043	sbebassari@yahoo.com	\N	Direktur Eksekutif DML Inswa di BPPT	fax 720 4367	\N	2026-07-07 07:44:21.843	2026-07-07 07:44:21.843	\N
-51	NNZ	Nina Nazar	HAZ-04	\N	Peraturan dan Kebijakan persampahan	0816 196 2611 021 7082 7959	\N	nina.nazar@gmail.com	\N	\N	\N	\N	2026-07-07 07:44:21.843	2026-07-07 07:44:21.843	\N
-52	SWY	Sri Wahyono	HAZ-04; HAZ-04	\N	Composting, Dau r ulang sampah, incinerator, dan penimbunan sampah	0812 857 6046	\N	swahyono@yahoo.com	\N	BPPT	\N	fax 316 9760	2026-07-07 07:44:21.844	2026-07-07 07:44:21.844	\N
-53	FLS	Firman L Sahwan	HAZ-04	\N	Composting	0817 815 136	\N	\N	\N	BPPT	\N	Fax 316 9760	2026-07-07 07:44:21.846	2026-07-07 07:44:21.846	\N
-54	AT	August Toruan	HAZ-04	\N	Pengelolaan Sampah Domestik (Komposting + Landfill)	0813 982 696 22	Mandiri 156 000 288 901 4	augustlumbantoruan@yahoo.com	\N	\N	\N	\N	2026-07-07 07:44:21.848	2026-07-07 07:44:21.848	\N
-55	JHM	Joko Heru Martono	HAZ-04	\N	\N	0812 865 2805	\N	Jokoheru@yahoo.com	\N	BPPT	\N	Fax 316 9760	2026-07-07 07:44:21.849	2026-07-07 07:44:21.849	\N
-56	AAM	Alfian Amir	HAZ-04	\N	Insinerator, Daur Ulang Sampah	0812 237 8359	\N	alametha@yahoo.co.id	\N	PT Arkobana	\N	\N	2026-07-07 07:44:21.85	2026-07-07 07:44:21.85	\N
-57	RIS	Ria Ismaria	HAZ-04	Jl. Soma, Bandung	Sampah Perkotaan	021 831 0441 ; 022 727 4076;  0812 234 7474	\N	\N	\N	\N	\N	\N	2026-07-07 07:44:21.851	2026-07-07 07:44:21.851	\N
-58	bgb	Pengelola TPA Bantargebang	Kunjungan Sampah Domestik (HAZ-04)	\N	Pengelolaan Sampah Domestik (Kunjungan Lapangan	Fax 021 825 0844 0813 1999 0318 (Erwin Sinaga-Man	\N	\N	\N	PT Godang Tua Jaya - Pengelola TPA Bantargebang	\N	\N	2026-07-07 07:44:21.852	2026-07-07 07:44:21.852	\N
-59	RA	R. Awarso	Kunjungan Sampah Domestik (HAZ-04)	\N	Kunjungan Lapangan Pengelolaan Sampah Domestik	0815 863 035 23	\N	\N	\N	PT. Rawajati	\N	021 794 3683	2026-07-07 07:44:21.853	2026-07-07 07:44:21.853	\N
-60	bppt	DR. Kardono	Kunjungan Lapangan Komposting (HAZ-04)	\N	Kunjungan Lapangan Komposting	\N	\N	\N	\N	Direktur Pusat Teknologi Lingkungan	\N	Fax 316 9760	2026-07-07 07:44:21.854	2026-07-07 07:44:21.854	\N
-61	dharma	Direksi PD Dharma Jaya	Kunjungan Sampah Domestik (HAZ-04)	\N	Kunjungan Lapangan Pengelolaan Sampah Domestik	\N	\N	\N	\N	PD. Dharma Jaya	\N	Fax 461 3015	2026-07-07 07:44:21.854	2026-07-07 07:44:21.854	\N
-62	pkujang	Ibu Ade Suryani	Kunjungan Lapangan Benchmarking (HAZ-04)	\N	Kunjungan Lapangan Benchmarking	\N	\N	\N	\N	Direktur SDM dan Umum PT Pupuk Kujang	\N	Fax 0264 314 235 Fax 0264 303 778	2026-07-07 07:44:21.855	2026-07-07 07:44:21.855	\N
-63	jbbk	Rahmad Kurniawan (WTP); M. Ayub Arwin (WWTP Manager)	Kunjungan WWTP (HAZ-04; WM-02; WM-03, ET-03)	\N	Kunjungan Lapangan - WWTP; Kunjungan Lapangan Pengolahan Limbah Industri; Kunjungan Lapangan Pengolahan Air	0818 383 757 (Rahmad ); 0813 1765 2634 (Ayub);0852 161 892 55(Deryanto);081318161703 (Sutrisno)	\N	rahmad@jababeka.co.id; ayub@jababeka.co.id; istingani@jababeka.co.id	\N	WTP Jababeka Infrastruktur	\N	021 898 34 321 Fax 021 893 5408	2026-07-07 07:44:21.856	2026-07-07 07:44:21.856	\N
-64	JMH	Johannes Matahelemual	WM-01; WM-02; WM-03; ET-03	Karawang	Limbah Cair	0267 401 102 0817 138 532	CIMB Niaga 064 01 02 696 183 a/n Johannes Matahelemual	Jmatahelemual@yahoo.com	\N	Degreemont	\N	\N	2026-07-07 07:44:21.857	2026-07-07 07:44:21.857	\N
-65	IKM	Dr. Ir. Ikbal Mahmud, Meng	WM-02	\N	Pengolahan biologi limbah industri	021 316 9770/769 Fax 021 316 9736 0815 1316 5401	\N	irkh2000@yahoo.com	\N	BPPT	Jl. MH Thamrin No. 8, Jakpus 10340	\N	2026-07-07 07:44:21.857	2026-07-07 07:44:21.857	\N
-66	AGS	Agus Supriyanto	WM-03	Jl. Gabus I No. 9, Rawamangun	Limbah Cair	021 471 8704	\N	agus.supriyanto@pharma.novartis.com	\N	\N	Jl. Pahlawan Desa Karangasem Timur, Bogor	\N	2026-07-07 07:44:21.858	2026-07-07 07:44:21.858	\N
-67	pindo	Eko; Bp Himawan, Dedi Rusli (Direktur); Sakri	Kunjungan Lapangan WWTP (WM-03)	\N	Kunjungan Lapangan Pengolahan Limbah Cair dan Pengolahan Air, WWTP; Kunjungan WTP	0881 580 3861 (Eko); 0888 238 2416, 0881 580 5820(Dedi );0881 580 1615 (Sakri)	\N	Dedi_rusli@app.co.id	\N	PT Pindodeli Pulp & Paper	0267 440 111 ; Fax 021 300 68 330	\N	2026-07-07 07:44:21.859	2026-07-07 07:44:21.859	\N
-68	mm2100	Bp. Darwoto, SE (HRD Manager )	Kunjungan Lapangan WWTP (WM-03)	\N	Kunjungan Lapangan Pengolahan Air	\N	\N	\N	\N	PT Megalopolis Manunggal Industrial Development	\N	Fax 898 1002	2026-07-07 07:44:21.86	2026-07-07 07:44:21.86	\N
-69	OMN	Occeu Muslihat	ET-02	\N	Penghematan Energi	0817 601 7518 0856 1086 441	\N	oche_nasution@yahoo.co.id	\N	Direktur Teknik Konsulindo	Komplek Patra II No. 25, Jl Jend Ahmad Yani, Cempaka Putih Timur, Jakpus 10510	021 934 984 88 ;Fax 021 450 8226	2026-07-07 07:44:21.86	2026-07-07 07:44:21.86	\N
-71	NI	Nyoman Iswaragyoga	ET-02	\N	Audit Penghematan Energi	0812 106 8473	\N	\N	\N	US Aid	\N	\N	2026-07-07 07:44:21.864	2026-07-07 07:44:21.864	\N
-72	SB	Suzzana Bilharzt	ET-02	\N	Energi	\N	\N	\N	\N	US AEP	\N	\N	2026-07-07 07:44:21.866	2026-07-07 07:44:21.866	\N
-73	UL	Uli\t\t,	ET-02	\N	\N	\N	\N	\N	\N	Staff PPBN KLH	Kementrian LH, Jl DI Panjaitan kav 24 Lt. 6	021 8590 6170	2026-07-07 07:44:21.867	2026-07-07 07:44:21.867	\N
-74	palyja	Imamsyah Rusli	Kunjungan Lapangan Pengolahan Air (ET-03)	\N	Kunjungan Lapangan Pengolahan Air	0818 758 302	\N	roesli.imamsjah@palyja.co.id	\N	Palyja	\N	021 871 0221 ext 2113	2026-07-07 07:44:21.868	2026-07-07 07:44:21.868	\N
-75	MA	Mulyadi Afmar	CSR-05;EP-09; WM-05; ENG-01; EP-08; WM-01; EM-05; EP-03; EP-02; TS-02; ET-01; HAZ-01; EP-01; EP-06; IMS-01 ; IMS-02;IMS-03;IMS-04;IMS-05;IMS-06;IMS-07;IMS-08; CSR-01; CSR-02;EP-07; HAZ-05; ENG-02; HAZ-06; WM-07; CSR-03; EP-14; EP-04; TS-03; HAZ-04; EP-11; ENG-07; EP-05; ESG-02; ESG-01; CSR-04; SDG-02; HAZ-02	Perumahan Telaga Sakinah Jl. Sunan Kalijaga Blok CD7 No. 16 Cikarang Barat, Bekasi	ISO 14001; Social Mapping, UKM Mandiri	021 8910 6015	\N	\N	\N	Direktur Benefita	Jl. MT Haryono Kav 33	021 831 5316	2026-07-07 07:44:21.869	2026-07-07 07:44:21.869	\N
-76	RZO	Riza Deliansyah	IMS	Cibubur, Jakarta	ISO 14001	021-8775 4078	\N	riza.deliansyah@ai.astra.co.id	\N	Astra International	\N	021 652 2555 ext 527	2026-07-07 07:44:21.87	2026-07-07 07:44:21.87	\N
-77	ATP	Andi Tri P	IMS	\N	ISO 14001, B3&LB3, Peraturan Perundangan, Komunikasi Lingkungan	0815 920 1345	\N	anditp2000@yahoo.com	\N	\N	\N	\N	2026-07-07 07:44:21.872	2026-07-07 07:44:21.872	\N
-78	ZMD	Zaenal Mulyadi	IMS	\N	Integrasi Sistem Manajemen EHS, ISO 14001, ISO 18001	021 898 1355 ext 202 Fax 021 898 1371 0811 858 052	\N	Zaenalmulyadi.yusuf@yahoo.com	\N	\N	\N	\N	2026-07-07 07:44:21.872	2026-07-07 07:44:21.872	\N
-79	ARI	Arie Irwan	IMS	\N	Bekerja di kalimantan, tapi ada jatah libur 1 minggu di bekasi	0813 21 44 22 99	\N	arie.irwan@vico.co.id	\N	Vico	\N	\N	2026-07-07 07:44:21.873	2026-07-07 07:44:21.873	\N
-80	ES	Emir Sadikin	IMS; EP-03; WM-01	\N	ISO 14001	021 891 104 34	\N	emir@jababeka.co.id	\N	\N	\N	\N	2026-07-07 07:44:21.874	2026-07-07 07:44:21.874	\N
-81	RE	Rina Elita (Sales)	IMS	\N	ISO 14001	087888933972	\N	rinae@sucofindo.co.id	\N	\N	\N	\N	2026-07-07 07:44:21.875	2026-07-07 07:44:21.875	\N
-82	NUR	Nurdizal	CSR	\N	\N	0813 9500 2786	\N	nurdizal@interdev.co.id	\N	Direktur PT Interdev	\N	\N	2026-07-07 07:44:21.876	2026-07-07 07:44:21.876	\N
-83	iatpi	IATPI	Ujian WM-01; EM-05	\N	\N	\N	\N	\N	\N	\N	\N	\N	2026-07-07 07:44:21.876	2026-07-07 07:44:21.876	\N
-84	CAH	Cahyadi	EM-01; EM-02; EM-05; EM-06; ENG-02; ENG-04; ENG-01; ENG-06; EM-08; ENG-03; EP-18; EP-16; IMS-05; EM-09; WM-10; ENG-07	\N	\N	\N	\N	\N	\N	BPPT	\N	\N	2026-07-07 07:44:21.877	2026-07-07 07:44:21.877	\N
-85	SAB	Saleh Abbas	EP-03	\N	\N	\N	\N	\N	\N	\N	\N	\N	2026-07-07 07:44:21.879	2026-07-07 07:44:21.879	\N
-86	NDK	Nandik Sufaryono	HAZ-09; SDG-01; HAZ-04; HAZ-06; CSR-01; CSR-02; CSR-03; CSR-04; CSR-05; CSR-06; CSR-07; EP-08;HAZ-06; HAZ-01; EP-02; EP-07; HAZ-05; EP-03; HAZ-08; EP-09; EP-15; IMS-04; EP-04	Cikarang	\N	\N	\N	nandiksufaryono@benefita.com	\N	Benefita	\N	\N	2026-07-07 07:44:21.881	2026-07-07 07:44:21.881	\N
-87	gcl	Geocylcle Holcim	HAZ-01	\N	\N	\N	\N	\N	\N	\N	\N	\N	2026-07-07 07:44:21.882	2026-07-07 07:44:21.882	\N
-88	HST	Haryo Satriyo Tomo	EM-05	\N	\N	022 â€“ 7803249	\N	haryo@tl.itb.ac.id / haryotomo@gmail.com	\N	Environmental Engineering, Institute of Technology Bandung Lecturer (Assistant Professor)	\N	\N	2026-07-07 07:44:21.883	2026-07-07 07:44:21.883	\N
-89	YUL	Yuli (Pak)	IMS-07	\N	\N	\N	\N	\N	\N	Sucofindo	\N	\N	2026-07-07 07:44:21.884	2026-07-07 07:44:21.884	\N
-90	ASP	Agus Supriyanto	WM-02	\N	\N	\N	\N	\N	\N	\N	\N	\N	2026-07-07 07:44:21.885	2026-07-07 07:44:21.885	\N
-91	DWK	Dwika Budianto	EM-05; EM-06; ENG-02	\N	\N	085714862017	\N	\N	\N	BPPT	\N	\N	2026-07-07 07:44:21.886	2026-07-07 07:44:21.886	\N
-92	EHL	Edi Hilmawan	ET-02, ET-02; ENG-01; eng-02; eng-03	\N	\N	081380731007	\N	hilmi0374@yahoo.com	\N	BPPT	\N	\N	2026-07-07 07:44:21.887	2026-07-07 07:44:21.887	\N
-93	EKW	Ekho Kurniawan	ENG-03; EP-09; HAZ-05; EM-01; HAZ-02; HAZ-03; EP-03; EP-07; HAZ-01; EM-05; WM-01; EP-01; HAZ-04; EP-02; WM-07; HAZ-06; EP-15	\N	\N	\N	\N	\N	\N	\N	\N	\N	2026-07-07 07:44:21.888	2026-07-07 07:44:21.888	\N
-94	SYR	Syiffa Rahmania	EP-01; WM-03; EP-02; HAZ-01; WM-01; HAZ-04; WM-07; WM-01	\N	\N	085263223080	\N	syiffarahmania@benefita.com	\N	PT. Benefita Indonesia	Gedung Menara Hijau Lt. Dasar. Jl. MT Haryono Kav. 33. Jakarta Selatan	\N	2026-07-07 07:44:21.889	2026-07-07 07:44:21.889	\N
-95	FRM	Firman	HAZ-04	\N	\N	\N	\N	\N	\N	\N	\N	\N	2026-07-07 07:44:21.89	2026-07-07 07:44:21.89	\N
-96	EDR	Endro	EM-05	\N	\N	\N	\N	\N	\N	IATPI	\N	\N	2026-07-07 07:44:21.891	2026-07-07 07:44:21.891	\N
-97	LRL	Dian Ayu	WM-03	\N	\N	\N	\N	\N	\N	\N	\N	\N	2026-07-07 07:44:21.891	2026-07-07 07:44:21.891	\N
-98	IW	Ilma Wiryanti	EP-08	\N	\N	\N	\N	\N	\N	\N	\N	\N	2026-07-07 07:44:21.892	2026-07-07 07:44:21.892	\N
-99	MR	Mety Rosmiati	EP-07	\N	\N	\N	\N	\N	\N	KLHK	\N	\N	2026-07-07 07:44:21.893	2026-07-07 07:44:21.893	\N
-100	SBahri	Syaiful Bahri	EP-07	\N	\N	\N	\N	\N	\N	KLHK	\N	\N	2026-07-07 07:44:21.895	2026-07-07 07:44:21.895	\N
-101	DMY	Dian Mulyadi	IMS-07	\N	\N	081381230050	\N	\N	\N	PT Sucofindo	\N	\N	2026-07-07 07:44:21.897	2026-07-07 07:44:21.897	\N
-102	SYS	Syukraini Suswita	IMS-07; IMS-01	\N	\N	\N	\N	\N	\N	\N	\N	\N	2026-07-07 07:44:21.899	2026-07-07 07:44:21.899	\N
-103	MSO	M. Satya Oktamalandi	HAZ-04; EP-03; HAZ-05	\N	\N	\N	\N	\N	\N	\N	\N	\N	2026-07-07 07:44:21.9	2026-07-07 07:44:21.9	\N
-104	IFR	Irfan Ramadiansyah	EP-07	\N	\N	\N	\N	\N	\N	KLHK, UDARA	\N	\N	2026-07-07 07:44:21.902	2026-07-07 07:44:21.902	\N
-105	ARM	Arohman	ENG-01; ENG-02; ENG-03	\N	\N	\N	\N	\N	\N	\N	\N	\N	2026-07-07 07:44:21.903	2026-07-07 07:44:21.903	\N
-106	AAD	Ahmad Arief D.	EP-09; EP-14; EP-11	\N	\N	\N	\N	\N	\N	\N	\N	\N	2026-07-07 07:44:21.904	2026-07-07 07:44:21.904	\N
-107	HYM	Hari Yurismono	ENG-01; ENG-02; ENG-03	\N	\N	08129506635	\N	\N	\N	\N	\N	\N	2026-07-07 07:44:21.905	2026-07-07 07:44:21.905	\N
-108	HYT	Haryanto	ENG-01; ENG-02; ENG-03	\N	\N	081281126295	\N	\N	\N	\N	\N	\N	2026-07-07 07:44:21.906	2026-07-07 07:44:21.906	\N
-109	SDM	Sudirman	ENG-01; ENG-02; ENG-03	\N	\N	\N	\N	\N	\N	\N	\N	\N	2026-07-07 07:44:21.906	2026-07-07 07:44:21.906	\N
-110	NS	Ir. Nasrullah Salim, M.Sc (Eriell)	IMS-05; ENG-03; ENG-01; ENG-02	\N	\N	08158252392	\N	eriellsalim@gmail.com	\N	Pelangi	\N	\N	2026-07-07 07:44:21.907	2026-07-07 07:44:21.907	\N
-111	TH	Taopik Hidayat	EM-05;EM-06; ENG-02; ENG-01; ENG-03; EM-01; EP-16; WM-10	\N	\N	\N	\N	\N	\N	\N	\N	\N	2026-07-07 07:44:21.908	2026-07-07 07:44:21.908	\N
-112	SL	Sylvania Permata Sari	WM-07;HAZ-06	\N	\N	\N	\N	\N	\N	\N	\N	\N	2026-07-07 07:44:21.909	2026-07-07 07:44:21.909	\N
-113	WIC	Wiwie Chaeruni	EM-05; EM-01; ENG-02; ENG-01; EM-06; ENG-04; EM-09; EM-10	\N	\N	\N	\N	\N	\N	BRIN	\N	\N	2026-07-07 07:44:21.91	2026-07-07 07:44:21.91	\N
-114	YY	Yuli Yulianto	EM-01	\N	\N	\N	\N	\N	\N	\N	\N	\N	2026-07-07 07:44:21.911	2026-07-07 07:44:21.911	\N
-115	RZ	Rita Zulbetti	CSR-05	\N	\N	\N	\N	\N	\N	\N	\N	\N	2026-07-07 07:44:21.913	2026-07-07 07:44:21.913	\N
-116	YP	Yuli Purwanto	WM-08	\N	\N	0815-9667-611	\N	\N	\N	\N	\N	\N	2026-07-07 07:44:21.914	2026-07-07 07:44:21.914	\N
-117	AHJ	Abdu Hamdan Juaffie	IMS-01	\N	\N	\N	\N	\N	\N	\N	\N	\N	2026-07-07 07:44:21.915	2026-07-07 07:44:21.915	\N
-118	YRD	Yahya Ramadhana	EP-14; HAZ-01; HAZ-06; EM-05; EM-06; WM-07; EP-04; WM-01; ENG-07; WM-09	\N	\N	\N	\N	\N	\N	\N	\N	\N	2026-07-07 07:44:21.916	2026-07-07 07:44:21.916	\N
-119	MGF	Muhammad Ghifari	SDG-01; EP-01; EP-04; EP-08; CSR-05; EP-09; HAZ-04; CSR-03; CSR-01; IMS-04; CSR-06; CSR-04; EP-02; HAZ-08; SDG-02; CSR-02; CSR-09; HAZ-06; HAZ-01; HAZ-05; HAZ-06; HAZ-12; EP-11; HAZ-17; HAZ-15	\N	\N	\N	\N	\N	\N	\N	\N	\N	2026-07-07 07:44:21.917	2026-07-07 07:44:21.917	\N
-120	LNS	Lianasari	WM-05; WM-09; HAZ-01; HAZ-06; EP-15; EP-04; IMS-01; EP-11; WM-01; WM-07; WM-02; HAZ-05; EM-05; EM-06; HAZ-08; EP-09; HAZ-02; EP-02; EP-18; HAZ-04; WM-03; WM-08; EP-14; IMS-06; EP-01; HAZ-09; HAZ-03	\N	\N	\N	\N	\N	\N	\N	\N	\N	2026-07-07 07:44:21.918	2026-07-07 07:44:21.918	\N
-121	ST	Sarwo Turinno	ENG-01; ENG-02	\N	\N	\N	\N	\N	\N	\N	\N	\N	2026-07-07 07:44:21.919	2026-07-07 07:44:21.919	\N
-122	NFY	Nofliyani	IMS-01; EP-08; HAZ-04; HAZ-06; HAZ-08; HAZ-05; HAZ-01; HAZ-06; HAZ-09; HAZ-02; HAZ-12; HAZ-10; HAZ-17	\N	\N	\N	\N	\N	\N	\N	\N	\N	2026-07-07 07:44:21.92	2026-07-07 07:44:21.92	\N
-123	AN	Agus Nurrohim	ENG-04; EM-08	\N	\N	\N	\N	\N	\N	BRIN	\N	\N	2026-07-07 07:44:21.921	2026-07-07 07:44:21.921	\N
-124	AR	Agus Riyadi, S.T., M.Sc.	WM-07; WM-03; WM-01; WM-09; WM-08; WM-02; EP-14; HAZ-02; EP-15	\N	\N	08112952228	\N	aguskuncung4225@gmail.com	\N	Universitas Pelita Bangsa	Jl. Inspeksi Kali Malang Tegal Danas Arah DeltaMas, Kec. Cikarang  Pusat, Kabupaten Bekasi	021-27318249	2026-07-07 07:44:21.922	2026-07-07 07:44:21.922	\N
-125	WED	William Edison	CSR01	\N	\N	085967286509	\N	\N	\N	\N	\N	\N	2026-07-07 07:44:21.923	2026-07-07 07:44:21.923	\N
-126	HH	Husni Husnayan	EP-19	\N	\N	\N	\N	\N	\N	\N	\N	\N	2026-07-07 07:44:21.923	2026-07-07 07:44:21.923	\N
+COPY benefita.konfirmasi (id, "noKonfirmasi", "tanggalKonfirmasi", "tanggalPelatihan", metode, kepada, "kodePelatihan", "namaPeserta", jabatan, kontak, "filePath", "noIndukInstansi", "instansiNama", "noJadwal", "pesertaTrainingId", "dibuatOlehId", "createdAt", "updatedAt") FROM stdin;
+1	0001/BNFT_K/HAX/0926	2026-09-02 07:01:12.299	2026-08-02 00:00:00	Online	Pimpinan	EP-14	Axel Putra Bintang Syahkuala Sebayang	Staff	081398125030	uploads/konfirmasi/1788332472285-999390493.jpg	PR00021	\N	2026751	7316	cmq67a4yn001ojc1chcom9uxp	2026-09-02 07:01:12.299	2026-09-02 07:06:02.343
 \.
 
 
 --
--- Data for Name: lini_bisnis; Type: TABLE DATA; Schema: benefita; Owner: postgres
+-- Data for Name: kontak; Type: TABLE DATA; Schema: benefita; Owner: -
+--
+
+COPY benefita.kontak (id, kode, nama, referensi, alamat, "subjekKhusus", telp, keterangan, email, tugas, kantor, "alamatKantor", "noTelpKantor", "createdAt", "updatedAt", "CV_Trainer", "statusAktif") FROM stdin;
+3	ISA	Imam Septana A	EM-02; EM-05; EM-01; EP-07; EP-01; EP-02; EP-03; EP-04; WM-01; EM-05; IMS-01 ; IMS-02;IMS-03;IMS-04;IMS-05;IMS-06;IMS-07;IMS-08; ET-02; EP-18; EP-15	\N	Peraturan Perundangan LH ; Kriteria PROPER ; Peraturan AMDAL, Implementasi AMDAL - UKL UPL,  dan pelaporannya; Penilain Potensi Penc. Udara dan pemantauan kualitas udara  ; Pengelolaan B3 dan LB3; Penilain Potensi Penc. Air, Minimisasi air limbah dan pemantauan air; ISO 14001, 18001, 26000	0811 1070 715	\N	imamseptana@gmail.com	\N	Private	\N	\N	2026-07-07 07:44:21.778	2026-07-07 07:44:21.778	\N	t
+4	PNR	Ir P. Nugro Rahardjo, MSc	WM-01, WM-02, WM-03; ET-03; WM-05; WM-04; WM-07; HAZ-01; HAZ-04; HAZ-06;HAZ-08; WM-08; WM-09; EP-18;EP-15	\N	Pengolahan Limbah Industri, Pengolahan Air	0816 115 9615; 021 316 9736 Fax 021 3169376	\N	inugardjoho@yahoo.com	\N	BPPT-UPTL Chief Engineer Program Kerekayasaan	Jl. MH Thamrin No. 8, Jakpus 10340	\N	2026-07-07 07:44:21.789	2026-07-07 07:44:21.789	\N	t
+5	ADA	Aryani Dwi Astuti	WM-03	Jl. Sakti III No. 71 Kemanggisan, Jakarta Barat 11480	Limbah Cair	021 549 4055 0816 135 1747	Bank Mandiri No. 117-000-202-1277 Cabang Universitas Trisakti Jakarta Barat	ariani-da@lead.or.id	\N	Kepala Jurusan Teknik Lingkungan USAKTI	\N	021 566 3232 ext 765;  021 560 2575	2026-07-07 07:44:21.791	2026-07-07 07:44:21.791	\N	t
+6	SYW	Syahrawardi	HAZ-02	\N	\N	\N	\N	\N	\N	\N	\N	+62 812-1948-5393	2026-07-07 07:44:21.792	2026-07-07 07:44:21.792	\N	t
+7	DAS	Drs Dasrul, MM	EP-01	\N	Kasus-kasus Pelanggaran Peraturan Perundangan Lingkungan	0812 811 5720	Belum bisa ngajar kalo di jakarta	\N	\N	KLH (Kepala PPPE Bali-Nusra)	Kementrian Lingkungan Hidup, Jl DI Panjaitan Kav 24	021 8590 4926 Fax 021 8590 4926	2026-07-07 07:44:21.793	2026-07-07 07:44:21.793	\N	t
+8	CSL	Cicilia Sulastri, SH	EP-01	\N	Peraturan Perundangan LH dan cara pemenuhannya	\N	Sudah tidak mengajar di Benefita dalam 6 tahun terakhir	\N	\N	KLH (Astep IV Penegakkan Hukum)	\N	Fax 859 04 926	2026-07-07 07:44:21.795	2026-07-07 07:44:21.795	\N	t
+9	KAR	Karliansyah	\N	\N	Kriteria PROPER dan Cara Pemenuhannya	\N	Ketua Sekretariat : Bp Sigit Reliantoro (Asdep Pengendalian pencemaran Pertambangan, energi dan Migas)	\N	\N	Fax 021 852 0886 021 852 0886 (Lala)	\N	\N	2026-07-07 07:44:21.797	2026-07-07 07:44:21.797	\N	t
+10	EMR	Emma Rahmawati	EP-02; EP-07	\N	Proper - Kriteria	0812 918 0113	Sementara tidak di PROPER	e_rachmawaty@yahoo.com	\N	Asdep IV Limbah B3 dan B3 Bidang Manufaktur dan Agroindustri	\N	021 859 04 932 Fax 021 859 04 932	2026-07-07 07:44:21.798	2026-07-07 07:44:21.798	\N	t
+11	LCP	Luckmi Purwandari, ST	EP-02; EP-07	\N	Proper	0813 166 17145	Sementara tidak di PROPER	Luckmip@gmail.com	\N	KLH	\N	021 859 04 932	2026-07-07 07:44:21.8	2026-07-07 07:44:21.8	\N	t
+12	pan	Direktur	Kunjungan Lapangan (EP-02)	\N	Kunjungan Lapangan Proper	\N	Kunjungan Lapangan	\N	\N	PT. Panasonic Gobel Battery Industry	Fax 021 883 245 70 Fax 021 883 250 33	\N	2026-07-07 07:44:21.801	2026-07-07 07:44:21.801	\N	t
+13	astra	Semara Wima	Kunjungan Lapangan (EP-02)	\N	Kunjungan Lapangan Proper	\N	Kunjungan Lapangan	\N	\N	PT Astra Daihatsu Motor	\N	Fax 651 0606	2026-07-07 07:44:21.802	2026-07-07 07:44:21.802	\N	t
+14	ASD	Ir. Ary Sudijanto	EP-03	\N	Kebijakan, penyusunan  dan Penilaian AMDAL dan UKL-UPL	0816 1181 801	\N	arysudijanto@menlh.go.id	\N	KLH (Asdep Urusan Kajian Dampak Lingkungan)	\N	021 851 7148 ext 242 021 8590 4925 (Heni)	2026-07-07 07:44:21.803	2026-07-07 07:44:21.803	\N	t
+15	DBS	Dadang Basuki	EP-03	\N	Implementasi AMDAL - UKL UPL	0812 811 8537	\N	dadangbasuki@gmail.com	\N	BPLH Tangerang	\N	Fax 557 68 703	2026-07-07 07:44:21.805	2026-07-07 07:44:21.805	\N	t
+16	EJS	Eka Jatnika Sundana	EP-03	\N	Implementasi AMDAL - UKL UPL	0812 143 0445	\N	kang.eka@gmail.com	\N	BLH Jabar	Bandung	\N	2026-07-07 07:44:21.806	2026-07-07 07:44:21.806	\N	t
+17	MFF	Dr. Melati Ferianita Fahrul	EP-04; EM-04; EM-01; WM-01	\N	Keanekaragaman Hayati dan Kerusakan laut; Studi Batimetri dan Pemantauan Kualitas Laut	0813 1065 6899	Mandiri 124-000-535-9600 a.n. Melati Ferianita Fahrul	melatif@hotmail.com	\N	Kepala Laboratorium USAKTI	\N	\N	2026-07-07 07:44:21.807	2026-07-07 07:44:21.807	\N	t
+18	TAF	Triyan Aidil Fitri	EP-04; IMS-01; IMS-02;	\N	Teknik Audit Lingkungan; ISO 9001, 14001 dan Audit Lingkungan	0816778022	\N	triyan@sucofindo.co.id	\N	SICS	Graha Sucofindo 1st floor Jl. Raya Pasar Minggu Kav. 34 Jakarta 12780	(021) 7983666 Ext. 1116 9minta disambungkan ke SiCS	2026-07-07 07:44:21.808	2026-07-07 07:44:21.808	\N	t
+19	IMR	Imamsyah Rusli	EP-05	\N	Komunikasi Lingkungan	0818 758 302	\N	roesli.imamsjah@palyja.co.id	\N	Palyja	Jl. Raya Bogor KM 29 Depok	021 871 0221 ext 2113	2026-07-07 07:44:21.809	2026-07-07 07:44:21.809	\N	t
+20	TS	Tulus Sibuea	EP-05	\N	Pengelolaan Lingkungan RS	0815 60 800 62	Bisa melalui pak Eka	\N	\N	BLH Jabar	\N	\N	2026-07-07 07:44:21.81	2026-07-07 07:44:21.81	\N	t
+21	BPLHD	Bu Ande dan Pak Didi	EP-05	\N	Pengelolaan Lingkungan RS	\N	\N	\N	\N	BPLHD Jabar	022 420 4871	\N	2026-07-07 07:44:21.811	2026-07-07 07:44:21.811	\N	t
+22	NOV	Novi Farhani	EM-01; EM-02	Komplek Batan Indah Blok K No. 66, Serpong, Tangerang	Pemantauan Udara	021 756 3839;  0815 815 4585	Kontak pertama untuk semua pemantauan di Pusarpedal	novyfarhani@yahoo.com	\N	Pusarpedal Puspitek Serpong (Ka. Lab)	\N	021 756 3114 ext 107	2026-07-07 07:44:21.812	2026-07-07 07:44:21.812	\N	t
+23	WIN	Winarti	EM-01; EM-02	\N	Kontak untuk permohonan kerjasama	\N	\N	Jasasarpedal@yahoo.com	\N	Pusarpedal Puspitek Serpong (Bagian Jasa)	021 7587 3337 Fax 021 7587 3338	\N	2026-07-07 07:44:21.815	2026-07-07 07:44:21.815	\N	t
+24	NTR	Niniek Triana	EM-01	\N	Pemantauan Air	0812 945 7703 ; 021 324 759 72	\N	ntriana@yahoo.com	\N	Pusarpedal Puspitek Serpong	\N	021 756 3114 ext 114 Fax 756 0981 Fax 756 3115	2026-07-07 07:44:21.816	2026-07-07 07:44:21.816	\N	t
+25	ERN	Ernawita Nazir	EM-01	\N	Pemantauan Air	0812 952 6757	\N	\N	\N	Pusarpedal Puspitek Serpong	\N	\N	2026-07-07 07:44:21.817	2026-07-07 07:44:21.817	\N	t
+26	SRH	Siti Rohmah	EM-01	Pamulang, Tangerang - Banten	Air	021 7470 0874	\N	\N	\N	Pusarpedal Puspitek Serpong	\N	021 756 3114 ext 114	2026-07-07 07:44:21.819	2026-07-07 07:44:21.819	\N	t
+27	EMA	Emalya	EM-02	\N	Pemantauan Udara	0812 967 1154	\N	\N	\N	Pusarpedal Puspitek Serpong	\N	\N	2026-07-07 07:44:21.82	2026-07-07 07:44:21.82	\N	t
+28	MHS	Moekti Handajani	EM-02	Teratai Putih 44, Rengas, Ciputat 15412	Udara	021 749 6823 ; 021 799 1912	\N	\N	\N	Deputi DirekturYayasan Pelangi	Jl. Danau Tondano A-4 Pejompongan	021 572 50202	2026-07-07 07:44:21.821	2026-07-07 07:44:21.821	\N	t
+29	ESH	Esrom Hamonangan	EM-02	\N	Pemantauan Kualitas Udara	0813 100 32 32 9	\N	\N	\N	Pusarpedal Puspitek Serpong	\N	\N	2026-07-07 07:44:21.821	2026-07-07 07:44:21.821	\N	t
+30	MIR	Mohammad Irsyad	EM-02	Jl. Menara Air No. 3, Sadangserang, Bandung	Pencemaran udara	022 250 7797	\N	\N	\N	Laboratorium Udara Departemen Teknik Lingkungan ITB,	Jl. Ganesha No. 10, Bandung 40132	022 253 4189	2026-07-07 07:44:21.822	2026-07-07 07:44:21.822	\N	t
+31	DRS	Dodi Rusjadi	EM-03	Kompleks Perumahan Puspitek Blok II/A3, Serpong, Tangerang	Kebisingan	021 471 8704	\N	dodirte@yahoo.com	\N	Laboratorium Akustik PUSKIM LIPI Puspitek Serpong	\N	021 756 0562 ext 3073	2026-07-07 07:44:21.823	2026-07-07 07:44:21.823	\N	t
+32	WEJ	Wisnu	EM-03	\N	Kebisingan, Getaran	0816 110 5597	\N	wisnueka@gmail.com	\N	Laboratorium Kebisingan dan Getara Sarpedal Puspitek Serpong	\N	021 756 3839 Fax 756 0981	2026-07-07 07:44:21.824	2026-07-07 07:44:21.824	\N	t
+33	JOS	Jozef Sandjaja	EM-05	BAndung	Jenis Bahan Bakar dan Pengendalian Pembakaran	0816 4605 6812	"- BCA:      233-146-7652 - Mandiri: 130-00-0789-3673. a.n. Jozef Sandjaja"	jozef@appli-epcm.com	\N	Plant Manager PLTU - Panasia	Bandung	\N	2026-07-07 07:44:21.824	2026-07-07 07:44:21.824	\N	t
+34	ZR	Zul Ramadhanie	ENG-02	\N	\N	081233661212	\N	\N	\N	BPPT	\N	\N	2026-07-07 07:44:21.825	2026-07-07 07:44:21.825	\N	t
+70	LSP	LSP PT Benefita Indonesia	WM-01;WM-07; EM-05; EM-06; ENG-01; ENG-02;HAZ-01;HAZ-06; HAZ-04; HAZ-08	Cikarang	uji Kompetensi	021-89111660	\N	info@benefita.com	\N	\N	\N	\N	2026-07-07 07:44:21.862	2026-07-07 07:44:21.862	\N	t
+35	HSL	Herlina Susilowati	HAZ-09; WM-02; HAZ-01; HAZ-06; EP-11; EP-07;WM-01,WM-07; HAZ-01; HAZ-02; HAZ-03; HAZ-04; HAZ-05; HAZ-06; HAZ-07; HAZ-08; EP-14; EM-05, EM-06;  EP-02; EP-04; EP-09; EM-01; EP-01; EP-15; EP-18; EP-19; EP-03; WM-08; WM-09; IMS-06; HAZ-10; HAZ-12; HAZ-15	\N	\N	\N	\N	\N	\N	\N	\N	\N	2026-07-07 07:44:21.826	2026-07-07 07:44:21.826	\N	t
+36	ISW	Iyan Suwargana	HAZ-01	\N	Pengelolaan LB3	08 777 017 5466	\N	isuwargana@yahoo.com	\N	KLH	\N	fax 859 04932	2026-07-07 07:44:21.827	2026-07-07 07:44:21.827	\N	t
+37	SLM	Suzanna Lumme	HAZ-01	Jl. Seroja I No. 54 Taman Yasmin, Bogor 16310	Pengelolaan dan Pengolahan LB3	0251 336 250 ; 0812 110 2722	\N	Suzanna.lumme@alsglobal.co.id	\N	ALS Australia	\N	\N	2026-07-07 07:44:21.829	2026-07-07 07:44:21.829	\N	t
+38	AHR	Agustina Haruki	HAZ-01	\N	Pengelolaan LB3	\N	\N	\N	\N	Kasubid Industri Hasil Hutan KLH	Fax 859 04 932	\N	2026-07-07 07:44:21.831	2026-07-07 07:44:21.831	\N	t
+39	ITA	Ita Sadono	Kunjungan Lapangan LB3 (HAZ-01)	\N	Kunjungan Lapangan LB3; Pengelolaan Limbah B3 (Pemanfaatan, Pengangkutan, STD)	0812 10 20 10 3 ; 0815 884 8838 (Shinta)	\N	ita.sadono@holcim.com	\N	Communication & Relations Manager PT. Holcim Indonesia	Jl. Raya Narogong Km. 7, Bogor 16820. Indonesia PO BOX 25 Bogor	021 823 1260 Fax 021 823 4057	2026-07-07 07:44:21.833	2026-07-07 07:44:21.833	\N	t
+40	SHM	Shinta Maryke	Kunjungan Lapangan LB3 (HAZ-01)	\N	Pengelolaan Limbah B3 (Pemanfaatan, Pengangkutan, STD)	0815 884 8838 (Shinta)	\N	Shinta.maryke@holcim.com	\N	Geocycle PT Holcim Inonesia	Jl. Raya Narogong Km. 7, Bogor 16820. Indonesia PO BOX 25 Bogor	\N	2026-07-07 07:44:21.834	2026-07-07 07:44:21.834	\N	t
+41	IDA	Farida Rohaeni	Kunjungan Lapangan LB3 (HAZ-01)	\N	\N	\N	\N	\N	\N	Geocycle PT Holcim Inonesia	Jl. Raya Narogong Km. 7, Bogor 16820. Indonesia PO BOX 25 Bogor	\N	2026-07-07 07:44:21.835	2026-07-07 07:44:21.835	\N	t
+42	ppli	Heni	Kunjungan Lapangan LB3 (HAZ-01)	\N	Kunjungan Lapangan Pengelolaan LB3	08 111 890 557	\N	\N	\N	Customer Service PPLI	\N	021 867 4042 Fax 867 4043	2026-07-07 07:44:21.836	2026-07-07 07:44:21.836	\N	t
+43	ind	Dedi/Martono atau Tomas Arista	Kunjungan Lapangan LB3 (HAZ-01)	\N	\N	\N	\N	\N	\N	PT Indocement Tunggal Perkasa, Tbk	Fax 86 89 9730 021 875 4343 ext 3748	\N	2026-07-07 07:44:21.837	2026-07-07 07:44:21.837	\N	t
+44	jmd	Tina	Kunjungan Lapangan LB3 (HAZ-01)	\N	\N	\N	\N	\N	\N	Jasa Medifest, PT	\N	\N	2026-07-07 07:44:21.838	2026-07-07 07:44:21.838	\N	t
+45	wgi	Rahmat Purba	Kunjungan Lapangan LB3 (HAZ-01)	\N	\N	\N	\N	\N	\N	\N	PT. Wiraswasta Gemilang Indonesia	Fax 883 0045	2026-07-07 07:44:21.838	2026-07-07 07:44:21.838	\N	t
+46	MSM	Maman Setiaman	HAZ-01; HAZ-03; HAZ-02	\N	Pengelolaan B3	08 111 785 36 ; 0813 1073 8494	\N	msetiaman@nalco.com	\N	\N	\N	021 875 3175	2026-07-07 07:44:21.839	2026-07-07 07:44:21.839	\N	t
+47	nalco	Timbul (Site Manager)	Kunjungan Lapangan Bahan B3 (HAZ-02)	\N	Kunjungan Lapangan Bahan B3	0817 9935 790	\N	msetiaman@nalco.com tksaputra@nalco.com	\N	PT. Nalco Indonesia	\N	Fax 021 875 3167	2026-07-07 07:44:21.84	2026-07-07 07:44:21.84	\N	t
+48	tifico	Bp. Josua (Manager EHS)	Kunjungan Lapangan Bahan B3 (HAZ-02)	\N	Kunjungan Lapangan Bahan B3	\N	\N	Josua@teijin.co.id	\N	PT. Tifico Indonesia	\N	021 539 8203 (ESH Dept) Fax 021 539 7560 ;021 539 7563/5 (front office)	2026-07-07 07:44:21.841	2026-07-07 07:44:21.841	\N	t
+49	clariant	Bp. Utun (Direktur)	Kunjungan Lapangan Bahan B3 (HAZ-02)	\N	\N	0815 924 8541	\N	\N	\N	PT. Clariant - Plant Cilegon	\N	025 439 6954 025 439 6956	2026-07-07 07:44:21.842	2026-07-07 07:44:21.842	\N	t
+50	SBS	Sri Bebasari	HAZ-04	\N	Peraturan dan Kebijakan persampahan	0811 825 241	Bank Mandiri No.  103-009-454-8043	sbebassari@yahoo.com	\N	Direktur Eksekutif DML Inswa di BPPT	fax 720 4367	\N	2026-07-07 07:44:21.843	2026-07-07 07:44:21.843	\N	t
+51	NNZ	Nina Nazar	HAZ-04	\N	Peraturan dan Kebijakan persampahan	0816 196 2611 021 7082 7959	\N	nina.nazar@gmail.com	\N	\N	\N	\N	2026-07-07 07:44:21.843	2026-07-07 07:44:21.843	\N	t
+52	SWY	Sri Wahyono	HAZ-04; HAZ-04	\N	Composting, Dau r ulang sampah, incinerator, dan penimbunan sampah	0812 857 6046	\N	swahyono@yahoo.com	\N	BPPT	\N	fax 316 9760	2026-07-07 07:44:21.844	2026-07-07 07:44:21.844	\N	t
+53	FLS	Firman L Sahwan	HAZ-04	\N	Composting	0817 815 136	\N	\N	\N	BPPT	\N	Fax 316 9760	2026-07-07 07:44:21.846	2026-07-07 07:44:21.846	\N	t
+54	AT	August Toruan	HAZ-04	\N	Pengelolaan Sampah Domestik (Komposting + Landfill)	0813 982 696 22	Mandiri 156 000 288 901 4	augustlumbantoruan@yahoo.com	\N	\N	\N	\N	2026-07-07 07:44:21.848	2026-07-07 07:44:21.848	\N	t
+55	JHM	Joko Heru Martono	HAZ-04	\N	\N	0812 865 2805	\N	Jokoheru@yahoo.com	\N	BPPT	\N	Fax 316 9760	2026-07-07 07:44:21.849	2026-07-07 07:44:21.849	\N	t
+56	AAM	Alfian Amir	HAZ-04	\N	Insinerator, Daur Ulang Sampah	0812 237 8359	\N	alametha@yahoo.co.id	\N	PT Arkobana	\N	\N	2026-07-07 07:44:21.85	2026-07-07 07:44:21.85	\N	t
+57	RIS	Ria Ismaria	HAZ-04	Jl. Soma, Bandung	Sampah Perkotaan	021 831 0441 ; 022 727 4076;  0812 234 7474	\N	\N	\N	\N	\N	\N	2026-07-07 07:44:21.851	2026-07-07 07:44:21.851	\N	t
+58	bgb	Pengelola TPA Bantargebang	Kunjungan Sampah Domestik (HAZ-04)	\N	Pengelolaan Sampah Domestik (Kunjungan Lapangan	Fax 021 825 0844 0813 1999 0318 (Erwin Sinaga-Man	\N	\N	\N	PT Godang Tua Jaya - Pengelola TPA Bantargebang	\N	\N	2026-07-07 07:44:21.852	2026-07-07 07:44:21.852	\N	t
+59	RA	R. Awarso	Kunjungan Sampah Domestik (HAZ-04)	\N	Kunjungan Lapangan Pengelolaan Sampah Domestik	0815 863 035 23	\N	\N	\N	PT. Rawajati	\N	021 794 3683	2026-07-07 07:44:21.853	2026-07-07 07:44:21.853	\N	t
+60	bppt	DR. Kardono	Kunjungan Lapangan Komposting (HAZ-04)	\N	Kunjungan Lapangan Komposting	\N	\N	\N	\N	Direktur Pusat Teknologi Lingkungan	\N	Fax 316 9760	2026-07-07 07:44:21.854	2026-07-07 07:44:21.854	\N	t
+61	dharma	Direksi PD Dharma Jaya	Kunjungan Sampah Domestik (HAZ-04)	\N	Kunjungan Lapangan Pengelolaan Sampah Domestik	\N	\N	\N	\N	PD. Dharma Jaya	\N	Fax 461 3015	2026-07-07 07:44:21.854	2026-07-07 07:44:21.854	\N	t
+62	pkujang	Ibu Ade Suryani	Kunjungan Lapangan Benchmarking (HAZ-04)	\N	Kunjungan Lapangan Benchmarking	\N	\N	\N	\N	Direktur SDM dan Umum PT Pupuk Kujang	\N	Fax 0264 314 235 Fax 0264 303 778	2026-07-07 07:44:21.855	2026-07-07 07:44:21.855	\N	t
+63	jbbk	Rahmad Kurniawan (WTP); M. Ayub Arwin (WWTP Manager)	Kunjungan WWTP (HAZ-04; WM-02; WM-03, ET-03)	\N	Kunjungan Lapangan - WWTP; Kunjungan Lapangan Pengolahan Limbah Industri; Kunjungan Lapangan Pengolahan Air	0818 383 757 (Rahmad ); 0813 1765 2634 (Ayub);0852 161 892 55(Deryanto);081318161703 (Sutrisno)	\N	rahmad@jababeka.co.id; ayub@jababeka.co.id; istingani@jababeka.co.id	\N	WTP Jababeka Infrastruktur	\N	021 898 34 321 Fax 021 893 5408	2026-07-07 07:44:21.856	2026-07-07 07:44:21.856	\N	t
+64	JMH	Johannes Matahelemual	WM-01; WM-02; WM-03; ET-03	Karawang	Limbah Cair	0267 401 102 0817 138 532	CIMB Niaga 064 01 02 696 183 a/n Johannes Matahelemual	Jmatahelemual@yahoo.com	\N	Degreemont	\N	\N	2026-07-07 07:44:21.857	2026-07-07 07:44:21.857	\N	t
+65	IKM	Dr. Ir. Ikbal Mahmud, Meng	WM-02	\N	Pengolahan biologi limbah industri	021 316 9770/769 Fax 021 316 9736 0815 1316 5401	\N	irkh2000@yahoo.com	\N	BPPT	Jl. MH Thamrin No. 8, Jakpus 10340	\N	2026-07-07 07:44:21.857	2026-07-07 07:44:21.857	\N	t
+66	AGS	Agus Supriyanto	WM-03	Jl. Gabus I No. 9, Rawamangun	Limbah Cair	021 471 8704	\N	agus.supriyanto@pharma.novartis.com	\N	\N	Jl. Pahlawan Desa Karangasem Timur, Bogor	\N	2026-07-07 07:44:21.858	2026-07-07 07:44:21.858	\N	t
+67	pindo	Eko; Bp Himawan, Dedi Rusli (Direktur); Sakri	Kunjungan Lapangan WWTP (WM-03)	\N	Kunjungan Lapangan Pengolahan Limbah Cair dan Pengolahan Air, WWTP; Kunjungan WTP	0881 580 3861 (Eko); 0888 238 2416, 0881 580 5820(Dedi );0881 580 1615 (Sakri)	\N	Dedi_rusli@app.co.id	\N	PT Pindodeli Pulp & Paper	0267 440 111 ; Fax 021 300 68 330	\N	2026-07-07 07:44:21.859	2026-07-07 07:44:21.859	\N	t
+68	mm2100	Bp. Darwoto, SE (HRD Manager )	Kunjungan Lapangan WWTP (WM-03)	\N	Kunjungan Lapangan Pengolahan Air	\N	\N	\N	\N	PT Megalopolis Manunggal Industrial Development	\N	Fax 898 1002	2026-07-07 07:44:21.86	2026-07-07 07:44:21.86	\N	t
+69	OMN	Occeu Muslihat	ET-02	\N	Penghematan Energi	0817 601 7518 0856 1086 441	\N	oche_nasution@yahoo.co.id	\N	Direktur Teknik Konsulindo	Komplek Patra II No. 25, Jl Jend Ahmad Yani, Cempaka Putih Timur, Jakpus 10510	021 934 984 88 ;Fax 021 450 8226	2026-07-07 07:44:21.86	2026-07-07 07:44:21.86	\N	t
+71	NI	Nyoman Iswaragyoga	ET-02	\N	Audit Penghematan Energi	0812 106 8473	\N	\N	\N	US Aid	\N	\N	2026-07-07 07:44:21.864	2026-07-07 07:44:21.864	\N	t
+72	SB	Suzzana Bilharzt	ET-02	\N	Energi	\N	\N	\N	\N	US AEP	\N	\N	2026-07-07 07:44:21.866	2026-07-07 07:44:21.866	\N	t
+73	UL	Uli\t\t,	ET-02	\N	\N	\N	\N	\N	\N	Staff PPBN KLH	Kementrian LH, Jl DI Panjaitan kav 24 Lt. 6	021 8590 6170	2026-07-07 07:44:21.867	2026-07-07 07:44:21.867	\N	t
+74	palyja	Imamsyah Rusli	Kunjungan Lapangan Pengolahan Air (ET-03)	\N	Kunjungan Lapangan Pengolahan Air	0818 758 302	\N	roesli.imamsjah@palyja.co.id	\N	Palyja	\N	021 871 0221 ext 2113	2026-07-07 07:44:21.868	2026-07-07 07:44:21.868	\N	t
+75	MA	Mulyadi Afmar	CSR-05;EP-09; WM-05; ENG-01; EP-08; WM-01; EM-05; EP-03; EP-02; TS-02; ET-01; HAZ-01; EP-01; EP-06; IMS-01 ; IMS-02;IMS-03;IMS-04;IMS-05;IMS-06;IMS-07;IMS-08; CSR-01; CSR-02;EP-07; HAZ-05; ENG-02; HAZ-06; WM-07; CSR-03; EP-14; EP-04; TS-03; HAZ-04; EP-11; ENG-07; EP-05; ESG-02; ESG-01; CSR-04; SDG-02; HAZ-02	Perumahan Telaga Sakinah Jl. Sunan Kalijaga Blok CD7 No. 16 Cikarang Barat, Bekasi	ISO 14001; Social Mapping, UKM Mandiri	021 8910 6015	\N	\N	\N	Direktur Benefita	Jl. MT Haryono Kav 33	021 831 5316	2026-07-07 07:44:21.869	2026-07-07 07:44:21.869	\N	t
+76	RZO	Riza Deliansyah	IMS	Cibubur, Jakarta	ISO 14001	021-8775 4078	\N	riza.deliansyah@ai.astra.co.id	\N	Astra International	\N	021 652 2555 ext 527	2026-07-07 07:44:21.87	2026-07-07 07:44:21.87	\N	t
+77	ATP	Andi Tri P	IMS	\N	ISO 14001, B3&LB3, Peraturan Perundangan, Komunikasi Lingkungan	0815 920 1345	\N	anditp2000@yahoo.com	\N	\N	\N	\N	2026-07-07 07:44:21.872	2026-07-07 07:44:21.872	\N	t
+78	ZMD	Zaenal Mulyadi	IMS	\N	Integrasi Sistem Manajemen EHS, ISO 14001, ISO 18001	021 898 1355 ext 202 Fax 021 898 1371 0811 858 052	\N	Zaenalmulyadi.yusuf@yahoo.com	\N	\N	\N	\N	2026-07-07 07:44:21.872	2026-07-07 07:44:21.872	\N	t
+79	ARI	Arie Irwan	IMS	\N	Bekerja di kalimantan, tapi ada jatah libur 1 minggu di bekasi	0813 21 44 22 99	\N	arie.irwan@vico.co.id	\N	Vico	\N	\N	2026-07-07 07:44:21.873	2026-07-07 07:44:21.873	\N	t
+80	ES	Emir Sadikin	IMS; EP-03; WM-01	\N	ISO 14001	021 891 104 34	\N	emir@jababeka.co.id	\N	\N	\N	\N	2026-07-07 07:44:21.874	2026-07-07 07:44:21.874	\N	t
+81	RE	Rina Elita (Sales)	IMS	\N	ISO 14001	087888933972	\N	rinae@sucofindo.co.id	\N	\N	\N	\N	2026-07-07 07:44:21.875	2026-07-07 07:44:21.875	\N	t
+82	NUR	Nurdizal	CSR	\N	\N	0813 9500 2786	\N	nurdizal@interdev.co.id	\N	Direktur PT Interdev	\N	\N	2026-07-07 07:44:21.876	2026-07-07 07:44:21.876	\N	t
+83	iatpi	IATPI	Ujian WM-01; EM-05	\N	\N	\N	\N	\N	\N	\N	\N	\N	2026-07-07 07:44:21.876	2026-07-07 07:44:21.876	\N	t
+84	CAH	Cahyadi	EM-01; EM-02; EM-05; EM-06; ENG-02; ENG-04; ENG-01; ENG-06; EM-08; ENG-03; EP-18; EP-16; IMS-05; EM-09; WM-10; ENG-07	\N	\N	\N	\N	\N	\N	BPPT	\N	\N	2026-07-07 07:44:21.877	2026-07-07 07:44:21.877	\N	t
+85	SAB	Saleh Abbas	EP-03	\N	\N	\N	\N	\N	\N	\N	\N	\N	2026-07-07 07:44:21.879	2026-07-07 07:44:21.879	\N	t
+86	NDK	Nandik Sufaryono	HAZ-09; SDG-01; HAZ-04; HAZ-06; CSR-01; CSR-02; CSR-03; CSR-04; CSR-05; CSR-06; CSR-07; EP-08;HAZ-06; HAZ-01; EP-02; EP-07; HAZ-05; EP-03; HAZ-08; EP-09; EP-15; IMS-04; EP-04	Cikarang	\N	\N	\N	nandiksufaryono@benefita.com	\N	Benefita	\N	\N	2026-07-07 07:44:21.881	2026-07-07 07:44:21.881	\N	t
+87	gcl	Geocylcle Holcim	HAZ-01	\N	\N	\N	\N	\N	\N	\N	\N	\N	2026-07-07 07:44:21.882	2026-07-07 07:44:21.882	\N	t
+88	HST	Haryo Satriyo Tomo	EM-05	\N	\N	022 â€“ 7803249	\N	haryo@tl.itb.ac.id / haryotomo@gmail.com	\N	Environmental Engineering, Institute of Technology Bandung Lecturer (Assistant Professor)	\N	\N	2026-07-07 07:44:21.883	2026-07-07 07:44:21.883	\N	t
+89	YUL	Yuli (Pak)	IMS-07	\N	\N	\N	\N	\N	\N	Sucofindo	\N	\N	2026-07-07 07:44:21.884	2026-07-07 07:44:21.884	\N	t
+90	ASP	Agus Supriyanto	WM-02	\N	\N	\N	\N	\N	\N	\N	\N	\N	2026-07-07 07:44:21.885	2026-07-07 07:44:21.885	\N	t
+91	DWK	Dwika Budianto	EM-05; EM-06; ENG-02	\N	\N	085714862017	\N	\N	\N	BPPT	\N	\N	2026-07-07 07:44:21.886	2026-07-07 07:44:21.886	\N	t
+92	EHL	Edi Hilmawan	ET-02, ET-02; ENG-01; eng-02; eng-03	\N	\N	081380731007	\N	hilmi0374@yahoo.com	\N	BPPT	\N	\N	2026-07-07 07:44:21.887	2026-07-07 07:44:21.887	\N	t
+93	EKW	Ekho Kurniawan	ENG-03; EP-09; HAZ-05; EM-01; HAZ-02; HAZ-03; EP-03; EP-07; HAZ-01; EM-05; WM-01; EP-01; HAZ-04; EP-02; WM-07; HAZ-06; EP-15	\N	\N	\N	\N	\N	\N	\N	\N	\N	2026-07-07 07:44:21.888	2026-07-07 07:44:21.888	\N	t
+94	SYR	Syiffa Rahmania	EP-01; WM-03; EP-02; HAZ-01; WM-01; HAZ-04; WM-07; WM-01	\N	\N	085263223080	\N	syiffarahmania@benefita.com	\N	PT. Benefita Indonesia	Gedung Menara Hijau Lt. Dasar. Jl. MT Haryono Kav. 33. Jakarta Selatan	\N	2026-07-07 07:44:21.889	2026-07-07 07:44:21.889	\N	t
+95	FRM	Firman	HAZ-04	\N	\N	\N	\N	\N	\N	\N	\N	\N	2026-07-07 07:44:21.89	2026-07-07 07:44:21.89	\N	t
+96	EDR	Endro	EM-05	\N	\N	\N	\N	\N	\N	IATPI	\N	\N	2026-07-07 07:44:21.891	2026-07-07 07:44:21.891	\N	t
+97	LRL	Dian Ayu	WM-03	\N	\N	\N	\N	\N	\N	\N	\N	\N	2026-07-07 07:44:21.891	2026-07-07 07:44:21.891	\N	t
+98	IW	Ilma Wiryanti	EP-08	\N	\N	\N	\N	\N	\N	\N	\N	\N	2026-07-07 07:44:21.892	2026-07-07 07:44:21.892	\N	t
+99	MR	Mety Rosmiati	EP-07	\N	\N	\N	\N	\N	\N	KLHK	\N	\N	2026-07-07 07:44:21.893	2026-07-07 07:44:21.893	\N	t
+100	SBahri	Syaiful Bahri	EP-07	\N	\N	\N	\N	\N	\N	KLHK	\N	\N	2026-07-07 07:44:21.895	2026-07-07 07:44:21.895	\N	t
+101	DMY	Dian Mulyadi	IMS-07	\N	\N	081381230050	\N	\N	\N	PT Sucofindo	\N	\N	2026-07-07 07:44:21.897	2026-07-07 07:44:21.897	\N	t
+102	SYS	Syukraini Suswita	IMS-07; IMS-01	\N	\N	\N	\N	\N	\N	\N	\N	\N	2026-07-07 07:44:21.899	2026-07-07 07:44:21.899	\N	t
+103	MSO	M. Satya Oktamalandi	HAZ-04; EP-03; HAZ-05	\N	\N	\N	\N	\N	\N	\N	\N	\N	2026-07-07 07:44:21.9	2026-07-07 07:44:21.9	\N	t
+104	IFR	Irfan Ramadiansyah	EP-07	\N	\N	\N	\N	\N	\N	KLHK, UDARA	\N	\N	2026-07-07 07:44:21.902	2026-07-07 07:44:21.902	\N	t
+105	ARM	Arohman	ENG-01; ENG-02; ENG-03	\N	\N	\N	\N	\N	\N	\N	\N	\N	2026-07-07 07:44:21.903	2026-07-07 07:44:21.903	\N	t
+106	AAD	Ahmad Arief D.	EP-09; EP-14; EP-11	\N	\N	\N	\N	\N	\N	\N	\N	\N	2026-07-07 07:44:21.904	2026-07-07 07:44:21.904	\N	t
+107	HYM	Hari Yurismono	ENG-01; ENG-02; ENG-03	\N	\N	08129506635	\N	\N	\N	\N	\N	\N	2026-07-07 07:44:21.905	2026-07-07 07:44:21.905	\N	t
+108	HYT	Haryanto	ENG-01; ENG-02; ENG-03	\N	\N	081281126295	\N	\N	\N	\N	\N	\N	2026-07-07 07:44:21.906	2026-07-07 07:44:21.906	\N	t
+109	SDM	Sudirman	ENG-01; ENG-02; ENG-03	\N	\N	\N	\N	\N	\N	\N	\N	\N	2026-07-07 07:44:21.906	2026-07-07 07:44:21.906	\N	t
+110	NS	Ir. Nasrullah Salim, M.Sc (Eriell)	IMS-05; ENG-03; ENG-01; ENG-02	\N	\N	08158252392	\N	eriellsalim@gmail.com	\N	Pelangi	\N	\N	2026-07-07 07:44:21.907	2026-07-07 07:44:21.907	\N	t
+111	TH	Taopik Hidayat	EM-05;EM-06; ENG-02; ENG-01; ENG-03; EM-01; EP-16; WM-10	\N	\N	\N	\N	\N	\N	\N	\N	\N	2026-07-07 07:44:21.908	2026-07-07 07:44:21.908	\N	t
+112	SL	Sylvania Permata Sari	WM-07;HAZ-06	\N	\N	\N	\N	\N	\N	\N	\N	\N	2026-07-07 07:44:21.909	2026-07-07 07:44:21.909	\N	t
+113	WIC	Wiwie Chaeruni	EM-05; EM-01; ENG-02; ENG-01; EM-06; ENG-04; EM-09; EM-10	\N	\N	\N	\N	\N	\N	BRIN	\N	\N	2026-07-07 07:44:21.91	2026-07-07 07:44:21.91	\N	t
+114	YY	Yuli Yulianto	EM-01	\N	\N	\N	\N	\N	\N	\N	\N	\N	2026-07-07 07:44:21.911	2026-07-07 07:44:21.911	\N	t
+115	RZ	Rita Zulbetti	CSR-05	\N	\N	\N	\N	\N	\N	\N	\N	\N	2026-07-07 07:44:21.913	2026-07-07 07:44:21.913	\N	t
+116	YP	Yuli Purwanto	WM-08	\N	\N	0815-9667-611	\N	\N	\N	\N	\N	\N	2026-07-07 07:44:21.914	2026-07-07 07:44:21.914	\N	t
+117	AHJ	Abdu Hamdan Juaffie	IMS-01	\N	\N	\N	\N	\N	\N	\N	\N	\N	2026-07-07 07:44:21.915	2026-07-07 07:44:21.915	\N	t
+118	YRD	Yahya Ramadhana	EP-14; HAZ-01; HAZ-06; EM-05; EM-06; WM-07; EP-04; WM-01; ENG-07; WM-09	\N	\N	\N	\N	\N	\N	\N	\N	\N	2026-07-07 07:44:21.916	2026-07-07 07:44:21.916	\N	t
+119	MGF	Muhammad Ghifari	SDG-01; EP-01; EP-04; EP-08; CSR-05; EP-09; HAZ-04; CSR-03; CSR-01; IMS-04; CSR-06; CSR-04; EP-02; HAZ-08; SDG-02; CSR-02; CSR-09; HAZ-06; HAZ-01; HAZ-05; HAZ-06; HAZ-12; EP-11; HAZ-17; HAZ-15	\N	\N	\N	\N	\N	\N	\N	\N	\N	2026-07-07 07:44:21.917	2026-07-07 07:44:21.917	\N	t
+120	LNS	Lianasari	WM-05; WM-09; HAZ-01; HAZ-06; EP-15; EP-04; IMS-01; EP-11; WM-01; WM-07; WM-02; HAZ-05; EM-05; EM-06; HAZ-08; EP-09; HAZ-02; EP-02; EP-18; HAZ-04; WM-03; WM-08; EP-14; IMS-06; EP-01; HAZ-09; HAZ-03	\N	\N	\N	\N	\N	\N	\N	\N	\N	2026-07-07 07:44:21.918	2026-07-07 07:44:21.918	\N	t
+121	ST	Sarwo Turinno	ENG-01; ENG-02	\N	\N	\N	\N	\N	\N	\N	\N	\N	2026-07-07 07:44:21.919	2026-07-07 07:44:21.919	\N	t
+122	NFY	Nofliyani	IMS-01; EP-08; HAZ-04; HAZ-06; HAZ-08; HAZ-05; HAZ-01; HAZ-06; HAZ-09; HAZ-02; HAZ-12; HAZ-10; HAZ-17	\N	\N	\N	\N	\N	\N	\N	\N	\N	2026-07-07 07:44:21.92	2026-07-07 07:44:21.92	\N	t
+123	AN	Agus Nurrohim	ENG-04; EM-08	\N	\N	\N	\N	\N	\N	BRIN	\N	\N	2026-07-07 07:44:21.921	2026-07-07 07:44:21.921	\N	t
+124	AR	Agus Riyadi, S.T., M.Sc.	WM-07; WM-03; WM-01; WM-09; WM-08; WM-02; EP-14; HAZ-02; EP-15	\N	\N	08112952228	\N	aguskuncung4225@gmail.com	\N	Universitas Pelita Bangsa	Jl. Inspeksi Kali Malang Tegal Danas Arah DeltaMas, Kec. Cikarang  Pusat, Kabupaten Bekasi	021-27318249	2026-07-07 07:44:21.922	2026-07-07 07:44:21.922	\N	t
+125	WED	William Edison	CSR01	\N	\N	085967286509	\N	\N	\N	\N	\N	\N	2026-07-07 07:44:21.923	2026-07-07 07:44:21.923	\N	t
+126	HH	Husni Husnayan	EP-19	\N	\N	\N	\N	\N	\N	\N	\N	\N	2026-07-07 07:44:21.923	2026-07-07 07:44:21.923	\N	t
+\.
+
+
+--
+-- Data for Name: lini_bisnis; Type: TABLE DATA; Schema: benefita; Owner: -
 --
 
 COPY benefita.lini_bisnis (id, nama, "createdAt", "updatedAt") FROM stdin;
@@ -45728,7 +46044,7 @@ COPY benefita.lini_bisnis (id, nama, "createdAt", "updatedAt") FROM stdin;
 
 
 --
--- Data for Name: lini_bisnis_training; Type: TABLE DATA; Schema: benefita; Owner: postgres
+-- Data for Name: lini_bisnis_training; Type: TABLE DATA; Schema: benefita; Owner: -
 --
 
 COPY benefita.lini_bisnis_training (id, "liniBisnisId", "judulTrainingId", "createdAt") FROM stdin;
@@ -46476,7 +46792,7 @@ COPY benefita.lini_bisnis_training (id, "liniBisnisId", "judulTrainingId", "crea
 
 
 --
--- Data for Name: log_perubahan_perusahaan; Type: TABLE DATA; Schema: benefita; Owner: postgres
+-- Data for Name: log_perubahan_perusahaan; Type: TABLE DATA; Schema: benefita; Owner: -
 --
 
 COPY benefita.log_perubahan_perusahaan (id, perusahaan_id, field, data_lama, data_baru, diubah_oleh, tanggal) FROM stdin;
@@ -46540,7 +46856,7 @@ cmsyguveg0004jcsk5ddo58u1	PR00001	PRIORITASAE	"cmqs494nh002njct8ctgqss52"	"Biyan
 
 
 --
--- Data for Name: penawaran; Type: TABLE DATA; Schema: benefita; Owner: postgres
+-- Data for Name: penawaran; Type: TABLE DATA; Schema: benefita; Owner: -
 --
 
 COPY benefita.penawaran (id, "kodePelatihan", tanggal, "filePath", "perusahaanId") FROM stdin;
@@ -46550,7 +46866,7 @@ cmq6g6uv5001hjc4smu7eb180	{"WHM-2| WH3"}	2026-06-09 09:39:01.696	\N	PRU003
 
 
 --
--- Data for Name: pengajuan_judul_training; Type: TABLE DATA; Schema: benefita; Owner: postgres
+-- Data for Name: pengajuan_judul_training; Type: TABLE DATA; Schema: benefita; Owner: -
 --
 
 COPY benefita.pengajuan_judul_training (id, "judulTraining", "jumlahHari", "namaKontak", kontak, "jumlahPeserta", "perusahaanId", "inputOlehId", "createdAt", "updatedAt", "tanggalPengajuan", "responMA", "namaPerusahaanManual") FROM stdin;
@@ -46560,7 +46876,7 @@ cmrugmwig0003jc1ojp8r0hrc	Pengajuan Judul XZY	3	Kiki	0819123134	43	\N	cmq67a4yn0
 
 
 --
--- Data for Name: permintaan_nomor_surat; Type: TABLE DATA; Schema: benefita; Owner: postgres
+-- Data for Name: permintaan_nomor_surat; Type: TABLE DATA; Schema: benefita; Owner: -
 --
 
 COPY benefita.permintaan_nomor_surat (id, "noSurat", keterangan, tanggal_kirim, tipe, tujuan_no_induk, pengirim_id, created_at, updated_at, tujuan_nama) FROM stdin;
@@ -46571,7 +46887,7 @@ COPY benefita.permintaan_nomor_surat (id, "noSurat", keterangan, tanggal_kirim, 
 
 
 --
--- Data for Name: permohonan_hak_akses; Type: TABLE DATA; Schema: benefita; Owner: postgres
+-- Data for Name: permohonan_hak_akses; Type: TABLE DATA; Schema: benefita; Owner: -
 --
 
 COPY benefita.permohonan_hak_akses (id, perusahaan_id, pegawai_id, jenis_akses, terima, tanggal) FROM stdin;
@@ -46581,7 +46897,7 @@ cmslnyaef0023jchc77skqs13	PR00001	cmslk73pe0008jcvsx9wyvr0k	ENV	\N	2026-08-09 10
 
 
 --
--- Data for Name: peserta_training; Type: TABLE DATA; Schema: benefita; Owner: postgres
+-- Data for Name: peserta_training; Type: TABLE DATA; Schema: benefita; Owner: -
 --
 
 COPY benefita.peserta_training (id, nama, jabatan, alamat, "noTelp", "noFax", email, "alamatPengirimanSertifikat", catatan, industri, status, "noIndukPerusahaan", "noJadwal", ujian, "noInvUjian", "noKwtUjian", diskon, ppn, cashback, "hargaTotal", bayar, "infoPembayaran", "infoPenagihan", "tglBayar", "noInvoice", "noKwitansi", "updateOleh", "konfirmasiOleh", "tglInput", "tglUpdate", "accExecutive", "inputOleh", "ownEnv", metode, "fileBuktiPembayaran", "filePendaftaran", biaya, bidang, dep, fee, gender, "idDok", "idPesPel", instansi, "jenisKelamin", "konOleh", "konTgl", "namaPerusahaan", "noCust", "noHp", "noJadOld", "noRegUji", "noUrut", partisipan, periode, religi, "tanggalLahir", "tempatLahir", "tglMulai") FROM stdin;
@@ -46605,6 +46921,7 @@ COPY benefita.peserta_training (id, nama, jabatan, alamat, "noTelp", "noFax", em
 1170	Rifad Adli	Laboratory Assistant Manager	Geltoli, Buli, Kecamatan Maba, Halmahera Timur, Maluku Utara	\N	\N	rifad.adly@antam.com	\N	\N	\N	FIX	\N	2023577	Ujian	\N	\N	0	0	0	0	0	\N	\N	\N	\N	\N	\N	\N	2023-07-01 03:29:42	2026-07-07 04:38:09.954	.	cmqs4gakf000cjcd0ykjc31bw	IQ	Offline	\N	\N	0	\N	.	\N	.	\N	17876	Aneka Tambang Tbk, PT - UBP Nikel Maluku Utara	\N	\N	\N	\N	.	0813-1287-8571	2023573	\N	.	\N	202307	.	\N	\N	2023-07-02 17:00:00
 1171	Junaidi	\N	\N	\N	\N	\N	\N	INV Bermaterai dan sertifikat pelatihan dikirim ke a.n. Ibu. Firda; Online	\N	FIX	\N	2023414	Pelatihan	\N	\N	0	0	0	5900000	5782000	MDR 2	\N	2023-08-02 17:00:00	0236/INV/REG-CSR-03/VII/23	\N	cmqs4gakj000fjcd0pnbh5kpw	\N	2023-07-03 02:03:42	2026-07-07 04:38:09.958	.	cmqs4gak60006jcd0m2yt7ric	IQ	Online	\N	\N	5900000	\N	.	\N	.	\N	\N	Hengjaya Mineralindo, PT	\N	IQBAL	2023-07-24 02:07:04	\N	\N	082233115558	\N	\N	.	1	202307	.	\N	\N	2023-07-25 17:00:00
 1211	via Firda	\N	\N	\N	\N	\N	\N	belum bisa ikut, tetap pingin offline	\N	CANCEL	\N	2023429	Pelatihan	\N	\N	0	0	0	0	0	\N	\N	\N	\N	\N	cmqs4gak60006jcd0m2yt7ric	\N	2023-07-13 07:10:20	2026-07-07 04:38:10.174	.	cmqs4gak60006jcd0m2yt7ric	IQ	Offline	\N	\N	5900000	\N	.	\N	.	\N	\N	Hengjaya Mineralindo, PT	\N	\N	\N	\N	\N	\N	\N	\N	.	\N	202310	.	\N	\N	2023-10-08 17:00:00
+1045	Khoirul Huda	\N	\N	\N	\N	\N	\N	\N	\N	FIX	\N	2023569	Ujian	\N	\N	0	0	0	0	0	\N	\N	\N	\N	\N	\N	\N	2023-06-13 02:38:14	2026-07-07 04:38:09.304	.	cmqs4gakf000cjcd0ykjc31bw	SL	\N	\N	\N	0	\N	.	\N	.	\N	17724	Panca Amara Utama, PT	\N	\N	\N	\N	.	085755555290	2023103	\N	.	\N	202306	.	\N	\N	2023-06-15 17:00:00
 1172	Bagos Setiawan	Unit Head Internal Environment	Jl. Tanjung Tembaga / Pelabuhan Baru, Kota Probolinggo	\N	\N	bagossetiawan7@gmail.com	\N	\N	\N	FIX	\N	2023579	Ujian	\N	\N	0	0	0	0	0	\N	\N	\N	\N	\N	\N	\N	2023-07-05 01:47:56	2026-07-07 04:38:09.964	.	cmqs4gak60006jcd0m2yt7ric	SL	Offline	\N	\N	3500000	\N	.	\N	.	\N	17717	Kutai Timber Indonesia, PT	\N	\N	\N	\N	.	087849021207	2023095	\N	.	\N	202307	.	\N	\N	2023-07-05 17:00:00
 1173	Doni Aprianto	Team Leader Operasi	Jln.Adi Sucipto,km 7,3 Sei Raya Kabupaten Kubu Raya 78391	\N	\N	doniaprianto72@gmail.com	\N	\N	\N	FIX	\N	2023551	Ujian	\N	\N	0	0	0	0	0	\N	\N	\N	\N	\N	\N	\N	2023-07-04 03:22:49	2026-07-07 04:38:09.969	.	cmqs4gak60006jcd0m2yt7ric	EE	Online	\N	\N	0	\N	.	\N	.	\N	17816	PLN Nusantara Power, PT -  UPDK Kapuas 	\N	\N	\N	\N	.	089606878623	2023068	\N	.	\N	202307	.	\N	\N	2023-07-05 17:00:00
 1174	Fitra Ria Hermawan	TL K3L dan Kam	Jl. Adi Sucipto KM 7,3 Kel. Sungai Raya, Kec Sungai Raya, Kab. Kubu Raya, Kalimantan Barat 	\N	\N	fitrariahermawan@ymail.com	\N	\N	\N	FIX	\N	2023551	Ujian	\N	\N	0	0	0	0	0	\N	\N	\N	\N	\N	\N	\N	2023-07-04 03:24:45	2026-07-07 04:38:09.974	.	cmqs4gak60006jcd0m2yt7ric	EE	Online	\N	\N	0	\N	.	\N	.	\N	17813	PLN Nusantara Power, PT -  UPDK Kapuas 	\N	\N	\N	\N	.	081258089049	2023068	\N	.	\N	202307	.	\N	\N	2023-07-05 17:00:00
@@ -46748,6 +47065,8 @@ COPY benefita.peserta_training (id, nama, jabatan, alamat, "noTelp", "noFax", em
 902	Kesi Handayani	\N	\N	\N	\N	\N	\N	Pindahan dr Tgl 2023-06-21:	\N	CANCEL	\N	2023457	Pelatihan	\N	\N	0	0	0	0	0	\N	\N	\N	\N	\N	\N	\N	2023-05-10 04:59:57	2026-07-07 04:38:08.612	.	cmqs4gak60006jcd0m2yt7ric	IQ	Online	\N	\N	5900000	\N	.	\N	.	\N	\N	Pudak Scientific, PT 	\N	\N	\N	\N	\N	\N	\N	\N	.	\N	202308	.	\N	\N	2023-08-22 17:00:00
 903	Muhammad Chusaini	\N	\N	\N	\N	\N	\N	ada kendala di manajemen, tahun ini cancle dulu	\N	CANCEL	\N	2023053	Pel & Ujian	\N	\N	0	0	0	0	0	\N	\N	\N	\N	\N	cmqs4gal1000ojcd0wf1gmv1q	\N	2023-05-10 07:36:07	2026-07-07 04:38:08.617	.	cmqs4gal1000ojcd0wf1gmv1q	SL	Offline	\N	\N	15900000	\N	.	\N	.	\N	\N	Eni Muara Bakau BV	\N	SYLVA	2023-06-23 12:04:27	\N	\N	\N	\N	\N	.	\N	202311	.	\N	\N	2023-11-05 17:00:00
 904	Ade Bagust Santoso	Technician	Jl. Industri Utama Blok RR No.7 Cikarang Selatan Kab. Bekasi	\N	\N	bagus@dmcti.co.id	\N	Offline ibis; INV Bermaterai, sertifikat pelatihan dikirim ke a.n Ibu Sukamti PT DMC Teknologi Indonesia	\N	FIX	\N	2023069	Pel & Ujian	\N	\N	0	0	0	12400000	12152000	MANDIRI	\N	2023-09-07 17:00:00	0260/INV/REG-HAZ-01/VII/23	\N	cmqs4gala000ujcd0i3glommm	\N	2023-05-10 07:38:50	2026-07-07 04:38:08.621	.	cmqs4gal1000ojcd0wf1gmv1q	SL	Offline	\N	\N	12400000	\N	.	\N	.	\N	\N	DMC Teknologi Indonesia, PT	\N	SYLVA	2023-07-24 07:32:10	PT DMC Teknologi Indonesia	\N	085710313338	\N	\N	.	1	202307	.	\N	\N	2023-07-30 17:00:00
+1046	Sudarsono	\N	\N	\N	\N	\N	\N	Pengganti Divka Aryo Pratama	\N	FIX	\N	2023068	Pel & Ujian	\N	\N	0	0	0	0	0	\N	\N	\N	\N	\N	cmqs4gajg0000jcd0evfyeg79	\N	2023-06-13 03:18:36	2026-07-07 04:38:09.309	.	cmqs4gajg0000jcd0evfyeg79	EE	\N	\N	\N	5900000	\N	.	\N	.	\N	\N	PLN (Persero), PT - UPDK Kapuas 	\N	\N	\N	\N	\N	081256822376	\N	\N	.	\N	202306	.	\N	\N	2023-06-18 17:00:00
+1375	via teja	\N	\N	\N	\N	\N	\N	biaya di atas budget mereka	\N	CANCEL	\N	2023116	Pel & Ujian	\N	\N	0	0	0	0	0	\N	\N	\N	\N	\N	cmqs4gajg0000jcd0evfyeg79	\N	2023-08-14 03:37:27	2026-07-07 04:38:10.974	.	cmqs4gajg0000jcd0evfyeg79	EE	Online	\N	\N	5900000	\N	.	\N	.	\N	\N	Gorontalo Minerals, PT	\N	\N	\N	\N	\N	\N	\N	\N	.	\N	202311	.	\N	\N	2023-12-17 17:00:00
 905	Listia Annisa	Quality Environment Supervisor	Gedung MCC, Kawasan Depo LRT Jakarta, Jl. Raya Kelapa Nias, Kel. Pegangsaan Dua, Kec. Kelapa Gading, Kota Jakarta Utara - 14250	\N	-	listia.annisa@lrtjakarta.co.id	\N	invoice bermaterai, sertifikat pelatihan, dikirim ke a.n Bpk Ridwan Andrian  -  Learning Officer – Human Capital Development Departement	\N	FIX	\N	2023069	Pel & Ujian	\N	\N	0	0	0	12900000	12639100	MANDIRI	\N	2023-09-17 17:00:00	0264/INV/REG-HAZ-01/VII/23	0048/KWT/REG-HAZ-01/VIII/23	cmqs4gala000ujcd0i3glommm	\N	2023-05-10 09:26:28	2026-07-07 04:38:08.626	.	cmqs4gal1000ojcd0wf1gmv1q	SL	Offline	\N	\N	12900000	\N	.	\N	.	\N	\N	LRT Jakarta, PT 	\N	SYLVA	2023-07-25 04:31:26	PT LRT Jakarta	\N	081294923532	\N	\N	.	1	202307	.	\N	\N	2023-07-30 17:00:00
 906	via Retno	\N	\N	\N	\N	\N	\N	sudah ganti nama perusahaan	\N	CANCEL	\N	2023006	Pel & Ujian	\N	\N	0	0	0	0	0	\N	\N	\N	\N	\N	\N	\N	2023-05-11 06:57:09	2026-07-07 04:38:08.63	.	cmqs4gak60006jcd0m2yt7ric	IQ	\N	\N	\N	5900000	\N	.	\N	.	\N	\N	Krakatau Nippon Steel Sumikin, PT	\N	\N	\N	\N	\N	\N	\N	\N	.	\N	202306	.	\N	\N	2023-06-11 17:00:00
 907	Muhamad Irfan	Technician Lingkungan	Jl Adi Sucipto KM 7,3 Kel. Sungai Raya, Kec. Sungai Raya, Kab. Kubu Raya, Kalbar	\N	-	muhamatirfan2822@gmail.com	\N	online 5 jt training, 5 jt uji	\N	FIX	\N	2023068	Pel & Ujian	\N	\N	0	0	0	0	0	\N	\N	\N	\N	\N	\N	\N	2023-05-12 10:31:49	2026-07-07 04:38:08.636	.	cmqs4gajg0000jcd0evfyeg79	EE	\N	\N	\N	5900000	\N	.	\N	.	\N	\N	PLN (Persero), PT - UPDK Kapuas 	\N	\N	\N	PT PLN Nusantara Power UPDK Kapuas	\N	085245315357	\N	\N	.	\N	202306	.	\N	\N	2023-06-18 17:00:00
@@ -46888,8 +47207,6 @@ COPY benefita.peserta_training (id, nama, jabatan, alamat, "noTelp", "noFax", em
 1042	Dita Ramadhani	HSE	Jl. Gaya Motor III No. 2, Kecamatan Tanjung Priok, Jakarta Utara, DKI	\N	\N	ditarmdhni@gmail.com	\N	\N	\N	FIX	PR00052	2023546	Ujian	\N	\N	0	0	0	0	0	\N	\N	\N	\N	\N	\N	\N	2023-06-13 02:01:52	2026-07-07 04:38:09.29	.	cmqs4gak60006jcd0m2yt7ric	SL	\N	\N	\N	5000000	\N	.	\N	.	\N	17446	Astra Daihatsu Motor, PT	\N	\N	\N	\N	.	081325478153	2023087	\N	.	\N	202306	.	\N	\N	2023-06-14 17:00:00
 1043	Ely Novyanti	Environmental Speialist	Wisma Nusantara Lantai 19 Jl. MH Thamrin No. 59 Jakarta Pusat	\N	021 3159525	elythea@yahoo.com	\N	INV Bermaterai dan sertifikat pelatihan dikirim ke a.n. Ibu. Erna - SDM; online	\N	FIX	\N	2023006	Refresh & Ujian	\N	\N	0	0	0	5000000	4900000	MANDIRI	\N	2023-07-26 17:00:00	0169/INV/REG-WM-01/VI/23	\N	cmqs4gala000ujcd0i3glommm	\N	2023-06-13 02:21:12	2026-07-07 04:38:09.294	.	cmqs4gal1000ojcd0wf1gmv1q	SL	Online	\N	\N	5900000	\N	.	\N	.	\N	\N	Nusantara Regas, PT	\N	\N	\N	PT Nusantara Regas	\N	087822850523	\N	\N	.	1	202306	.	\N	\N	2023-06-11 17:00:00
 1044	Agus Salim	\N	\N	\N	\N	\N	\N	\N	\N	FIX	\N	2023568	Ujian	\N	\N	0	0	0	0	0	\N	\N	\N	\N	\N	\N	\N	2023-06-13 02:37:17	2026-07-07 04:38:09.3	.	cmqs4gakf000cjcd0ykjc31bw	SL	\N	\N	\N	0	\N	.	\N	.	\N	17723	Panca Amara Utama, PT	\N	\N	\N	\N	.	0811538392	2023103	\N	.	\N	202306	.	\N	\N	2023-06-15 17:00:00
-1045	Khoirul Huda	\N	\N	\N	\N	\N	\N	\N	\N	FIX	\N	2023569	Ujian	\N	\N	0	0	0	0	0	\N	\N	\N	\N	\N	\N	\N	2023-06-13 02:38:14	2026-07-07 04:38:09.304	.	cmqs4gakf000cjcd0ykjc31bw	SL	\N	\N	\N	0	\N	.	\N	.	\N	17724	Panca Amara Utama, PT	\N	\N	\N	\N	.	085755555290	2023103	\N	.	\N	202306	.	\N	\N	2023-06-15 17:00:00
-1046	Sudarsono	\N	\N	\N	\N	\N	\N	Pengganti Divka Aryo Pratama	\N	FIX	\N	2023068	Pel & Ujian	\N	\N	0	0	0	0	0	\N	\N	\N	\N	\N	cmqs4gajg0000jcd0evfyeg79	\N	2023-06-13 03:18:36	2026-07-07 04:38:09.309	.	cmqs4gajg0000jcd0evfyeg79	EE	\N	\N	\N	5900000	\N	.	\N	.	\N	\N	PLN (Persero), PT - UPDK Kapuas 	\N	\N	\N	\N	\N	081256822376	\N	\N	.	\N	202306	.	\N	\N	2023-06-18 17:00:00
 1047	Fitra Ria Hermawan	TL K3L dan Kam	Jl. Adi Sucipto KM 7,3 Kel. Sungai Raya, Kec Sungai Raya, Kab. Kubu Raya, Kalimantan Barat 	\N	-	fitrariahermawan@ymail.com	\N	online 5 jt training, 5 jt uji	\N	FIX	\N	2023068	Pel & Ujian	\N	\N	0	0	0	0	0	\N	\N	\N	\N	\N	\N	\N	2023-06-13 03:37:41	2026-07-07 04:38:09.313	.	cmqs4gajg0000jcd0evfyeg79	EE	\N	\N	\N	5900000	\N	.	\N	.	\N	\N	PLN (Persero), PT - UPDK Kapuas 	\N	\N	\N	PLN Nusantara Power- UPDK Kapuas	\N	081258089049	\N	\N	.	\N	202306	.	\N	\N	2023-06-18 17:00:00
 1048	Rivaldo Harvianto	Technician K3L dan Keamanan	Jl. Adisucipto Km. 7,3 Sei Raya, Kabupaten Kubu Raya, Kalimantan Barat	\N	\N	harviantorivaldo@gmail.com	\N	online 5 jt training, 5 jt uji	\N	FIX	\N	2023068	Pel & Ujian	\N	\N	0	0	0	0	0	\N	\N	\N	\N	\N	\N	\N	2023-06-13 03:40:09	2026-07-07 04:38:09.319	.	cmqs4gajg0000jcd0evfyeg79	EE	\N	\N	\N	5900000	\N	.	\N	.	\N	\N	PLN (Persero), PT - UPDK Kapuas 	\N	\N	\N	PT PLN Nusantara Power UPDK Kapuas	\N	085346577131	\N	\N	.	\N	202306	.	\N	\N	2023-06-18 17:00:00
 1049	Mursyal	\N	\N	\N	\N	\N	\N	online 5 jt training, 5 jt uji	\N	FIX	\N	2023068	Pel & Ujian	\N	\N	0	0	0	0	0	\N	\N	\N	\N	\N	cmqs4gajg0000jcd0evfyeg79	\N	2023-06-13 03:44:09	2026-07-07 04:38:09.322	.	cmqs4gajg0000jcd0evfyeg79	EE	\N	\N	\N	5900000	\N	.	\N	.	\N	\N	PLN (Persero), PT - UPDK Kapuas 	\N	\N	\N	\N	\N	082157243964	\N	\N	.	\N	202306	.	\N	\N	2023-06-18 17:00:00
@@ -46992,6 +47309,7 @@ COPY benefita.peserta_training (id, nama, jabatan, alamat, "noTelp", "noFax", em
 1145	Hanung Wijaya	\N	\N	\N	\N	\N	\N	Offline Swissbelinn Simatupang	\N	FIX	\N	2023576	Pelatihan	\N	\N	0	0	0	0	0	\N	\N	\N	\N	\N	cmqs4gal1000ojcd0wf1gmv1q	\N	2023-06-26 03:32:12	2026-07-07 04:38:09.827	.	cmqs4gal1000ojcd0wf1gmv1q	SL	Offline	\N	\N	5900000	\N	.	\N	.	\N	\N	Panca Amara Utama, PT	\N	\N	\N	\N	\N	\N	\N	\N	.	\N	202308	.	\N	\N	2023-08-01 17:00:00
 1146	Dev Suresh Bhojwani	\N	\N	\N	\N	\N	\N	Offline Swissbelinn Simatupang	\N	FIX	\N	2023576	Pelatihan	\N	\N	0	0	0	0	0	\N	\N	\N	\N	\N	cmqs4gal1000ojcd0wf1gmv1q	\N	2023-06-26 03:32:40	2026-07-07 04:38:09.836	.	cmqs4gal1000ojcd0wf1gmv1q	SL	Offline	\N	\N	5900000	\N	.	\N	.	\N	\N	Panca Amara Utama, PT	\N	\N	\N	\N	\N	\N	\N	\N	.	\N	202308	.	\N	\N	2023-08-01 17:00:00
 1147	Agung Pradana Prastya Wibowo	\N	\N	\N	\N	\N	\N	Pindahan dr Tgl 2023-07-17:	\N	CANCEL	\N	2023187	Pelatihan	\N	\N	0	0	0	0	0	\N	\N	\N	\N	\N	\N	\N	2023-06-26 03:52:05	2026-07-07 04:38:09.841	.	cmqs4gal1000ojcd0wf1gmv1q	SL	Offline	\N	\N	5900000	\N	.	\N	.	\N	\N	Kao Indonesia, PT - Cikarang Plant 	\N	\N	\N	\N	\N	\N	\N	\N	.	\N	202308	.	\N	\N	2023-08-27 17:00:00
+1376	via Yahdini	\N	\N	\N	\N	\N	\N	Rencana daftar 5 orang	\N	TENTATIF	\N	2023008	Pel & Ujian	\N	\N	0	0	0	0	0	\N	\N	\N	\N	\N	\N	\N	2023-08-14 04:02:46	2026-07-07 04:38:10.981	.	cmqs4gak60006jcd0m2yt7ric	IQ	Online	\N	\N	5900000	\N	.	\N	.	\N	\N	Unilever Oleochemical Indonesia, PT 	\N	\N	\N	\N	.	\N	\N	\N	.	\N	202308	.	\N	\N	2023-08-27 17:00:00
 1148	Kuswanto	Electric Technician	Karawang	\N	\N	kuswanto@mubadalaenergy.com	\N	\N	\N	FIX	\N	2023059	Pel & Ujian	\N	\N	0	0	0	0	0	\N	\N	\N	\N	\N	\N	\N	2023-06-26 07:54:18	2026-07-07 04:38:09.847	.	cmqs4gal1000ojcd0wf1gmv1q	SL	Offline	\N	\N	5900000	\N	.	\N	.	\N	\N	Mubadala Energy -  Pearl Oil (Sebuku) Ltd.	\N	\N	\N	Mubadala Energy 	\N	087841252223	\N	\N	.	\N	202307	.	\N	\N	2023-07-23 17:00:00
 1149	Hasan Suryono	Project Engineering Manager	Jl. Raya Pasar Minggu KM 18 Jaksel	\N	\N	Ha_suryo@yahoo.co.id	\N	\N	\N	FIX	\N	2023070	Pel & Ujian	\N	\N	0	0	0	0	0	\N	\N	\N	\N	\N	\N	\N	2023-08-11 09:21:27	2026-07-07 04:38:09.852	.	cmqs4gal1000ojcd0wf1gmv1q	SL	Online	\N	\N	5900000	\N	.	\N	.	\N	\N	Adhi Karya Tbk, PT - Kantor Pusat	\N	\N	\N	PT. Adhi Karya 	.	08117677474	\N	\N	.	\N	202309	.	\N	\N	2023-09-03 17:00:00
 1150	Dita Amara Yeranda	Supervisor	Plot 5J, Kawasan EJIP, Cikarang Selatan	\N	0218970910	dita.amara@aisin-indonesia.co.id	\N	Uji PDLCA;  4 agustus di ibis	\N	FIX	PR00013	2023104	Pel & Ujian	\N	\N	0	0	0	0	0	\N	\N	\N	\N	\N	\N	\N	2023-06-26 09:03:12	2026-07-07 04:38:09.857	.	cmqs4gal1000ojcd0wf1gmv1q	SL	Online	\N	\N	11500000	\N	.	\N	.	\N	\N	Aisin Indonesia, PT	\N	SYLVA	2023-07-17 07:47:41	PT Aisin Indonesia	\N	081235239349	\N	\N	.	\N	202307	.	\N	\N	2023-07-30 17:00:00
@@ -47033,6 +47351,7 @@ COPY benefita.peserta_training (id, nama, jabatan, alamat, "noTelp", "noFax", em
 1224	via irma	\N	\N	\N	\N	\N	\N	Pindahan dr WM-01 25 Sep 2023	\N	CANCEL	\N	2023010	Pel & Ujian	\N	\N	0	0	0	0	0	\N	\N	\N	\N	\N	\N	\N	2023-07-20 05:41:48	2026-07-07 04:38:10.237	.	cmqs4gal1000ojcd0wf1gmv1q	SL	Online	\N	\N	5900000	\N	.	\N	.	\N	\N	Aqua Golden Missisippi, PT - Mekarsari	\N	\N	\N	\N	\N	\N	\N	\N	.	\N	202309	.	\N	\N	2023-10-22 17:00:00
 1225	via irma	\N	\N	\N	\N	\N	\N	Dialihakan tahun depan, keperluan proper thn ini sdh slesai	\N	CANCEL	\N	2023083	Pel & Ujian	\N	\N	0	0	0	0	0	\N	\N	\N	\N	\N	cmqs4gal1000ojcd0wf1gmv1q	\N	2023-07-20 09:15:52	2026-07-07 04:38:10.241	.	cmqs4gal1000ojcd0wf1gmv1q	SL	Offline	\N	\N	5900000	\N	.	\N	.	\N	\N	Aqua Golden Missisippi, PT - Mekarsari	\N	\N	\N	\N	\N	\N	\N	\N	.	\N	202311	.	\N	\N	2023-11-05 17:00:00
 1226	Raihul Rizal	Supervisor	Jl. Rambutan Lot 504-508A Batamindo Industrial Park, Mukakuning-Batam	\N	0770-611115	raihul.rizal@sep.epson.com.sg	\N	INV Bermaterai dan sertifikat pelatihan dikirim ke a.n. Ibu. Tiara Wulansari	\N	FIX	\N	2023414	Pelatihan	\N	\N	0	0	0	15800000	15484000	MDR 2	\N	2023-08-29 17:00:00	0237/INV/REG-CSR-03/VII/23	\N	cmqs4gala000ujcd0i3glommm	\N	2023-07-21 06:44:58	2026-07-07 04:38:10.245	.	cmqs4gal1000ojcd0wf1gmv1q	IQ	Offline	\N	\N	7900000	\N	.	\N	.	\N	\N	Epson Batam, PT	\N	SYLVA	2023-07-21 08:10:21	PT Epson Batam	\N	08117787445	\N	\N	.	2	202307	.	\N	\N	2023-07-25 17:00:00
+1377	Akhmad Zubaidi	Manajer Operation and Maintenance WTP	JL. Sumatera kawasan industri mm2100 bekasi	\N	021-8981002	ahmad-z@mmid.co.id	\N	Uji Offline	\N	FIX	\N	2023051	Refresh & Ujian	\N	\N	0	0	0	0	0	\N	\N	\N	\N	\N	\N	\N	2023-08-14 04:20:10	2026-07-07 04:38:10.985	.	cmqs4gak60006jcd0m2yt7ric	IQ	Online	\N	\N	5900000	\N	.	\N	.	\N	\N	Megalopolis Manunggal Industrial Development (MM2100), PT.	\N	\N	\N	PT. Megalopolis Manunggal Industrial Deveopment	\N	 08123386782	\N	\N	.	\N	202308	.	\N	\N	2023-08-20 17:00:00
 1227	Rauda Ikhsan	Environmental Engineer	Tanjung Ulie, Desa Lelilef Sawai, Kec.Weda Tengah, Kab. Halmahera Tengah	\N	\N	rauda.ikhsan@iwip.co.id	\N	INV Bermaterai dikirim ke a.n. Ibu. Ajeng Alya 	\N	FIX	\N	2023282	Pelatihan	\N	\N	600000	0	0	17100000	16758000	MDR 2	\N	2023-09-06 17:00:00	0218/INV/REG-EM-08/VIII/23	0061/KWT/REG-EM-08/IX/23	cmqs4gala000ujcd0i3glommm	\N	2023-07-21 06:57:44	2026-07-07 04:38:10.251	.	cmqs4gal1000ojcd0wf1gmv1q	SL	Online	\N	\N	5700000	\N	.	\N	.	\N	\N	Indonesia Weda Bay Industrial Park, PT - Halmahera	\N	SYLVA	2023-08-01 08:29:55	PT Indonesia Weda Bay Industrial Park	\N	081390373358	\N	\N	.	3	202308	.	\N	\N	2023-08-06 17:00:00
 1228	Ajeng Alya Hidrijanti	Enviro Training Officer	Sopo Del Office Tower A Lt 21 Jl. Mega Kuningan Barat III, Lot 10.1-6 Kawasan Mega Kuningan	\N	-	ajengalya9@gmail.com	\N	\N	\N	FIX	\N	2023282	Pelatihan	\N	\N	0	0	0	0	0	\N	\N	\N	\N	\N	\N	\N	2023-07-21 06:58:17	2026-07-07 04:38:10.255	.	cmqs4gal1000ojcd0wf1gmv1q	SL	Online	\N	\N	5900000	\N	.	\N	.	\N	\N	Indonesia Weda Bay Industrial Park, PT - Halmahera	\N	\N	\N	PT Indonesia Weda Bay Industrial Park	\N	081221893704	\N	\N	.	\N	202308	.	\N	\N	2023-08-06 17:00:00
 1229	Alvin Ardiani	Environmetal ISO 14001:2015	Ds. Lelilef Kec. Weda Tengah, Kab. Halmahera Tengah, Provinsi Maluku Utara	\N	+62 21 5080 6587	ardianialvin@gmail.com	\N	\N	\N	FIX	\N	2023282	Pelatihan	\N	\N	0	0	0	0	0	\N	\N	\N	\N	\N	\N	\N	2023-07-21 06:58:45	2026-07-07 04:38:10.259	.	cmqs4gal1000ojcd0wf1gmv1q	SL	Online	\N	\N	5900000	\N	.	\N	.	\N	\N	Indonesia Weda Bay Industrial Park, PT - Halmahera	\N	\N	\N	PT. Indonesia Weda Bay Industrial Park	\N	085237055106	\N	\N	.	\N	202308	.	\N	\N	2023-08-06 17:00:00
@@ -47182,9 +47501,6 @@ COPY benefita.peserta_training (id, nama, jabatan, alamat, "noTelp", "noFax", em
 1372	Via yahdini	\N	\N	\N	\N	\N	\N	Pindahan dr EM-06 16 Oct 2023	\N	CANCEL	\N	2023044	Pel & Ujian	\N	\N	0	0	0	0	0	\N	\N	\N	\N	\N	cmqs4gal1000ojcd0wf1gmv1q	\N	2023-08-14 02:47:40	2026-07-07 04:38:10.96	.	cmqs4gal1000ojcd0wf1gmv1q	AM	Offline	\N	\N	5900000	\N	.	\N	.	\N	\N	Unilever Oleochemical Indonesia, PT 	\N	\N	\N	\N	\N	\N	\N	\N	.	\N	202311	.	\N	\N	2023-11-12 17:00:00
 1373	Andri Rustandi	Staff Maintenance Planning	Blok Roma No.10 Rt:01/01 Ds.Bulak 45273	\N	\N	andri.rustandi@pertamina.com	\N	Uji saja krn ada yg belum kompeten	\N	CANCEL	\N	2023598	Ujian	\N	\N	0	0	0	0	0	\N	\N	\N	\N	\N	cmqs4gakj000fjcd0pnbh5kpw	\N	2023-08-14 03:49:47	2026-07-07 04:38:10.966	.	cmqs4gajg0000jcd0evfyeg79	EE	Offline	\N	\N	5900000	\N	.	\N	.	\N	17334	Pertamina EP, PT - Asset 5 Field Tarakan	\N	\N	\N	\N	\N	081322900258	2023047	\N	.	\N	202308	.	\N	\N	2023-08-23 17:00:00
 1374	Amrizal Rellya	\N	\N	\N	\N	\N	\N	\N	\N	CANCEL	\N	2023125	Pelatihan	\N	\N	0	0	0	0	0	\N	\N	\N	\N	\N	cmqs4gajg0000jcd0evfyeg79	\N	2023-08-14 03:09:03	2026-07-07 04:38:10.97	.	cmqs4gajg0000jcd0evfyeg79	EE	Offline	\N	\N	5900000	\N	.	\N	.	\N	\N	Jakarta International Container Terminal (JICT), PT	\N	\N	\N	\N	\N	\N	\N	\N	.	\N	202310	.	\N	\N	2023-10-15 17:00:00
-1375	via teja	\N	\N	\N	\N	\N	\N	biaya di atas budget mereka	\N	CANCEL	\N	2023116	Pel & Ujian	\N	\N	0	0	0	0	0	\N	\N	\N	\N	\N	cmqs4gajg0000jcd0evfyeg79	\N	2023-08-14 03:37:27	2026-07-07 04:38:10.974	.	cmqs4gajg0000jcd0evfyeg79	EE	Online	\N	\N	5900000	\N	.	\N	.	\N	\N	Gorontalo Minerals, PT	\N	\N	\N	\N	\N	\N	\N	\N	.	\N	202311	.	\N	\N	2023-12-17 17:00:00
-1376	via Yahdini	\N	\N	\N	\N	\N	\N	Rencana daftar 5 orang	\N	TENTATIF	\N	2023008	Pel & Ujian	\N	\N	0	0	0	0	0	\N	\N	\N	\N	\N	\N	\N	2023-08-14 04:02:46	2026-07-07 04:38:10.981	.	cmqs4gak60006jcd0m2yt7ric	IQ	Online	\N	\N	5900000	\N	.	\N	.	\N	\N	Unilever Oleochemical Indonesia, PT 	\N	\N	\N	\N	.	\N	\N	\N	.	\N	202308	.	\N	\N	2023-08-27 17:00:00
-1377	Akhmad Zubaidi	Manajer Operation and Maintenance WTP	JL. Sumatera kawasan industri mm2100 bekasi	\N	021-8981002	ahmad-z@mmid.co.id	\N	Uji Offline	\N	FIX	\N	2023051	Refresh & Ujian	\N	\N	0	0	0	0	0	\N	\N	\N	\N	\N	\N	\N	2023-08-14 04:20:10	2026-07-07 04:38:10.985	.	cmqs4gak60006jcd0m2yt7ric	IQ	Online	\N	\N	5900000	\N	.	\N	.	\N	\N	Megalopolis Manunggal Industrial Development (MM2100), PT.	\N	\N	\N	PT. Megalopolis Manunggal Industrial Deveopment	\N	 08123386782	\N	\N	.	\N	202308	.	\N	\N	2023-08-20 17:00:00
 1378	Budiyono	Supervisor ME	MM2100 Industrial Town Cikarang Barat Bekasi Jawa Barat	\N	021 8981002	budiyono@mmid.co.id	\N	Uji Offline; INV bermaterai dan sertifikat pelatihan an Budiyono dan Akhmad Zubaidi dikirim ke an Rahmalia	\N	FIX	\N	2023051	Refresh & Ujian	\N	\N	0	0	0	18000000	18000000	MANDIRI	\N	2023-10-12 17:00:00	0300/INV/REG-ENG-01/VIII/23	\N	cmqs4gala000ujcd0i3glommm	\N	2023-08-14 04:20:53	2026-07-07 04:38:10.989	.	cmqs4gak60006jcd0m2yt7ric	IQ	Online	\N	\N	5900000	\N	.	\N	.	\N	\N	Megalopolis Manunggal Industrial Development (MM2100), PT.	\N	\N	\N	PT. Megalopolis Manunggal Industrial Development	\N	08129943363	\N	\N	.	2	202308	.	\N	\N	2023-08-20 17:00:00
 1379	Via dea	\N	\N	\N	\N	\N	\N	Pindahan dr Tgl 2023-08-21:	\N	CANCEL	\N	2023169	Pelatihan	\N	\N	0	0	0	0	0	\N	\N	\N	\N	\N	\N	\N	2023-08-14 04:49:28	2026-07-07 04:38:10.993	.	cmqs4gal1000ojcd0wf1gmv1q	SL	Online	\N	\N	5900000	\N	.	\N	.	\N	\N	Bhumi Jepara Service,  PT	\N	\N	\N	\N	\N	\N	\N	\N	.	\N	202311	.	\N	\N	2023-11-28 17:00:00
 1380	Bowo Pramono	\N	\N	\N	\N	\N	\N	Uji Offline	\N	CANCEL	\N	2023051	Refresh & Ujian	\N	\N	0	0	0	0	0	\N	\N	\N	\N	\N	cmqs4gak60006jcd0m2yt7ric	\N	2023-08-14 04:58:25	2026-07-07 04:38:10.999	.	cmqs4gak60006jcd0m2yt7ric	IQ	Online	\N	\N	9000000	\N	.	\N	.	\N	\N	PLN Indonesia Power, PT - Unit Pembangkitan Suralaya	\N	IQBAL	2023-08-18 07:23:39	\N	\N	\N	\N	\N	.	\N	202308	.	\N	\N	2023-08-20 17:00:00
@@ -47487,6 +47803,7 @@ COPY benefita.peserta_training (id, nama, jabatan, alamat, "noTelp", "noFax", em
 1678	Hendra Gunawan	Mekanik Teknisi 	Cabok Kaler RT/RW 003/001 No 93 Haurpugur Rancaekek Bandung Jawa Barat 40395	\N	021 7592 2831	g_endra@yahoo.co.id	\N	INV bermaterai dan sertifikat pelatihan an Hendra Gunawan dikirim ke an Ibu Tiara	\N	FIX	\N	2023045	Pel & Ujian	\N	\N	0	0	0	11400000	11172000	MANDIRI	\N	2024-01-15 17:00:00	0005/INV/REG-EM-06/XII/24	\N	cmqs4gala000ujcd0i3glommm	\N	2023-10-09 12:51:12	2026-07-07 04:38:12.467	.	cmqs4gal1000ojcd0wf1gmv1q	SL	Offline	\N	\N	11400000	\N	.	\N	.	\N	\N	Mubadala Energy  (Sebuku) Ltd.	\N	SYLVA	2023-12-13 03:45:02	Swasta 	\N	082240489042	\N	\N	.	1	202312	.	\N	\N	2023-12-17 17:00:00
 1679	Nur Aji Meiarto	\N	\N	\N	\N	\N	\N	Karena 2 kali batal. Minta refund	\N	CANCEL	\N	2024164	Pelatihan	\N	\N	0	0	0	0	7900000	MANDIRI	\N	2023-11-12 17:00:00	\N	\N	cmqs4gal1000ojcd0wf1gmv1q	\N	2023-10-10 04:12:57	2026-07-07 04:38:12.471	.	cmqs4gal1000ojcd0wf1gmv1q	SL	Online	\N	\N	5900000	\N	.	\N	.	\N	\N	Kemang Food Industries, PT	\N	\N	\N	\N	\N	\N	\N	\N	.	\N	202404	.	\N	\N	2024-04-23 17:00:00
 1680	Fahmi Alifian	SHEQ Officer	Komp. PCI Blok D 87 No. 17, Cilegon, Banten	\N	\N	fahmi.alifian@vopak.com	\N	3 Inv bermaterai, PO, 2 Jaket, sertifikat pelatihan an Albertus Bobby, Fahmi Alifian dikirim ke an Bpk Albertus	\N	FIX	\N	2023022	Pel & Ujian	\N	\N	0	0	0	8900000	8722000	PERMATA	\N	2024-01-15 17:00:00	0422/INV/REG-WM-07/XI/23	\N	cmqs4gala000ujcd0i3glommm	\N	2023-10-10 05:26:14	2026-07-07 04:38:12.476	.	cmqs4gal1000ojcd0wf1gmv1q	SL	Online	\N	\N	8900000	\N	.	\N	.	\N	\N	Jakarta Tank Terminal, PT	\N	SYLVA	2023-11-13 03:14:05	PT. Jakarta Tank Terminal	\N	087808706076	\N	\N	.	1	202311	.	\N	\N	2023-11-19 17:00:00
+4343	Ilham Aulia Marganti	Group Head	Kawasan industri GIIC Blok AC no.01 , Cikarang Pusat, Kab.Bekasi	\N	\N	ilham.aulia@suzuki.co.id	\N	\N	\N	FIX	\N	2025423	Ujian	\N	\N	0	0	0	0	0	\N	\N	\N	\N	\N	\N	\N	2025-05-07 06:38:54	2026-07-07 04:38:27.662	.	cmqs4gak60006jcd0m2yt7ric	SL	Offline	\N	\N	4600000	\N	.	\N	.	\N	21054	Suzuki Indomobil Motor, PT - Plant Pulogadung	\N	\N	\N	\N	.	087870688430	2025215	\N	.	\N	202505	.	\N	\N	2025-05-07 17:00:00
 1681	Umar Rozaq	Safety Patrol 	Jln, A. Yani. No.10,Km101 Desa Suato Tatakan, Tapin Selatan, Tapin-Kalimantan Selatan 	\N	-	umarrozaq920@gmail.com	\N	INV bermaterai, jaket dan sertifikat pelatihan an Umar Rozaq dikirim ke an Ibu Ety Budiarti	\N	FIX	\N	2023022	Pel & Ujian	\N	\N	0	0	0	9400000	9212000	MANDIRI	\N	2024-01-04 17:00:00	0421/INV/REG-WM-07/XI/23	\N	cmqs4gala000ujcd0i3glommm	\N	2023-10-10 05:26:15	2026-07-07 04:38:12.481	.	cmqs4gal1000ojcd0wf1gmv1q	SL	Online	\N	\N	9400000	\N	.	\N	.	\N	\N	Tapin Coal Terminal, PT - Kalimantan Selatan	\N	SYLVA	2023-11-10 02:52:12	PT. Tapin Coal Terminal 	\N	082252603384	\N	\N	.	1	202311	.	\N	\N	2023-11-19 17:00:00
 1682	Ahmad Muztaba	SHEQ Manager 	Jalan Timor Raya No.2 Kawasan Pelindo KOJA Jakarta Utara 	\N	NA	ahmad.muztaba@vopak.com	\N	INV bermaterai (belum kirim jaket dan sertifikat pelatihan) dikriim ke an Bpk Albertus 14 des	\N	FIX	\N	2023012	Pel & Ujian	\N	\N	500000	0	0	10400000	10192000	PERMATA	\N	2024-01-21 17:00:00	0447/INV/REG-WM-01/XII/23	\N	cmqs4gala000ujcd0i3glommm	\N	2023-10-10 05:26:44	2026-07-07 04:38:12.485	.	cmqs4gal1000ojcd0wf1gmv1q	SL	Online	\N	\N	10400000	\N	.	\N	.	\N	\N	Jakarta Tank Terminal, PT	\N	SYLVA	2023-12-22 01:01:51	PT. Jakarta Tank Terminal	\N	081113906349	\N	\N	.	1	202312	.	\N	\N	2023-12-25 17:00:00
 1683	via winda	\N	\N	\N	\N	\N	\N	Pindahan dr EM-05 13 Nov 2023	\N	CANCEL	\N	2023034	Refresh & Ujian	\N	\N	0	0	0	0	0	\N	\N	\N	\N	\N	\N	\N	2023-10-10 07:02:31	2026-07-07 04:38:12.489	.	cmqs4gajg0000jcd0evfyeg79	EE	Online	\N	\N	5900000	\N	.	\N	.	\N	\N	Indonesia Asahan Aluminium (Persero), PT	\N	\N	\N	\N	\N	\N	\N	\N	.	\N	202311	.	\N	\N	2023-12-17 17:00:00
@@ -47625,6 +47942,7 @@ COPY benefita.peserta_training (id, nama, jabatan, alamat, "noTelp", "noFax", em
 1812	Arfi Hazami	\N	\N	\N	\N	\N	\N	\N	\N	FIX	\N	2023649	Ujian	\N	\N	0	0	0	0	0	\N	\N	\N	\N	\N	\N	\N	2023-11-08 04:41:37	2026-07-07 04:38:13.095	.	cmqs4gak60006jcd0m2yt7ric	EE	Offline	\N	\N	0	\N	.	\N	.	\N	18546	PLN Indonesia Power, PT -  UPDK Jambi 	\N	\N	\N	\N	.	085870331843	2023053	\N	.	\N	202311	.	\N	\N	2023-11-08 17:00:00
 1813	Aris Budianto	\N	\N	\N	\N	\N	\N	\N	\N	FIX	\N	2023649	Ujian	\N	\N	0	0	0	0	0	\N	\N	\N	\N	\N	\N	\N	2023-11-08 04:44:24	2026-07-07 04:38:13.099	.	cmqs4gak60006jcd0m2yt7ric	EE	Offline	\N	\N	0	\N	.	\N	.	\N	18498	PLN Indonesia Power, PT -  UPDK Jambi 	\N	\N	\N	\N	.	081347813232	2023053	\N	.	\N	202311	.	\N	\N	2023-11-08 17:00:00
 1814	Irwansyah	Junior Officer Lingkungan	Jl. Bambang Ismoyo No.1 Singkawang	\N	-	irwansyah1@plnindonesiapower.co.id	\N	Inv Bermaterai, 2 Jaket dan Sertifikat pelatihan an Irwansyah dikirim ke an Bpk Salahudin	\N	FIX	\N	2023283	Pelatihan	\N	\N	0	0	0	5900000	5900000	MANDIRI	\N	2023-11-07 17:00:00	0411/INV/REG-EM-08/XI/23	\N	cmqs4gap5003fjcd05xlop67f	\N	2023-11-08 05:30:39	2026-07-07 04:38:13.103	.	cmqs4gak60006jcd0m2yt7ric	EE	Online	\N	../form_pendaftaran/2023283/18588Formulir Pendaftaran_Penurunan Emisi dan GRK Untuk PROPER.pdf	5900000	\N	.	\N	.	\N	\N	PLN Indonesia Power, PT -  UPDK Singkawang	\N	ENI	2023-11-09 09:24:26	PT PLN Indonesia Power UPK Singkawang	\N	082149202994	\N	\N	.	1	202311	.	\N	\N	2023-11-14 17:00:00
+4344	Andrian Bima Wicaksono	Forman safety	Desa fatufia	\N	\N	andrnbima@gmail.com	\N	INV bermaterai pelatihan periode April - Mei (30%) dan Sertifikat Pelatihan	\N	FIX	\N	2025300	Pel & Ujian	\N	\N	0	0	0	12900000	12642000	MDR 2	\N	2025-08-26 17:00:00	0185/INV/REG-ENG-01/V/25	\N	cmqs4gala000ujcd0i3glommm	\N	2025-05-07 04:41:56	2026-07-07 04:38:27.667	.	cmqs4gapx0040jcd0khj3da1w	EE	Online	\N	\N	12900000	\N	.	6	.	\N	\N	Dexin Steel Indonesia , PT	Laki-laki	WULAN	2025-05-20 01:35:53	Dexin steel indonesia	\N	082292854089	\N	\N	.	1	202505	.	\N	\N	2025-05-25 17:00:00
 1815	Saptoni	Junior Officer Logistik	Jalan Raya Tanjung Gundul, Kabupaten Bengkayang , Unit PLTU 3 Bengkayang	\N	\N	saptoni57@gmail.com	\N	\N	\N	FIX	\N	2023252	Pelatihan	\N	\N	0	0	0	11800000	11800000	MANDIRI	\N	2023-11-07 17:00:00	0405/INV/REG-HAZ-02/XI/23	\N	\N	\N	2023-11-08 05:22:24	2026-07-07 04:38:13.106	.	cmqs4gak60006jcd0m2yt7ric	EE	Online	\N	../form_pendaftaran/2023252/18585Formulir Pendaftaran_Bahan B3.pdf	5900000	\N	.	\N	.	\N	\N	PLN Indonesia Power, PT -  UPDK Singkawang	\N	ENI	2023-11-09 09:19:05	PT. PLN INDONESIA POWER UPK SINGKAWANG	\N	08971117730	\N	\N	.	2	202311	.	\N	\N	2023-11-12 17:00:00
 1816	Parhani	Junior Officer Lingkungan	Jl. Raya Sedau, Dusun Tanjung Gundul, Desa Karimunting, Kec. Sungai Raya Kepulauan	\N	-	parhani@plnindonesiapower.co.id	\N	\N	\N	FIX	\N	2023252	Pelatihan	\N	\N	0	0	0	0	0	\N	\N	\N	\N	\N	\N	\N	2023-11-08 05:22:55	2026-07-07 04:38:13.113	.	cmqs4gak60006jcd0m2yt7ric	EE	Online	\N	\N	5900000	\N	.	\N	.	\N	\N	PLN Indonesia Power, PT -  UPDK Singkawang	\N	\N	\N	PLN Indonesia Power UPK Singkawang	\N	089693467263	\N	\N	.	\N	202311	.	\N	\N	2023-11-12 17:00:00
 1817	Hilda Rosalina	Team Leader Lingkungan	JL. RAYA SEDAU, DUSUN TANJUNG GUNDUL, DESA KARIMUNTING, KEC. SUNGAI RAYA KEPULAUAN, KAB. BENGKAYANG, KALIMANTAN BARAT	\N	-	hilda.rosalina93@gmail.com	\N	belum kirim sertifikat pelataihan an Hilda Sari ;Pindahan dr Tgl 2023-11-20:Inv Bermaterai, 2 Jaket dan Sertifikat pelatihan an Irwansyah dikirim ke a	\N	FIX	\N	2023108	Pelatihan	\N	\N	0	0	0	6900000	6900000	MANDIRI	\N	2023-11-07 17:00:00	0412/INV/REG-EP-14/XI/23	\N	cmqs4gap5003fjcd05xlop67f	\N	2023-11-08 05:26:37	2026-07-07 04:38:13.118	.	cmqs4gak60006jcd0m2yt7ric	EE	Online	\N	../form_pendaftaran/2023107/18587Formulir Pendaftaran_Workshop LCA Untuk PROPER.pdf	6900000	\N	.	\N	.	\N	\N	PLN Indonesia Power, PT -  UPDK Singkawang	\N	ENI	2023-11-09 09:33:51	PT PLN INDONESIA POWER UPK SINGKAWANG	\N	081251778200	\N	\N	.	1	202312	.	\N	\N	2023-12-17 17:00:00
@@ -47835,6 +48153,7 @@ COPY benefita.peserta_training (id, nama, jabatan, alamat, "noTelp", "noFax", em
 2021	Syaiful Adzahari 	Hse manager	Cibubur	\N	\N	Syaifulazhary2003@gmail.com	\N	\N	\N	FIX	\N	2024366	Ujian	\N	\N	0	0	0	0	0	\N	\N	\N	\N	\N	\N	\N	2024-01-30 04:34:50	2026-07-07 04:38:14.089	.	cmqs4gak60006jcd0m2yt7ric	SL	Offline	\N	\N	6750000	\N	.	\N	.	\N	18772	REI Sistem Indonesia, PT	\N	\N	\N	\N	.	081285160494	2024038	\N	.	\N	202402	.	\N	\N	2024-02-01 17:00:00
 2022	Rudi Hari Wibowo	\N	\N	\N	\N	\N	\N	fix jika di Bogor	\N	CANCEL	\N	2024088	Pel & Ujian	\N	\N	0	0	0	0	0	\N	\N	\N	\N	\N	cmqs4gal1000ojcd0wf1gmv1q	\N	2024-01-31 03:02:56	2026-07-07 04:38:14.094	.	cmqs4gal1000ojcd0wf1gmv1q	SL	Offline	\N	\N	5900000	\N	.	\N	.	\N	\N	Guohua Taidian Pembangkitan Jawa Bali, PT	\N	\N	\N	\N	\N	\N	\N	\N	.	\N	202402	.	\N	\N	2024-02-25 17:00:00
 2023	Renato Renold Richard Rauan	Enviro supervisor	Jl. Pluit raya no. 18, jakarta utara 14450	\N	(021) 66605561	rauanrenato@gmail.com	\N	uji online 28 maret; INV bermaterai dan sertifikat pelatihan an Renato Renold Richard Rauan dikiirm ke an Ibu Dyah	\N	FIX	\N	2024120	Refresh & Ujian	\N	\N	0	0	0	5000000	4900000	MANDIRI	\N	2024-04-22 17:00:00	0071/INV/REG-HAZ-01/III/24	\N	cmqs4gala000ujcd0i3glommm	\N	2024-03-05 04:17:17	2026-07-07 04:38:14.1	.	cmqs4gal1000ojcd0wf1gmv1q	SL	Online	\N	\N	5000000	\N	.	\N	.	\N	\N	Sebuku Iron Lateritic Ores, PT	\N	SYLVA	2024-03-15 06:57:14	PT. Sebuku iron lateritic ores	\N	081348659352	\N	\N	.	1	202403	.	\N	\N	2024-03-17 17:00:00
+7071	Ezy Triansyah Putra	Specialist	Kp. Bangkoreang RT 01 RW 01 Desa Wangunharja, Kec. Cikarang Utara Kab. Bekasi Provinsi Jawa Barat	\N	\N	ezy.triansyah@gmail.com	\N	\N	\N	FIX	\N	2026489	Pel & Ujian	\N	\N	0	0	0	0	0	\N	\N	\N	\N	\N	\N	\N	2026-05-25 05:05:30	2026-07-07 04:38:45.827	.	cmqs4gal1000ojcd0wf1gmv1q	SL	Offline	\N	\N	5900000	\N	.	\N	.	\N	\N	The Univenus Serang, PT 	Laki-laki	\N	\N	PT. Kati Kartika Murni - Cikarang	.	085280597815	\N	\N	.	\N	202606	.	\N	\N	2026-06-07 17:00:00
 2024	Teguh Santoso	Facility Engineer	Jl. Garden Villas VII No. M-19 Pinus Regency Bandung	\N	\N	Teguh.santoso@kangean-energy.com	\N	INV bermaterai dan sertifikat pelatihan an Teguh Santoso dikirim ke an Bpk Raymond F. Wuisan	\N	FIX	\N	2024249	Pel & Ujian	\N	\N	0	0	0	12900000	12642000	MANDIRI	\N	2024-07-11 17:00:00	0191/INV/REG-EM-05/VI/24	\N	cmqs4gala000ujcd0i3glommm	\N	2024-02-26 00:58:37	2026-07-07 04:38:14.104	.	cmqs4gajg0000jcd0evfyeg79	EE	Offline	\N	\N	12900000	\N	.	\N	.	\N	\N	Kangean Energy Indonesia Ltd.	\N	ENI	2024-06-11 07:56:19	PT. Kangean Energy Indonesia	\N	081284218840	\N	\N	.	1	202406	.	\N	\N	2024-06-18 17:00:00
 2025	Ary Tjahjono	Assisten Manager	Jl. Tanjung Tembaga Baru /Pelabuhan probolinggo 67218 Probolinggo Jawa Timur	\N	0335 - 421669	ary_mtp1@kti.co.id	\N	INV Bermaterai, jaket dan sertifikat pelatihan dan jaket a.n Ary Tjahjono dikirim ke an Ibu Intan Fitria	\N	FIX	\N	2024088	Pel & Ujian	\N	\N	0	0	0	10900000	10632000	MDR 2	\N	2024-04-22 17:00:00	0057/INV/REG-WM-01/II/24	\N	cmqs4gala000ujcd0i3glommm	\N	2024-02-01 03:51:39	2026-07-07 04:38:14.109	.	cmqs4gal1000ojcd0wf1gmv1q	SL	Online	\N	\N	10900000	\N	.	\N	.	\N	\N	Kutai Timber Indonesia, PT	\N	SYLVA	2024-02-06 01:22:03	PT. Kutai Timber Indonesia	\N	081329024836	\N	\N	.	1	202402	.	\N	\N	2024-02-25 17:00:00
 2026	Muhammad Firdaus	Sampler	KALIMANTAN SELATA, KAB.TANAH BUMBU, DESA.MEKAR JAYA, BLOK E, KEC.ANGSANA	\N	-	firdausmhmmmad@gmail.com	\N	INV Bermaterai, Sertifikat Pelatihan, Jaket a.n. M Firdaus, Dodi Alfianur dan Tandi Surya dikirim ke an Ibu ERYSNA/ INTAN	\N	FIX	\N	2024118	Pel & Ujian	\N	\N	0	0	0	31200000	30576000	MDR 2	\N	2024-04-01 17:00:00	0064/INV/REG-WM-08/III/24	\N	cmqs4gala000ujcd0i3glommm	\N	2024-02-02 02:27:04	2026-07-07 04:38:14.114	.	cmqs4gajg0000jcd0evfyeg79	EE	Online	\N	\N	10400000	\N	.	\N	.	\N	\N	Rolimex Kimia Nusamas, PT	\N	ENI	2024-03-15 05:46:49	PT ROLIEX KIMIA NUSAMAS	\N	085752686156	\N	\N	.	3	202403	.	\N	\N	2024-03-17 17:00:00
@@ -47855,6 +48174,7 @@ COPY benefita.peserta_training (id, nama, jabatan, alamat, "noTelp", "noFax", em
 2048	Arwin Rudy Irwanto	\N	\N	\N	\N	\N	\N	\N	\N	FIX	\N	2024421	Pelatihan	\N	\N	0	0	0	0	0	\N	\N	\N	\N	\N	cmqs4gakj000fjcd0pnbh5kpw	\N	2024-02-13 09:26:53	2026-07-07 04:38:14.219	.	cmqs4gal1000ojcd0wf1gmv1q	SL	Offline	\N	\N	108500000	\N	.	\N	.	\N	\N	Pupuk Kalimantan Timur, PT - Kantor Pusat	\N	\N	\N	\N	\N	\N	\N	\N	.	\N	202402	.	\N	\N	2024-02-20 17:00:00
 2049	Khoirul Anam	\N	\N	\N	\N	\N	\N	\N	\N	FIX	\N	2024421	Pelatihan	\N	\N	0	0	0	0	0	\N	\N	\N	\N	\N	\N	\N	2024-02-13 09:27:19	2026-07-07 04:38:14.224	.	cmqs4gal1000ojcd0wf1gmv1q	SL	Offline	\N	\N	108500000	\N	.	\N	.	\N	\N	Pupuk Kalimantan Timur, PT - Kantor Pusat	\N	\N	\N	\N	.	\N	\N	\N	.	\N	202402	.	\N	\N	2024-02-20 17:00:00
 2050	Arni Kusumastuti	\N	\N	\N	\N	\N	\N	\N	\N	FIX	\N	2024421	Pelatihan	\N	\N	0	0	0	0	0	\N	\N	\N	\N	\N	\N	\N	2024-02-13 09:27:44	2026-07-07 04:38:14.229	.	cmqs4gal1000ojcd0wf1gmv1q	SL	Offline	\N	\N	108500000	\N	.	\N	.	\N	\N	Pupuk Kalimantan Timur, PT - Kantor Pusat	\N	\N	\N	\N	.	\N	\N	\N	.	\N	202402	.	\N	\N	2024-02-20 17:00:00
+7072	Yessy Sekyatansa	Specialist, Environment	Jl. Soekarno-Hatta Km. 31, Harjosari, Bawen, Kab. Semarang	\N	\N	yessy_sekyatansa@app.co.id	\N	\N	\N	FIX	\N	2026489	Pel & Ujian	\N	\N	0	0	0	0	0	\N	\N	\N	\N	\N	\N	\N	2026-05-25 05:06:00	2026-07-07 04:38:45.835	.	cmqs4gal1000ojcd0wf1gmv1q	SL	Offline	\N	\N	5900000	\N	.	\N	.	\N	\N	APP Purinusa Ekapersada, PT-  Semarang Mill	Laki-laki	\N	\N	PT APP PURINUSA EKAPERSADA	.	082143784297	\N	\N	.	\N	202606	.	\N	\N	2026-06-07 17:00:00
 2051	Aditya Krisna	Facility Manager	Jl. Beringin Kav 204, Batamindo Industrial Park, Muka Kuning, Batam, 29433	\N	-	aditya.krisna@alcon.com	\N	yg daftarkan alcon ind; INV bermaterai, Jaket, sertifikat pelatihan an Aditya Krisna dikirim ke an Bpk Aditya Krisna	\N	FIX	\N	2024076	Pel & Ujian	\N	\N	0	0	0	15900000	15900000	MANDIRI	\N	2024-02-28 17:00:00	0049/INV/REG-ENG-01/II/24	\N	cmqs4gala000ujcd0i3glommm	\N	2024-02-15 04:11:52	2026-07-07 04:38:14.235	.	cmqs4gajg0000jcd0evfyeg79	EE	Offline	\N	\N	15900000	\N	.	\N	.	\N	\N	Ciba Vision Batam, PT	\N	ENI	2024-02-16 08:08:37	PT. Ciba Vision Batam	\N	082113420502	\N	\N	.	1	202402	.	\N	\N	2024-02-18 17:00:00
 2052	Dodi Alfianur	Sampler	KALIMANTAN SELATAN KAB. TANAH BUMBU DESA MEKAR JAYA 	\N	\N	dodialfian22@gmail.com	\N	\N	\N	FIX	\N	2024118	Pel & Ujian	\N	\N	0	0	0	0	0	\N	\N	\N	\N	\N	\N	\N	2024-02-15 04:39:44	2026-07-07 04:38:14.241	.	cmqs4gajg0000jcd0evfyeg79	EE	Online	\N	\N	5900000	\N	.	\N	.	\N	\N	Rolimex Kimia Nusamas, PT	\N	\N	\N	PT ROLIMEX KIMIA NUSA MAS 	\N	085251679721	\N	\N	.	\N	202403	.	\N	\N	2024-03-17 17:00:00
 2053	Zam Faisal	\N	\N	\N	\N	\N	\N	uji tanggal 8 Juni di lalinsa	\N	CANCEL	\N	2024239	Ujian	\N	\N	0	0	0	0	0	\N	\N	\N	\N	\N	\N	\N	2024-02-15 06:47:00	2026-07-07 04:38:14.245	.	cmqs4gal1000ojcd0wf1gmv1q	SL	Offline	\N	\N	5900000	\N	.	\N	.	\N	\N	Inconis Nusa Jaya, PT	\N	\N	\N	\N	\N	\N	\N	\N	.	\N	202406	.	\N	\N	2024-06-09 17:00:00
@@ -47875,6 +48195,7 @@ COPY benefita.peserta_training (id, nama, jabatan, alamat, "noTelp", "noFax", em
 2279	Muliadi Malik	.	\N	\N	\N	muliadi.malik@sf.ciptakridatama.co.id	\N	.	\N	CANCEL	\N	2024433	Pel & Ujian	\N	\N	0	0	0	0	0	\N	\N	\N	\N	\N	cmqs4gal1000ojcd0wf1gmv1q	\N	2024-04-25 04:33:13	2026-07-07 04:38:15.35	.	cmqs4gak60006jcd0m2yt7ric	SL	Offline	\N	\N	0	\N	.	\N	.	\N	\N	Cipta Kridatama, PT	\N	\N	2024-04-25 04:33:13	\N	\N	081347127806	\N	\N	.	\N	202405	.	\N	\N	2024-05-19 17:00:00
 2068	Aditya Heriyo Purnama	Project Manager	BTN Graha Asri Blok U No 3	\N	\N	aheriyop95@gmail.com	\N	\N	\N	FIX	\N	2024382	Ujian	\N	\N	0	0	0	0	0	\N	\N	\N	\N	\N	cmqs4gak60006jcd0m2yt7ric	\N	2024-02-20 06:45:33	2026-07-07 04:38:14.312	.	cmqs4gak60006jcd0m2yt7ric	SL	Offline	\N	\N	5000000	\N	.	\N	.	\N	18776	Adhi Karya Tbk, PT - Kantor Pusat	\N	\N	\N	\N	\N	0822-4283-3992	2024079	\N	.	\N	202402	.	\N	\N	2024-02-21 17:00:00
 2069	Jiana Rofik Baitur Rozaq	Chief HSE - RMC IKN	Batching Plant Kariangau - Jl. Soekarno Hatta No.KM13, Kariangau, Kec. Balikpapan Bar., Kota Balikpapan, Kalimantan Timur 76134	\N	\N	tutur.jiana@gmail.com	\N	\N	\N	FIX	\N	2024382	Ujian	\N	\N	0	0	0	0	0	\N	\N	\N	\N	\N	cmqs4gak60006jcd0m2yt7ric	\N	2024-02-20 06:46:09	2026-07-07 04:38:14.316	.	cmqs4gak60006jcd0m2yt7ric	SL	Offline	\N	\N	5000000	\N	.	\N	.	\N	18777	Adhi Karya Tbk, PT - Kantor Pusat	\N	\N	\N	\N	\N	085536890259	2024079	\N	.	\N	202402	.	\N	\N	2024-02-21 17:00:00
+7073	Agung Angga Kesuma Siregar	\N	\N	\N	\N	\N	\N	\N	\N	FIX	\N	2026489	Pel & Ujian	\N	\N	0	0	0	0	0	\N	\N	\N	\N	\N	\N	\N	2026-05-25 05:06:47	2026-07-07 04:38:45.843	.	cmqs4gal1000ojcd0wf1gmv1q	SL	Offline	\N	\N	5900000	\N	.	\N	.	\N	\N	APP Purinusa Ekapersada, PT-  Demak Mill	\N	\N	\N	\N	.	\N	\N	\N	.	\N	202606	.	\N	\N	2026-06-07 17:00:00
 2070	Wahyu Zolla Rohmatulaeny	Chief HSE	Pabrik Margorejo PT Adhi Persada Beton Jalan Magelang KM 17,5 Jlegingan, Margorejo, Kec. Tempel, Kabupaten Sleman, Daerah Istimewa Yogyakarta 55552	\N	\N	wahyuzollar@gmail.com	\N	\N	\N	FIX	\N	2024382	Ujian	\N	\N	0	0	0	0	0	\N	\N	\N	\N	\N	cmqs4gak60006jcd0m2yt7ric	\N	2024-02-20 06:46:38	2026-07-07 04:38:14.32	.	cmqs4gak60006jcd0m2yt7ric	SL	Offline	\N	\N	5000000	\N	.	\N	.	\N	18778	Adhi Karya Tbk, PT - Kantor Pusat	\N	\N	\N	\N	\N	08121706446	2024079	\N	.	\N	202402	.	\N	\N	2024-02-21 17:00:00
 2071	Aditya Krisna	Facility Manager	Jl. Beringin Kav 204, Batamindo Industrial Park, Muka Kuning, Batam, 29433	\N	\N	aditya.krisna@alcon.com	\N	\N	\N	FIX	\N	2024381	Ujian	\N	\N	0	0	0	0	0	\N	\N	\N	\N	\N	\N	\N	2024-02-20 06:48:51	2026-07-07 04:38:14.361	.	cmqs4gak60006jcd0m2yt7ric	EE	Offline	\N	\N	8000000	\N	.	\N	.	\N	18818	Ciba Vision Batam, PT	\N	\N	\N	\N	.	082113420502	2024076	\N	.	\N	202402	.	\N	\N	2024-02-21 17:00:00
 2072	Candra Haryanto	FU-WWT Lead	Jl. Soekarno Hatta, blok gempol No. 35 Mekarmukya, panyileukan. Bandung	\N	\N	candra.haryanto@collins.com	\N	\N	\N	FIX	\N	2024381	Ujian	\N	\N	0	0	0	8000000	8000000	PERMATA	\N	2024-04-03 17:00:00	0042/INV/UJI-ENG-01/II/24	\N	cmqs4gala000ujcd0i3glommm	\N	2024-02-20 06:52:15	2026-07-07 04:38:14.371	.	cmqs4gak60006jcd0m2yt7ric	SL	Offline	\N	\N	8000000	\N	.	\N	.	\N	18646	UTC Aerospace Systems, PT	\N	\N	\N	\N	\N	085655426518	2024076	\N	.	1	202402	.	\N	\N	2024-02-21 17:00:00
@@ -47954,6 +48275,7 @@ COPY benefita.peserta_training (id, nama, jabatan, alamat, "noTelp", "noFax", em
 2146	adwi	\N	\N	\N	\N	\N	\N	Pindahan dr Tgl 2024-04-01:	\N	CANCEL	\N	2024242	Pelatihan	\N	\N	0	0	0	0	0	\N	\N	\N	\N	\N	\N	\N	2024-03-12 10:30:25	2026-07-07 04:38:14.717	.	cmqs4gajg0000jcd0evfyeg79	EE	Online	\N	\N	5900000	\N	.	\N	.	\N	\N	Sulawesi Cahaya Mineral, PT 	\N	\N	\N	\N	\N	\N	\N	\N	.	\N	202406	.	\N	\N	2024-06-11 17:00:00
 2147	via syarif	\N	\N	\N	\N	\N	\N	Pindahan dr EP-08 12 Jun 2024	\N	CANCEL	\N	2024282	Pelatihan	\N	\N	0	0	0	0	0	\N	\N	\N	\N	\N	\N	\N	2024-03-13 06:51:55	2026-07-07 04:38:14.721	.	cmqs4gal1000ojcd0wf1gmv1q	WD	Offline	\N	\N	5900000	\N	.	\N	.	\N	\N	CNC Foundation	\N	\N	\N	\N	\N	\N	\N	\N	.	\N	202407	.	\N	\N	2024-07-07 17:00:00
 2165	via astri	\N	\N	\N	\N	\N	\N	Pindahan dr EP-09 25 Mar 2024	\N	CANCEL	\N	2024188	Pelatihan	\N	\N	0	0	0	0	0	\N	\N	\N	\N	\N	\N	\N	2024-03-15 04:59:20	2026-07-07 04:38:14.808	.	cmqs4gajg0000jcd0evfyeg79	EE	Online	\N	\N	5900000	\N	.	\N	.	\N	\N	Bukit Muria Jaya, PT - Karawang	\N	\N	\N	\N	\N	\N	\N	\N	.	\N	202403	.	\N	\N	2024-05-05 17:00:00
+7074	Arif Purwantoro	Manager	Jl. Raya Surabaya Mojokerto KM.44 Sidoarjo Jawa Timur 	\N	\N	arif_purwantoro@app.co.id	\N	\N	\N	FIX	\N	2026489	Pel & Ujian	\N	\N	0	0	0	0	0	\N	\N	\N	\N	\N	\N	\N	2026-05-25 05:11:15	2026-07-07 04:38:45.847	.	cmqs4gal1000ojcd0wf1gmv1q	SL	Offline	\N	\N	5900000	\N	.	\N	.	\N	\N	Pabrik Kertas Tjiwi Kimia Tbk, PT - Sidoarjo 	Laki-laki	\N	\N	PT Pabrik Kertas Tjiwi Kimia Tbk	.	08814300876	\N	\N	.	\N	202606	.	\N	\N	2026-06-07 17:00:00
 2148	Jumaidi Indra	E&SR Advisor	Perkantoran Hijau Arkadia, Jln. T.B .Simatupang	\N	n/a	jumaidi.indra@se1.bp.com	\N	INV Bermaterai, Sertifikat Pelatihan a.n. Jumaidi Indra dan Berlian Kartika dikirim ke an Ibu Novi Prima	\N	FIX	\N	2024493	Pel & Ujian	\N	\N	0	0	0	29800000	29800000	MANDIRI	\N	2024-08-21 17:00:00	0108/INV/REG-ENG-02/VI/24	\N	cmqs4gala000ujcd0i3glommm	\N	2024-04-18 10:17:59	2026-07-07 04:38:14.726	.	cmqs4gajg0000jcd0evfyeg79	EE	Online	\N	\N	14900000	\N	.	\N	.	\N	\N	Surveyor Indonesia, PT - Surabaya	\N	ENI	2024-05-03 03:02:01	BP	\N	081380212374	\N	\N	.	2	202407	.	\N	\N	2024-07-28 17:00:00
 2149	Fernando Setiawan	Analist	Jl Dieng-Batur, Simpangan, Kab. Banjarnegara	\N	021 7982930	fernando@geodipa.co.id	\N	uji offline 21 maret; INV dan KWT bermaterai, dan sertifikat pelatihan an Fernando Setiawan dikirim ke an Ibu Amalia	\N	FIX	\N	2024120	Pel & Ujian	\N	\N	0	0	0	12900000	12642000	MANDIRI	\N	2024-05-14 17:00:00	0070/INV/REG-HAZ-01/III/24	0009/KWT/REG-HAZ-01/III/24	cmqs4gala000ujcd0i3glommm	\N	2024-03-14 01:34:35	2026-07-07 04:38:14.731	.	cmqs4gal1000ojcd0wf1gmv1q	SL	Offline	\N	\N	12900000	\N	.	\N	.	\N	\N	Geo Dipa Energi (Persero), PT - Kantor Pusat 	\N	SYLVA	2024-03-15 01:51:40	PT. Geo Dipa Energi (Persero)	\N	081268476114	\N	\N	.	1	202403	.	\N	\N	2024-03-17 17:00:00
 2150	Apif Miptahul Hajji	Wakil Dekan II Fakultas Vokasi	Jl. Surabaya No. 5 Malang	\N	0341 551312	apif.miptahul.ft@um.ac.id	\N	INV bermaterai, sertifikat pelatihan an Apif Miptahul Hajji dititip ke peserta	\N	FIX	SK00290	2024349	Pel & Ujian	\N	\N	0	0	0	15650000	15337000	MANDIRI	\N	2024-08-12 17:00:00	0208/INV/REG-EP-14/VII/24	0066/KWT/REG-EP-14/VIII/24	cmqs4gap5003fjcd05xlop67f	\N	2024-03-14 05:14:20	2026-07-07 04:38:14.735	.	cmqs4gal1000ojcd0wf1gmv1q	SL	Offline	\N	\N	15650000	\N	.	\N	.	\N	\N	Universitas Negeri Malang ( UM )	\N	SYLVA	2024-08-12 07:35:11	Universitas Negeri Malang (UM)	\N	081332672048	\N	\N	.	1	202408	.	\N	\N	2024-08-18 17:00:00
@@ -50148,8 +50470,6 @@ COPY benefita.peserta_training (id, nama, jabatan, alamat, "noTelp", "noFax", em
 4341	Via Rivaldy	\N	\N	\N	\N	\N	\N	\N	\N	CANCEL	\N	2025626	Pelatihan	\N	\N	0	0	0	0	0	\N	\N	\N	\N	\N	cmqs4gapx0040jcd0khj3da1w	\N	2025-05-07 04:07:04	2026-07-07 04:38:27.648	.	cmqs4gapx0040jcd0khj3da1w	EE	Offline	\N	\N	7900000	\N	.	\N	.	\N	\N	J Resources Bolaang Mongondow, PT	\N	\N	\N	\N	\N	\N	\N	\N	.	\N	202509	.	\N	\N	2025-09-21 17:00:00
 4342	Maruf Turaekhan	STAFF	JAKARTA	\N	\N	maruf_utility@yamaha-motor.co.id	\N	\N	\N	FIX	\N	2025421	Ujian	\N	\N	0	0	0	0	0	\N	\N	\N	\N	\N	\N	\N	2025-05-07 04:16:14	2026-07-07 04:38:27.659	.	cmqs4gak60006jcd0m2yt7ric	SL	Offline	\N	\N	7500000	\N	.	\N	.	\N	20845	Yamaha Indonesia Motor Manufacturing, PT - Pulogadung Plant 	\N	NANANG	2025-05-07 04:17:39	\N	.	081318994415	2025212	\N	.	\N	202505	.	\N	\N	2025-05-15 17:00:00
 4363	Irvan Kaisar	\N	\N	\N	\N	\N	\N	\N	\N	FIX	\N	2025424	Ujian	\N	\N	0	0	0	0	0	\N	\N	\N	\N	\N	\N	\N	2025-05-07 06:56:56	2026-07-07 04:38:27.845	.	cmqs4gak60006jcd0m2yt7ric	SL	Online	\N	\N	2600000	\N	.	\N	.	\N	21114	Riau Andalan Pulp & Paper, PT	\N	\N	\N	\N	.	081365701307	2025216	\N	.	\N	202505	.	\N	\N	2025-05-07 17:00:00
-4343	Ilham Aulia Marganti	Group Head	Kawasan industri GIIC Blok AC no.01 , Cikarang Pusat, Kab.Bekasi	\N	\N	ilham.aulia@suzuki.co.id	\N	\N	\N	FIX	\N	2025423	Ujian	\N	\N	0	0	0	0	0	\N	\N	\N	\N	\N	\N	\N	2025-05-07 06:38:54	2026-07-07 04:38:27.662	.	cmqs4gak60006jcd0m2yt7ric	SL	Offline	\N	\N	4600000	\N	.	\N	.	\N	21054	Suzuki Indomobil Motor, PT - Plant Pulogadung	\N	\N	\N	\N	.	087870688430	2025215	\N	.	\N	202505	.	\N	\N	2025-05-07 17:00:00
-4344	Andrian Bima Wicaksono	Forman safety	Desa fatufia	\N	\N	andrnbima@gmail.com	\N	INV bermaterai pelatihan periode April - Mei (30%) dan Sertifikat Pelatihan	\N	FIX	\N	2025300	Pel & Ujian	\N	\N	0	0	0	12900000	12642000	MDR 2	\N	2025-08-26 17:00:00	0185/INV/REG-ENG-01/V/25	\N	cmqs4gala000ujcd0i3glommm	\N	2025-05-07 04:41:56	2026-07-07 04:38:27.667	.	cmqs4gapx0040jcd0khj3da1w	EE	Online	\N	\N	12900000	\N	.	6	.	\N	\N	Dexin Steel Indonesia , PT	Laki-laki	WULAN	2025-05-20 01:35:53	Dexin steel indonesia	\N	082292854089	\N	\N	.	1	202505	.	\N	\N	2025-05-25 17:00:00
 4345	Denny Wibowo	Staff WWT	Kawasaan industri GIIC blok AC no1 , Cikarang Pusat	\N	\N	dennywibowo283@gmail.com	\N	INV bermaterai PCUA dan peserta an Denny Wibowo, Iskandar Dinata, Rizal Maulana, Andri Prasetyo dan Sunardi dikirim ke Ibu Ana	\N	FIX	\N	2025282	Refresh & Ujian	\N	\N	0	0	0	15500000	15190000	MDR1	\N	2025-07-06 17:00:00	0191/INV/REG-WM-08/V/25	\N	cmqs4gala000ujcd0i3glommm	\N	2025-05-07 05:03:07	2026-07-07 04:38:27.673	.	cmqs4gal1000ojcd0wf1gmv1q	SL	Offline	\N	\N	3100000	\N	.	6	.	\N	\N	Suzuki Indomobil Motor, PT - Plant Pulogadung	Laki-laki	SYLVA	2025-05-14 02:11:36	PT SUZUKI INDOMOBIL	\N	089612314441	\N	\N	.	5	202505	.	\N	\N	2025-05-18 17:00:00
 4346	Iskandar Dinata	Leader	Kawasan industri GIIC, Blok Ac.No.1 Cikarang Pusat	\N	\N	iskandar.dinata.id@gmail.com	\N	\N	\N	FIX	\N	2025282	Refresh & Ujian	\N	\N	0	0	0	0	0	\N	\N	\N	\N	\N	\N	\N	2025-05-07 05:04:51	2026-07-07 04:38:27.677	.	cmqs4gal1000ojcd0wf1gmv1q	SL	Offline	\N	\N	5900000	\N	.	6	.	\N	\N	Suzuki Indomobil Motor, PT - Plant Pulogadung	Laki-laki	\N	\N	PT.Suzuki Indomobil Motor Plant Cikarang	\N	081380494392	\N	\N	.	\N	202505	.	\N	\N	2025-05-18 17:00:00
 4347	Rizal Maulana	Staff	Jl. Diponegoro No.4, Jatimulya, Kec. Tambun Sel., Kota Bks, Jawa Barat 17510	\N	\N	izalmaulana1996@gmail.com	\N	\N	\N	FIX	\N	2025282	Refresh & Ujian	\N	\N	0	0	0	0	0	\N	\N	\N	\N	\N	\N	\N	2025-05-07 05:05:26	2026-07-07 04:38:27.681	.	cmqs4gal1000ojcd0wf1gmv1q	SL	Offline	\N	\N	5900000	\N	.	6	.	\N	\N	Suzuki Indomobil Motor, PT - Plant Pulogadung	Laki-laki	\N	\N	PT SUZUKI INDOMOBIL MOTOR PLANT TAMBUN 1	.	082122229023	\N	\N	.	\N	202505	.	\N	\N	2025-05-18 17:00:00
@@ -50488,6 +50808,7 @@ COPY benefita.peserta_training (id, nama, jabatan, alamat, "noTelp", "noFax", em
 4681	Guntur Setiawan	Supervisor lingkungan 	Jl. Perniagaan No. 4 Kel. Panjunan Kec. Lemahwungkuk , Kota Cirebon, Jawa Barat 45112	\N	\N	cirebon@pelindo.co.id	\N	\N	\N	FIX	\N	2025816	Pelatihan	\N	\N	0	0	0	0	0	\N	\N	\N	\N	\N	cmqs4gak60006jcd0m2yt7ric	\N	2025-06-20 03:48:14	2026-07-07 04:38:30.159	.	cmqs4gal1000ojcd0wf1gmv1q	\N	Online	\N	\N	0	\N	.	\N	.	\N	\N	Pelabuhan Indonesia (Persero), PT - Regional 2 Cirebon	Laki-laki	\N	\N	PT Pelabuhan Indonesia (Persero) Cabang Cirebon	\N	085780094301	\N	\N	.	\N	202506	.	\N	\N	2025-06-22 17:00:00
 4682	Raina Rachmani	Spv. Utilitas & Sistem Informasi	Jalan Yos Sudarso No.337 Panjang Bandar Lampung 35241	\N	\N	raina_rachmani@hotmail.com	\N	\N	\N	FIX	\N	2025816	Pelatihan	\N	\N	0	0	0	0	0	\N	\N	\N	\N	\N	cmqs4gak60006jcd0m2yt7ric	\N	2025-06-20 03:50:14	2026-07-07 04:38:30.163	.	cmqs4gal1000ojcd0wf1gmv1q	SL	Online	\N	\N	0	\N	.	\N	.	\N	\N	Pelabuhan Indonesia (Persero), PT - Regional 2 Panjang	Perempuan	\N	\N	Pelindo Regional 2 Panjang	\N	085279977992	\N	\N	.	\N	202506	.	\N	\N	2025-06-22 17:00:00
 4683	Muqham Elsafad	Plt Junior Manager Komersial & Teknik	Jalan Pelabuhan No. 01 Kec. Tanjungpandan Kabupaten Belitung Prov. Bangka Belitung	\N	\N	elsafad@pelindo.co.id	\N	\N	\N	FIX	\N	2025816	Pelatihan	\N	\N	0	0	0	0	0	\N	\N	\N	\N	\N	cmqs4gak60006jcd0m2yt7ric	\N	2025-06-20 03:50:59	2026-07-07 04:38:30.194	.	cmqs4gal1000ojcd0wf1gmv1q	SL	Online	\N	\N	0	\N	.	\N	.	\N	\N	Pelabuhan Indonesia (Persero), PT - Regional 2 Tanjung Pandan	Laki-laki	\N	\N	PT Pelindo regional 2 Tanjungpandan	\N	081367154046	\N	\N	.	\N	202506	.	\N	\N	2025-06-22 17:00:00
+7075	Irawan Jati Prayogi	Specialist	Bandung	\N	\N	irawan.j.prayogi@gmail.com	\N	\N	\N	FIX	\N	2026489	Pel & Ujian	\N	\N	0	0	0	0	0	\N	\N	\N	\N	\N	\N	\N	2026-05-25 05:12:08	2026-07-07 04:38:45.851	.	cmqs4gal1000ojcd0wf1gmv1q	SL	Offline	\N	\N	5900000	\N	.	\N	.	\N	\N	APP Purinusa Ekapersada, PT - Bandung	Laki-laki	\N	\N	PT. APP Purinusa Ekapersada	.	08812006994	\N	\N	.	\N	202606	.	\N	\N	2026-06-07 17:00:00
 4684	Adhi Nugroho	Junior Manager HSSE	Jl Belinyu No. 1 Boom Baru, Ilir Timur II, Palembang, Sumatera Selatan 30111	\N	\N	nugrohadhi@gmail.com	\N	\N	\N	FIX	\N	2025816	Pelatihan	\N	\N	0	0	0	0	0	\N	\N	\N	\N	\N	cmqs4gak60006jcd0m2yt7ric	\N	2025-06-20 03:51:49	2026-07-07 04:38:30.202	.	cmqs4gal1000ojcd0wf1gmv1q	SL	Online	\N	\N	0	\N	.	\N	.	\N	\N	Pelabuhan Indonesia (Persero), PT - Regional 2 Palembang	Laki-laki	\N	\N	PT Pelabuhan Indonesia (Persero) Regional 2 Palembang	\N	082260080260	\N	\N	.	\N	202506	.	\N	\N	2025-06-22 17:00:00
 4685	Moris Alfian	Administrator I Fasilias	Jln. Pak Kasih No. 11 Pontianak - Kalimantan Barat 78112	\N	\N	morisalfian@gmail.com	\N	\N	\N	FIX	\N	2025816	Pelatihan	\N	\N	0	0	0	0	0	\N	\N	\N	\N	\N	cmqs4gak60006jcd0m2yt7ric	\N	2025-06-20 03:52:33	2026-07-07 04:38:30.206	.	cmqs4gal1000ojcd0wf1gmv1q	SL	Online	\N	\N	0	\N	.	\N	.	\N	\N	Pelabuhan Indonesia (Persero), PT - Regional 2 Pontianak	Laki-laki	\N	\N	PT Pelabuhan Indonesia (Persero) Regional 2 Pontianak	\N	085245809090	\N	\N	.	\N	202506	.	\N	\N	2025-06-22 17:00:00
 4686	Hafid Gisen Parastra	Officer II Lingkungan	Jl. Pasoso No.1, Tanjung Priok, Jakarta Utara, 14310	\N	\N	hafidgisenparastra@gmail.com	\N	INV, KWT, Penawara, Penagihan, Dll dan sertifikat pelatihan PLB3; OPLB3; PPPU; POIPPU; PPPA dan POPAL dikirim ke Bpk Cyril Yeremia	\N	FIX	\N	2025817	Pel & Ujian	\N	\N	0	0	0	40000000	39200000	MDR 2	\N	2026-05-24 17:00:00	0256/INV/INH-HAZ-06/VI/25	\N	cmqs4gala000ujcd0i3glommm	\N	2025-06-20 03:54:25	2026-07-07 04:38:30.21	.	cmqs4gal1000ojcd0wf1gmv1q	SL	Online	\N	\N	5900000	\N	.	\N	.	\N	\N	Pelabuhan Indonesia (Persero), PT - Regional 2 Tanjung Priok	Laki-laki	\N	\N	PT Pelabuhan Indonesia (Persero) Regional 2 Tanjung Priok	\N	085292353537	\N	\N	.	5	202506	.	\N	\N	2025-06-22 17:00:00
@@ -52876,11 +53197,6 @@ COPY benefita.peserta_training (id, nama, jabatan, alamat, "noTelp", "noFax", em
 7068	Agree Manganju Evannels Silalahi	\N	\N	\N	\N	\N	\N	\N	\N	CANCEL	\N	2026490	Pel & Ujian	\N	\N	0	0	0	0	0	\N	\N	\N	\N	\N	cmqs4gakf000cjcd0ykjc31bw	\N	2026-05-25 04:57:07	2026-07-07 04:38:45.805	.	cmqs4gal1000ojcd0wf1gmv1q	SL	Offline	\N	\N	5900000	\N	.	\N	.	\N	\N	Lontar Papyrus Pulp and Paper Industry, PT - Jambi 	\N	\N	\N	\N	\N	\N	\N	\N	.	\N	202606	.	\N	\N	2026-06-07 17:00:00
 7069	Nawawi	Admin	Jl. Raya Serang - Jkt, Kragilan, Kec. Kragilan, Kabupaten Serang, Banten 42184	\N	\N	nawawioke79@gmail.com	\N	\N	\N	FIX	\N	2026490	Pel & Ujian	\N	\N	0	0	0	0	0	\N	\N	\N	\N	\N	\N	\N	2026-05-25 04:58:43	2026-07-07 04:38:45.812	.	cmqs4gal1000ojcd0wf1gmv1q	SL	Offline	\N	\N	5900000	\N	.	\N	.	\N	\N	Indah Kiat Pulp and Paper Tbk, PT - Tangerang Mills	Laki-laki	\N	\N	PT indah kiat pulp paper	.	08815626583	\N	\N	.	\N	202606	.	\N	\N	2026-06-07 17:00:00
 7070	Alya Azhni Mulya	\N	\N	\N	\N	\N	\N	\N	\N	CANCEL	\N	2026490	Pel & Ujian	\N	\N	0	0	0	0	0	\N	\N	\N	\N	\N	cmqs4gakf000cjcd0ykjc31bw	\N	2026-05-25 05:03:53	2026-07-07 04:38:45.819	.	cmqs4gal1000ojcd0wf1gmv1q	EE	Offline	\N	\N	5900000	\N	.	\N	.	\N	\N	Indah Kiat Pulp and Paper Tbk, PT - Perawang Mill	\N	\N	\N	\N	\N	\N	\N	\N	.	\N	202606	.	\N	\N	2026-06-07 17:00:00
-7071	Ezy Triansyah Putra	Specialist	Kp. Bangkoreang RT 01 RW 01 Desa Wangunharja, Kec. Cikarang Utara Kab. Bekasi Provinsi Jawa Barat	\N	\N	ezy.triansyah@gmail.com	\N	\N	\N	FIX	\N	2026489	Pel & Ujian	\N	\N	0	0	0	0	0	\N	\N	\N	\N	\N	\N	\N	2026-05-25 05:05:30	2026-07-07 04:38:45.827	.	cmqs4gal1000ojcd0wf1gmv1q	SL	Offline	\N	\N	5900000	\N	.	\N	.	\N	\N	The Univenus Serang, PT 	Laki-laki	\N	\N	PT. Kati Kartika Murni - Cikarang	.	085280597815	\N	\N	.	\N	202606	.	\N	\N	2026-06-07 17:00:00
-7072	Yessy Sekyatansa	Specialist, Environment	Jl. Soekarno-Hatta Km. 31, Harjosari, Bawen, Kab. Semarang	\N	\N	yessy_sekyatansa@app.co.id	\N	\N	\N	FIX	\N	2026489	Pel & Ujian	\N	\N	0	0	0	0	0	\N	\N	\N	\N	\N	\N	\N	2026-05-25 05:06:00	2026-07-07 04:38:45.835	.	cmqs4gal1000ojcd0wf1gmv1q	SL	Offline	\N	\N	5900000	\N	.	\N	.	\N	\N	APP Purinusa Ekapersada, PT-  Semarang Mill	Laki-laki	\N	\N	PT APP PURINUSA EKAPERSADA	.	082143784297	\N	\N	.	\N	202606	.	\N	\N	2026-06-07 17:00:00
-7073	Agung Angga Kesuma Siregar	\N	\N	\N	\N	\N	\N	\N	\N	FIX	\N	2026489	Pel & Ujian	\N	\N	0	0	0	0	0	\N	\N	\N	\N	\N	\N	\N	2026-05-25 05:06:47	2026-07-07 04:38:45.843	.	cmqs4gal1000ojcd0wf1gmv1q	SL	Offline	\N	\N	5900000	\N	.	\N	.	\N	\N	APP Purinusa Ekapersada, PT-  Demak Mill	\N	\N	\N	\N	.	\N	\N	\N	.	\N	202606	.	\N	\N	2026-06-07 17:00:00
-7074	Arif Purwantoro	Manager	Jl. Raya Surabaya Mojokerto KM.44 Sidoarjo Jawa Timur 	\N	\N	arif_purwantoro@app.co.id	\N	\N	\N	FIX	\N	2026489	Pel & Ujian	\N	\N	0	0	0	0	0	\N	\N	\N	\N	\N	\N	\N	2026-05-25 05:11:15	2026-07-07 04:38:45.847	.	cmqs4gal1000ojcd0wf1gmv1q	SL	Offline	\N	\N	5900000	\N	.	\N	.	\N	\N	Pabrik Kertas Tjiwi Kimia Tbk, PT - Sidoarjo 	Laki-laki	\N	\N	PT Pabrik Kertas Tjiwi Kimia Tbk	.	08814300876	\N	\N	.	\N	202606	.	\N	\N	2026-06-07 17:00:00
-7075	Irawan Jati Prayogi	Specialist	Bandung	\N	\N	irawan.j.prayogi@gmail.com	\N	\N	\N	FIX	\N	2026489	Pel & Ujian	\N	\N	0	0	0	0	0	\N	\N	\N	\N	\N	\N	\N	2026-05-25 05:12:08	2026-07-07 04:38:45.851	.	cmqs4gal1000ojcd0wf1gmv1q	SL	Offline	\N	\N	5900000	\N	.	\N	.	\N	\N	APP Purinusa Ekapersada, PT - Bandung	Laki-laki	\N	\N	PT. APP Purinusa Ekapersada	.	08812006994	\N	\N	.	\N	202606	.	\N	\N	2026-06-07 17:00:00
 7076	Zunawakhir Tanjung	Specialist Enviroment	Jl.Kawasan Industri Sentul, desa Sentul kecamatan Babakan Madang kab. Bogor 	\N	\N	zunawakhir1985@gmail.com	\N	\N	\N	FIX	\N	2026489	Pel & Ujian	\N	\N	0	0	0	0	0	\N	\N	\N	\N	\N	\N	\N	2026-05-25 05:15:26	2026-07-07 04:38:45.858	.	cmqs4gal1000ojcd0wf1gmv1q	NW	Offline	\N	\N	5900000	\N	.	\N	.	\N	\N	Paramitra Gunakarya Cemerlang, PT  	Laki-laki	\N	\N	PT Paramitra Gunakarya Cemerlang 	.	082387515270	\N	\N	.	\N	202606	.	\N	\N	2026-06-07 17:00:00
 7077	Ine Indriana Hermawan	Specialist	Kp. Ciparungsari RT 004 RW 002, Kecamatan Cibatu Kabupaten Purwakarta	\N	\N	Ine_Hermawan@app.co.id	\N	\N	\N	FIX	\N	2026489	Pel & Ujian	\N	\N	0	0	0	0	0	\N	\N	\N	\N	\N	\N	\N	2026-05-25 05:16:15	2026-07-07 04:38:45.863	.	cmqs4gal1000ojcd0wf1gmv1q	SL	Offline	\N	\N	5900000	\N	.	\N	.	\N	\N	APP Purinusa Ekapersada, PT-  Subang Mill	Perempuan	\N	\N	PT. APP Purinusa Ekapersada (Subang)	.	089649256290	\N	\N	.	\N	202606	.	\N	\N	2026-06-07 17:00:00
 7078	Regi Pratama	Supervisor	Jl. Prof. Dr. Ir. H. Soetami No. 88, Kel. Adiarsa Timur, Kec. Karawang Timur, Kab. Karawang 41313, Jawa Barat	\N	\N	regi_pratama@app.co.id	\N	\N	\N	CANCEL	\N	2026489	Pel & Ujian	\N	\N	0	0	0	0	0	\N	\N	\N	\N	\N	cmqs4gakf000cjcd0ykjc31bw	\N	2026-05-25 05:17:02	2026-07-07 04:38:45.868	.	cmqs4gal1000ojcd0wf1gmv1q	SL	Offline	\N	\N	5900000	\N	.	\N	.	\N	\N	Pindo Deli Pulp and Paper Mills, PT - Mills I	Laki-laki	\N	\N	PT Pindo Deli Pulp & Paper Mills	\N	085216060441	\N	\N	.	\N	202606	.	\N	\N	2026-06-07 17:00:00
@@ -53120,11 +53436,12 @@ COPY benefita.peserta_training (id, nama, jabatan, alamat, "noTelp", "noFax", em
 7313	Elan Herlana 	\N	\N	\N	\N	\N	\N	\N	\N	FIX	\N	2026379	Pelatihan	\N	\N	0	0	0	0	0	\N	\N	\N	\N	\N	cmqs494n8002kjct8t7fbx1ki	\N	2026-06-23 02:48:31	2026-07-07 04:38:47.371	.	cmqs494n8002kjct8t7fbx1ki	RN	Online	\N	\N	11800000	\N	.	\N	.	\N	\N	Multi Nitrotama Kimia, PT	\N	ARISTA	2026-06-23 06:57:30	\N	\N	082111631668	\N	\N	.	\N	202606	.	\N	\N	2026-07-07 17:00:00
 7314	Widaningsih 	\N	\N	\N	\N	\N	\N	\N	\N	FIX	\N	2026379	Pelatihan	\N	\N	0	0	0	0	0	\N	\N	\N	\N	\N	cmqs494n8002kjct8t7fbx1ki	\N	2026-06-23 02:49:08	2026-07-07 04:38:47.375	.	cmqs494n8002kjct8t7fbx1ki	RN	Online	\N	\N	5900000	\N	.	\N	.	\N	\N	Multi Nitrotama Kimia, PT	\N	\N	\N	\N	\N	08128331432	\N	\N	.	\N	202606	.	\N	\N	2026-07-07 17:00:00
 7315	Redy Suryono	GA Superintendent	Jl. Raya Juntinyuag Km. 13, Desa Limbangan, Kec. Juntinyuat, Kab. Indramayu	\N	\N	redy.suryono@polytama.co.id	\N	\N	\N	FIX	\N	2026370	Refresh & Ujian	\N	\N	0	0	0	0	0	\N	\N	\N	\N	\N	\N	\N	2026-06-23 09:02:53	2026-07-07 04:38:47.379	.	cmqs4gajg0000jcd0evfyeg79	EE	Online	\N	\N	4600000	\N	.	\N	.	\N	\N	Polytama Propindo, PT	Laki-laki	ENI	2026-06-23 09:03:35	PT POLYTAMA PROPINDO	.	081806331408	\N	\N	.	\N	202606	.	\N	\N	2026-06-21 17:00:00
+7316	Axel Putra Bintang Syahkuala Sebayang	Staff	Kos Putri Pondok Rempah, Jalan Cisitu Lama VIII No.25, Dago, Coblong	081398125030		axelsembayang456@gmail.com	Kos Putri Pondok Rempah, Jalan Cisitu Lama VIII No.25, Dago, Coblong		Informatika	FIX	PR00021	2026751	Refresh & Ujian			\N	\N	\N	100000	100000			2026-08-20 00:00:00			cmq67a4yn001ojc1chcom9uxp	cmq67a4yn001ojc1chcom9uxp	2026-08-30 11:58:12.277	2026-09-02 07:01:12.301		cmq67a4yn001ojc1chcom9uxp		Online	uploads\\penawaran\\1788091266963-380301091.pdf	uploads\\penawaran\\1788091266966-773915206.pdf	\N	IT Engineer	\N	\N	\N	\N	\N	\N	L	\N	2026-09-02 07:01:12.299	\N	\N	081398125030	\N	\N	\N	\N	\N	\N	2004-04-03 00:00:00	Bekasi	\N
 \.
 
 
 --
--- Data for Name: tabposperusahaan; Type: TABLE DATA; Schema: benefita; Owner: postgres
+-- Data for Name: tabposperusahaan; Type: TABLE DATA; Schema: benefita; Owner: -
 --
 
 COPY benefita.tabposperusahaan (id, nama, jabatan, "FOLLOW_UP", "NO_INDUK", "ACC") FROM stdin;
@@ -53132,7 +53449,7 @@ COPY benefita.tabposperusahaan (id, nama, jabatan, "FOLLOW_UP", "NO_INDUK", "ACC
 
 
 --
--- Data for Name: trainer_on_jadwal; Type: TABLE DATA; Schema: benefita; Owner: postgres
+-- Data for Name: trainer_on_jadwal; Type: TABLE DATA; Schema: benefita; Owner: -
 --
 
 COPY benefita.trainer_on_jadwal ("jadwalId", "trainerKode") FROM stdin;
@@ -53140,7 +53457,21 @@ COPY benefita.trainer_on_jadwal ("jadwalId", "trainerKode") FROM stdin;
 
 
 --
--- Data for Name: umk; Type: TABLE DATA; Schema: benefita; Owner: postgres
+-- Data for Name: trainer_on_jadwal_hari; Type: TABLE DATA; Schema: benefita; Owner: -
+--
+
+COPY benefita.trainer_on_jadwal_hari ("jadwalHariId", "trainerKode") FROM stdin;
+2	AAD
+2	AAM
+3	AAD
+3	bgb
+4	AAD
+4	AGS
+\.
+
+
+--
+-- Data for Name: umk; Type: TABLE DATA; Schema: benefita; Owner: -
 --
 
 COPY benefita.umk (id, "TglInput_umk", "No_umk", "Jumlah_umk", "PIC_umk", "Tujuan_umk", "TglPeyerahanUang_umk", "Realisasi_umk", "TglPutm_kmk", "SisaUang_umk", "Ket_umk", "Periode_umk", inputter) FROM stdin;
@@ -53181,6 +53512,7 @@ COPY benefita.umk (id, "TglInput_umk", "No_umk", "Jumlah_umk", "PIC_umk", "Tujua
 4332	2017-05-02 17:00:00	048/UMK-III/17	13950000	cmqs4v40n0001jcqgdsnit2bq	BIAYA PELATIHAN MANAGER ENERGI 29 MARET 2017	29.03.2017	12385000	\N	0	  BIAYA PELATIHAN MANAGER ENERGI 29 MARET 2017	201703	cmqs4gak60006jcd0m2yt7ric
 4333	2017-03-29 17:00:00	049/UMK-III/17	552000	\N	KEPERLUAN DAPUR DAN BBM	29.03.2017	552000	\N	0	  PEMBELIAN KEPERLUAN DAPUR DAN BBM	201703	cmqs4gak60006jcd0m2yt7ric
 4334	2017-03-29 17:00:00	050/UMK-III/17	276500	cmq67m7fm0000jc4wafuhw4j6	PEMELIHARAAN KESEHATAN	29.03.2017	276500	\N	0	 BIAYA PENGOBATAN ANANDA ADINDA NAZWA (NANANG)	201703	cmqs4gak60006jcd0m2yt7ric
+4606	2017-10-08 17:00:00	005/UMK-X/17	3500000	cmqs4v42v000fjcqg281l8qc4	ATK PELATHAN	09.10.2017	3500000	\N	0	 PEMBELIAN FLASH DISC 100 PCS	201710	cmqs4gak60006jcd0m2yt7ric
 4245	2017-01-25 17:00:00	022/UMK-I/17	1241263	cmqs4gakb0009jcd0wrpu7n4l	TRANSPORT DANUANG SAKU PERJALANAN DINAS	26.01.2017	1241263	\N	0	 UANG TRANSPORT DAN UANG SAKU PERJALANAN DINAS TANGGAL 17 - 18 JAN 2017 DAN 24 - 25 JAN 2017	201701	cmqs4gak60006jcd0m2yt7ric
 4246	2017-02-08 17:00:00	025/UMK-I/17	1346000	\N	PEMBELIAN ATK PELATIHAN	31.01.2017	1343000	\N	0	  PEMBELIAN KERTAS A4 10 RIM, PLASTIK LAMINATING 20 ROL, PULPEN 12 BOX DAN STABILO 12 BOX	201702	cmqs4gak60006jcd0m2yt7ric
 4247	2017-03-30 17:00:00	024/UMK-I/17	3050000	cmqs4v40n0001jcqgdsnit2bq	KEPERLUAN DAPUR KANTOR MH	30.01.2017	2946100	\N	0	  KEPERLUAN DAPUR KANTOR MH	201701	cmqs4gak60006jcd0m2yt7ric
@@ -53253,6 +53585,7 @@ COPY benefita.umk (id, "TglInput_umk", "No_umk", "Jumlah_umk", "PIC_umk", "Tujua
 4315	2017-03-19 17:00:00	034/UMK-III/17	60000	\N	KEPERLUAN DAPUR KANTOR CKRG	20.03.2017	64000	\N	0	  PEMBELIAN AQUA 4 GALON	201703	cmqs4gak60006jcd0m2yt7ric
 4317	2017-03-19 17:00:00	035/UMK-III/17	2420000	cmqs4gala000ujcd0i3glommm	BIAYA PELATIHAN AUDIT INTERNAL ISO 14001 - KS - 15 MARET 2017	20.03.2017	2420000	\N	0	 BIAYA TRANSPORTASI DAN AKOMODASI PELATIHAN AUDIT ISO 14001 PT KS TGL 15 MARET 2017 DI CILEGON	201703	cmqs4gak60006jcd0m2yt7ric
 4318	2017-03-19 17:00:00	036/UMK-III/17	379000	cmqs4gala000ujcd0i3glommm	TRANSPORTASI	20.03.2017	379000	\N	0	 BBM MOBIL INNOVA DAN HONDA CITY	201703	cmqs4gak60006jcd0m2yt7ric
+4970	2018-05-20 17:00:00	028/UMK-V/18	109000	cmqs4v42v000fjcqg281l8qc4	PENGIRIMAN DOKUMEN	21.05.2018	109000	\N	0	 BIAYA PENGIRIMAN DOKUMEN	201805	cmqs4gak60006jcd0m2yt7ric
 4335	2017-03-29 17:00:00	051/UMK-III/17	1711695	cmq67m7fm0000jc4wafuhw4j6	SEWA MESIN FOTO COPY	30.03.2017	1711695	\N	0	 PEMBAYARAN SEWA MESIN FOTO COPY BULAN MARET 2017	201703	cmqs4gak60006jcd0m2yt7ric
 4336	2017-03-29 17:00:00	052/UMK-III/17	335600	cmq67eg2w0023jc1cq2v2qets	PEMELIHARAAN KESEHATAN	30.03.2017	335600	\N	0	 PENGOBATAN ANANDA ZIAN (SYLVA)	201703	cmqs4gak60006jcd0m2yt7ric
 4337	2017-03-29 17:00:00	053/UMK-III/17	202000	cmq67eg2w0023jc1cq2v2qets	PEMBELIAN ATK, PERALATAN DAN KIRIM DOK	30.03.2017	202000	\N	0	 PEMBELIAN MATEEI, WAJAN, TUTUP GELAS, DAN BIAYA KIRM DOKUMEN	201703	cmqs4gak60006jcd0m2yt7ric
@@ -53484,6 +53817,7 @@ COPY benefita.umk (id, "TglInput_umk", "No_umk", "Jumlah_umk", "PIC_umk", "Tujua
 4566	2017-09-05 17:00:00	009/UMK-IX/17	492729	cmqs4gala000ujcd0i3glommm	KONSUMSI DAN BBM	06.09.2017	492729	\N	0	 KONSUMSI RAPAT DAN BBM HONDA CITY	201709	cmqs4gak60006jcd0m2yt7ric
 4567	2017-09-06 17:00:00	010/UMK-IX/17	4380000	cmqs4gala000ujcd0i3glommm	PEMBAYARAN ASURANSI 	07.09.2017	4380000	\N	0	 PEMBAYARAN ASURANSI KENDARAAN HONDA CITY	201709	cmqs4gak60006jcd0m2yt7ric
 4568	2018-04-15 17:00:00	011/UMK-IX/17	1000000	cmqs4gala000ujcd0i3glommm	PELUNASAN SERAGAM	07.09.2017	1000000	\N	0	  CASH BON DODI I UTK PELUNASAN SERAGAM ANAK	201709	cmqs4gak60006jcd0m2yt7ric
+4605	2018-01-01 17:00:00	004/UMK-X/17	16880000	cmq67eg2w0023jc1cq2v2qets	BIAYA PELATIHAN MPPA 9 OKT 2017	09.10.2017	15020000	\N	0	   BIAYA PELATIHAN MPPA TGL 9 OKT 2017 DI IBIS STYLE CIKARANG 	201710	cmqs4gak60006jcd0m2yt7ric
 4569	2017-10-08 17:00:00	012/UMK-IX/17	32500000	cmq67eg2w0023jc1cq2v2qets	BIAYA SERTIFIKASI AUDITOR ENERGI	08.09.2017	38000000	\N	0	  BIAYA SERTIFIKASI AUDITOR ENERGI OLEH LSP ENERGI TGL 9 SEPT 2017 DI BDG. DP : RP. 18.750.000,- TGL 8 SEPT 2017	201709	cmqs4gak60006jcd0m2yt7ric
 4570	2017-09-19 17:00:00	013/UMK-IX/17	18900000	cmqs4v40n0001jcqgdsnit2bq	BIAYA PELATIHAN	08.09.2017	18179000	\N	0	   BIAYA PELATIHAN WM 01 TGL 11 SEPTEMBER 2017 DI MH LT 2	201709	cmqs4gak60006jcd0m2yt7ric
 4571	2017-10-19 17:00:00	014/UMK-IX/17	10155000	cmq67eg2w0023jc1cq2v2qets	BIAYA PELATIHAN	12.09.2017	7149495	\N	0	    BIAYA PELATIHAN EM 01 TGL 11 SEPT 2017	201709	cmqs4gak60006jcd0m2yt7ric
@@ -53521,8 +53855,6 @@ COPY benefita.umk (id, "TglInput_umk", "No_umk", "Jumlah_umk", "PIC_umk", "Tujua
 4602	2018-01-01 17:00:00	001/UMK-X/17	10100000	cmq67eg2w0023jc1cq2v2qets	BIAYA PELATIHAN HAZ 01 - 2 OKT 2017	02.10.2017	10004400	\N	0	   BIAYA PELATIHAN HAZ 01 TGL 2 OKT 2017	201710	cmqs4gak60006jcd0m2yt7ric
 4603	2017-10-02 17:00:00	002/UMK-X/17	634855	cmq67m7fm0000jc4wafuhw4j6	PEMBAYARAN SEWA MESIN FC	03.10.2017	643855	\N	0	 PEMBAYARAN SEWA MESIN FC BULAN AGUSTUS 2017	201710	cmqs4gak60006jcd0m2yt7ric
 4604	2017-11-16 17:00:00	003/UMK-X/17	2750000	cmqs4v40n0001jcqgdsnit2bq	BIAYA OPS KANTOR MH	03.10.2017	2733400	\N	0	  BIAYA OPS KANTOR MH	201710	cmqs4gak60006jcd0m2yt7ric
-4605	2018-01-01 17:00:00	004/UMK-X/17	16880000	cmq67eg2w0023jc1cq2v2qets	BIAYA PELATIHAN MPPA 9 OKT 2017	09.10.2017	15020000	\N	0	   BIAYA PELATIHAN MPPA TGL 9 OKT 2017 DI IBIS STYLE CIKARANG 	201710	cmqs4gak60006jcd0m2yt7ric
-4606	2017-10-08 17:00:00	005/UMK-X/17	3500000	cmqs4v42v000fjcqg281l8qc4	ATK PELATHAN	09.10.2017	3500000	\N	0	 PEMBELIAN FLASH DISC 100 PCS	201710	cmqs4gak60006jcd0m2yt7ric
 4607	2017-10-08 17:00:00	006/UMK-X/17	400000	cmqs4v42v000fjcqg281l8qc4	PEMBELIAN KERTAS A4 DAN ENGSEL PINTU	09.10.2017	400000	\N	0	 PEMBELIAN KERTAS A4 80 GRAM 10 RIM DAN 1 ENGSEL PINTU	201710	cmqs4gak60006jcd0m2yt7ric
 4608	2017-10-08 17:00:00	007/UMK-X/17	45000	cmqs4v43g000jjcqg5gvpx40d	PEMBELIAN AQUA  3 GALON	09.10.2017	48000	\N	0	  PEMBELIA AQUA 3 GALON	201710	cmqs4gak60006jcd0m2yt7ric
 4609	2017-10-08 17:00:00	008/UMK-X/17	1615355	cmqs4gala000ujcd0i3glommm	BBM, DATALINK CABLE DAN PERAWATAN KESEHATAN	09.10.2017	1615355	\N	0	 PEMBELIAN BBM MOBIL, PEMELIHARAAN KESEHATAN PAK MUL DAN DATALINK CABLE 	201710	cmqs4gak60006jcd0m2yt7ric
@@ -53886,7 +54218,6 @@ COPY benefita.umk (id, "TglInput_umk", "No_umk", "Jumlah_umk", "PIC_umk", "Tujua
 4967	2018-08-12 17:00:00	025/UMK-V/18	6000000	cmqs4v42v000fjcqg281l8qc4	BIAYA PERPANJANGAN STNK LGX	17.05.2018	5357000	\N	0	  PERPANJANGAN STNK DAN BALIK NAMA MOBIL LGX	201805	cmqs4gak60006jcd0m2yt7ric
 4968	2018-05-23 17:00:00	026/UMK-V/18	5000000	cmqs4v42v000fjcqg281l8qc4	PEMBELIAN ATK PELATIHAN	17.05.2018	4900000	\N	0	  BIAYA PEMBELIAN FLASH DICS PELATIHAN	201805	cmqs4gak60006jcd0m2yt7ric
 4969	2018-05-20 17:00:00	027/UMK-V/18	20221000	cmq67m7fm0000jc4wafuhw4j6	BIAYA KIRIM BROSUR VIA PT POS	17.05.2018	20221000	\N	0	  BIAYA KIRIM BROSUR VIA PT POS (5.000 PCS)	201805	cmqs4gak60006jcd0m2yt7ric
-4970	2018-05-20 17:00:00	028/UMK-V/18	109000	cmqs4v42v000fjcqg281l8qc4	PENGIRIMAN DOKUMEN	21.05.2018	109000	\N	0	 BIAYA PENGIRIMAN DOKUMEN	201805	cmqs4gak60006jcd0m2yt7ric
 4971	2018-05-20 17:00:00	029/UMK-V/18	153300	cmqs4v42v000fjcqg281l8qc4	PEMBELIAN SHOWER DAN BBM MOTOR	21.05.2018	153300	\N	0	 PEMBELIAN SHOWER TOILET DAN BBM MOTOR	201805	cmqs4gak60006jcd0m2yt7ric
 4972	2018-05-29 17:00:00	030/UMK-V/18	16970533	cmqs4gala000ujcd0i3glommm	MKT FEE	22.05.2018	16970533	\N	0	  MKT FEE PERIODE MARET DAN APRIL 2018	201805	cmqs4gak60006jcd0m2yt7ric
 4973	2018-07-17 17:00:00	031/UMK-V/18	2250000	cmq67m7fm0000jc4wafuhw4j6	SERVIS MESIN FOTO COPY	23.05.2018	1050000	\N	0	  SERVIS MESIN FOTO COPY	201805	cmqs4gak60006jcd0m2yt7ric
@@ -57343,91 +57674,112 @@ COPY benefita.umk (id, "TglInput_umk", "No_umk", "Jumlah_umk", "PIC_umk", "Tujua
 
 
 --
--- Name: Proper_id_seq; Type: SEQUENCE SET; Schema: benefita; Owner: postgres
+-- Name: Proper_id_seq; Type: SEQUENCE SET; Schema: benefita; Owner: -
 --
 
-SELECT pg_catalog.setval('benefita."Proper_id_seq"', 55947, true);
+SELECT pg_catalog.setval('benefita."Proper_id_seq"', 55966, true);
 
 
 --
--- Name: SertifikasiBnsp_id_seq; Type: SEQUENCE SET; Schema: benefita; Owner: postgres
+-- Name: SertifikasiBnsp_id_seq; Type: SEQUENCE SET; Schema: benefita; Owner: -
 --
 
 SELECT pg_catalog.setval('benefita."SertifikasiBnsp_id_seq"', 1, false);
 
 
 --
--- Name: TableJenisBiaya_id_seq; Type: SEQUENCE SET; Schema: benefita; Owner: postgres
+-- Name: TableJenisBiaya_id_seq; Type: SEQUENCE SET; Schema: benefita; Owner: -
 --
 
 SELECT pg_catalog.setval('benefita."TableJenisBiaya_id_seq"', 95, true);
 
 
 --
--- Name: TableNeraca_id_seq; Type: SEQUENCE SET; Schema: benefita; Owner: postgres
+-- Name: TableNeraca_id_seq; Type: SEQUENCE SET; Schema: benefita; Owner: -
 --
 
 SELECT pg_catalog.setval('benefita."TableNeraca_id_seq"', 4336, true);
 
 
 --
--- Name: jadwal_training_id_seq; Type: SEQUENCE SET; Schema: benefita; Owner: postgres
+-- Name: evaluasi_pelatihan_id_seq; Type: SEQUENCE SET; Schema: benefita; Owner: -
 --
 
-SELECT pg_catalog.setval('benefita.jadwal_training_id_seq', 12847, true);
+SELECT pg_catalog.setval('benefita.evaluasi_pelatihan_id_seq', 1, true);
 
 
 --
--- Name: judul_training_id_seq; Type: SEQUENCE SET; Schema: benefita; Owner: postgres
+-- Name: jadwal_training_hari_id_seq; Type: SEQUENCE SET; Schema: benefita; Owner: -
+--
+
+SELECT pg_catalog.setval('benefita.jadwal_training_hari_id_seq', 4, true);
+
+
+--
+-- Name: jadwal_training_id_seq; Type: SEQUENCE SET; Schema: benefita; Owner: -
+--
+
+SELECT pg_catalog.setval('benefita.jadwal_training_id_seq', 12849, true);
+
+
+--
+-- Name: judul_training_id_seq; Type: SEQUENCE SET; Schema: benefita; Owner: -
 --
 
 SELECT pg_catalog.setval('benefita.judul_training_id_seq', 115, true);
 
 
 --
--- Name: kontak_id_seq; Type: SEQUENCE SET; Schema: benefita; Owner: postgres
+-- Name: konfirmasi_id_seq; Type: SEQUENCE SET; Schema: benefita; Owner: -
+--
+
+SELECT pg_catalog.setval('benefita.konfirmasi_id_seq', 1, true);
+
+
+--
+-- Name: kontak_id_seq; Type: SEQUENCE SET; Schema: benefita; Owner: -
 --
 
 SELECT pg_catalog.setval('benefita.kontak_id_seq', 126, true);
 
 
 --
--- Name: lini_bisnis_id_seq; Type: SEQUENCE SET; Schema: benefita; Owner: postgres
+-- Name: lini_bisnis_id_seq; Type: SEQUENCE SET; Schema: benefita; Owner: -
 --
 
 SELECT pg_catalog.setval('benefita.lini_bisnis_id_seq', 35, true);
 
 
 --
--- Name: lini_bisnis_training_id_seq; Type: SEQUENCE SET; Schema: benefita; Owner: postgres
+-- Name: lini_bisnis_training_id_seq; Type: SEQUENCE SET; Schema: benefita; Owner: -
 --
 
 SELECT pg_catalog.setval('benefita.lini_bisnis_training_id_seq', 740, true);
 
 
 --
--- Name: permintaan_nomor_surat_id_seq; Type: SEQUENCE SET; Schema: benefita; Owner: postgres
+-- Name: permintaan_nomor_surat_id_seq; Type: SEQUENCE SET; Schema: benefita; Owner: -
 --
 
 SELECT pg_catalog.setval('benefita.permintaan_nomor_surat_id_seq', 10, true);
 
 
 --
--- Name: peserta_training_id_seq; Type: SEQUENCE SET; Schema: benefita; Owner: postgres
+-- Name: peserta_training_id_seq; Type: SEQUENCE SET; Schema: benefita; Owner: -
 --
 
-SELECT pg_catalog.setval('benefita.peserta_training_id_seq', 7315, true);
+SELECT pg_catalog.setval('benefita.peserta_training_id_seq', 7316, true);
 
 
 --
--- Name: umk_id_seq; Type: SEQUENCE SET; Schema: benefita; Owner: postgres
+-- Name: umk_id_seq; Type: SEQUENCE SET; Schema: benefita; Owner: -
 --
 
 SELECT pg_catalog.setval('benefita.umk_id_seq', 8444, true);
 
 
 --
--- Name: BuktiIzin BuktiIzin_pkey; Type: CONSTRAINT; Schema: benefita; Owner: postgres
+-- Name: BuktiIzin BuktiIzin_pkey; Type: CONSTRAINT; Schema: benefita; Owner: -
 --
 
 ALTER TABLE ONLY benefita."BuktiIzin"
@@ -57435,7 +57787,7 @@ ALTER TABLE ONLY benefita."BuktiIzin"
 
 
 --
--- Name: DeviceTrusted DeviceTrusted_pkey; Type: CONSTRAINT; Schema: benefita; Owner: postgres
+-- Name: DeviceTrusted DeviceTrusted_pkey; Type: CONSTRAINT; Schema: benefita; Owner: -
 --
 
 ALTER TABLE ONLY benefita."DeviceTrusted"
@@ -57443,7 +57795,7 @@ ALTER TABLE ONLY benefita."DeviceTrusted"
 
 
 --
--- Name: DokumenPegawai DokumenPegawai_pkey; Type: CONSTRAINT; Schema: benefita; Owner: postgres
+-- Name: DokumenPegawai DokumenPegawai_pkey; Type: CONSTRAINT; Schema: benefita; Owner: -
 --
 
 ALTER TABLE ONLY benefita."DokumenPegawai"
@@ -57451,7 +57803,7 @@ ALTER TABLE ONLY benefita."DokumenPegawai"
 
 
 --
--- Name: HakAksesKaryawan HakAksesKaryawan_pkey; Type: CONSTRAINT; Schema: benefita; Owner: postgres
+-- Name: HakAksesKaryawan HakAksesKaryawan_pkey; Type: CONSTRAINT; Schema: benefita; Owner: -
 --
 
 ALTER TABLE ONLY benefita."HakAksesKaryawan"
@@ -57459,7 +57811,7 @@ ALTER TABLE ONLY benefita."HakAksesKaryawan"
 
 
 --
--- Name: OtpCode OtpCode_pkey; Type: CONSTRAINT; Schema: benefita; Owner: postgres
+-- Name: OtpCode OtpCode_pkey; Type: CONSTRAINT; Schema: benefita; Owner: -
 --
 
 ALTER TABLE ONLY benefita."OtpCode"
@@ -57467,7 +57819,7 @@ ALTER TABLE ONLY benefita."OtpCode"
 
 
 --
--- Name: Pegawai Pegawai_pkey; Type: CONSTRAINT; Schema: benefita; Owner: postgres
+-- Name: Pegawai Pegawai_pkey; Type: CONSTRAINT; Schema: benefita; Owner: -
 --
 
 ALTER TABLE ONLY benefita."Pegawai"
@@ -57475,7 +57827,7 @@ ALTER TABLE ONLY benefita."Pegawai"
 
 
 --
--- Name: PengajuanIzin PengajuanIzin_pkey; Type: CONSTRAINT; Schema: benefita; Owner: postgres
+-- Name: PengajuanIzin PengajuanIzin_pkey; Type: CONSTRAINT; Schema: benefita; Owner: -
 --
 
 ALTER TABLE ONLY benefita."PengajuanIzin"
@@ -57483,7 +57835,7 @@ ALTER TABLE ONLY benefita."PengajuanIzin"
 
 
 --
--- Name: Proper Proper_pkey; Type: CONSTRAINT; Schema: benefita; Owner: postgres
+-- Name: Proper Proper_pkey; Type: CONSTRAINT; Schema: benefita; Owner: -
 --
 
 ALTER TABLE ONLY benefita."Proper"
@@ -57491,7 +57843,7 @@ ALTER TABLE ONLY benefita."Proper"
 
 
 --
--- Name: RefreshToken RefreshToken_pkey; Type: CONSTRAINT; Schema: benefita; Owner: postgres
+-- Name: RefreshToken RefreshToken_pkey; Type: CONSTRAINT; Schema: benefita; Owner: -
 --
 
 ALTER TABLE ONLY benefita."RefreshToken"
@@ -57499,7 +57851,7 @@ ALTER TABLE ONLY benefita."RefreshToken"
 
 
 --
--- Name: SertifikasiBnsp SertifikasiBnsp_pkey; Type: CONSTRAINT; Schema: benefita; Owner: postgres
+-- Name: SertifikasiBnsp SertifikasiBnsp_pkey; Type: CONSTRAINT; Schema: benefita; Owner: -
 --
 
 ALTER TABLE ONLY benefita."SertifikasiBnsp"
@@ -57507,7 +57859,7 @@ ALTER TABLE ONLY benefita."SertifikasiBnsp"
 
 
 --
--- Name: TabPerusahaan TabPerusahaan_pkey; Type: CONSTRAINT; Schema: benefita; Owner: postgres
+-- Name: TabPerusahaan TabPerusahaan_pkey; Type: CONSTRAINT; Schema: benefita; Owner: -
 --
 
 ALTER TABLE ONLY benefita."TabPerusahaan"
@@ -57515,7 +57867,7 @@ ALTER TABLE ONLY benefita."TabPerusahaan"
 
 
 --
--- Name: TableJenisBiaya TableJenisBiaya_pkey; Type: CONSTRAINT; Schema: benefita; Owner: postgres
+-- Name: TableJenisBiaya TableJenisBiaya_pkey; Type: CONSTRAINT; Schema: benefita; Owner: -
 --
 
 ALTER TABLE ONLY benefita."TableJenisBiaya"
@@ -57523,7 +57875,7 @@ ALTER TABLE ONLY benefita."TableJenisBiaya"
 
 
 --
--- Name: TableNeraca TableNeraca_pkey; Type: CONSTRAINT; Schema: benefita; Owner: postgres
+-- Name: TableNeraca TableNeraca_pkey; Type: CONSTRAINT; Schema: benefita; Owner: -
 --
 
 ALTER TABLE ONLY benefita."TableNeraca"
@@ -57531,7 +57883,7 @@ ALTER TABLE ONLY benefita."TableNeraca"
 
 
 --
--- Name: User User_pkey; Type: CONSTRAINT; Schema: benefita; Owner: postgres
+-- Name: User User_pkey; Type: CONSTRAINT; Schema: benefita; Owner: -
 --
 
 ALTER TABLE ONLY benefita."User"
@@ -57539,7 +57891,7 @@ ALTER TABLE ONLY benefita."User"
 
 
 --
--- Name: _prisma_migrations _prisma_migrations_pkey; Type: CONSTRAINT; Schema: benefita; Owner: postgres
+-- Name: _prisma_migrations _prisma_migrations_pkey; Type: CONSTRAINT; Schema: benefita; Owner: -
 --
 
 ALTER TABLE ONLY benefita._prisma_migrations
@@ -57547,7 +57899,7 @@ ALTER TABLE ONLY benefita._prisma_migrations
 
 
 --
--- Name: berita berita_pkey; Type: CONSTRAINT; Schema: benefita; Owner: postgres
+-- Name: berita berita_pkey; Type: CONSTRAINT; Schema: benefita; Owner: -
 --
 
 ALTER TABLE ONLY benefita.berita
@@ -57555,7 +57907,7 @@ ALTER TABLE ONLY benefita.berita
 
 
 --
--- Name: contact_person_perusahaan contact_person_perusahaan_pkey; Type: CONSTRAINT; Schema: benefita; Owner: postgres
+-- Name: contact_person_perusahaan contact_person_perusahaan_pkey; Type: CONSTRAINT; Schema: benefita; Owner: -
 --
 
 ALTER TABLE ONLY benefita.contact_person_perusahaan
@@ -57563,7 +57915,7 @@ ALTER TABLE ONLY benefita.contact_person_perusahaan
 
 
 --
--- Name: daily_activity daily_activity_pkey; Type: CONSTRAINT; Schema: benefita; Owner: postgres
+-- Name: daily_activity daily_activity_pkey; Type: CONSTRAINT; Schema: benefita; Owner: -
 --
 
 ALTER TABLE ONLY benefita.daily_activity
@@ -57571,7 +57923,23 @@ ALTER TABLE ONLY benefita.daily_activity
 
 
 --
--- Name: hotel hotel_pkey; Type: CONSTRAINT; Schema: benefita; Owner: postgres
+-- Name: evaluasi_pelatihan_diminati evaluasi_pelatihan_diminati_pkey; Type: CONSTRAINT; Schema: benefita; Owner: -
+--
+
+ALTER TABLE ONLY benefita.evaluasi_pelatihan_diminati
+    ADD CONSTRAINT evaluasi_pelatihan_diminati_pkey PRIMARY KEY ("evaluasiId", "judulTrainingId");
+
+
+--
+-- Name: evaluasi_pelatihan evaluasi_pelatihan_pkey; Type: CONSTRAINT; Schema: benefita; Owner: -
+--
+
+ALTER TABLE ONLY benefita.evaluasi_pelatihan
+    ADD CONSTRAINT evaluasi_pelatihan_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: hotel hotel_pkey; Type: CONSTRAINT; Schema: benefita; Owner: -
 --
 
 ALTER TABLE ONLY benefita.hotel
@@ -57579,7 +57947,15 @@ ALTER TABLE ONLY benefita.hotel
 
 
 --
--- Name: jadwal_training jadwal_training_pkey; Type: CONSTRAINT; Schema: benefita; Owner: postgres
+-- Name: jadwal_training_hari jadwal_training_hari_pkey; Type: CONSTRAINT; Schema: benefita; Owner: -
+--
+
+ALTER TABLE ONLY benefita.jadwal_training_hari
+    ADD CONSTRAINT jadwal_training_hari_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: jadwal_training jadwal_training_pkey; Type: CONSTRAINT; Schema: benefita; Owner: -
 --
 
 ALTER TABLE ONLY benefita.jadwal_training
@@ -57587,7 +57963,7 @@ ALTER TABLE ONLY benefita.jadwal_training
 
 
 --
--- Name: judul_training judul_training_pkey; Type: CONSTRAINT; Schema: benefita; Owner: postgres
+-- Name: judul_training judul_training_pkey; Type: CONSTRAINT; Schema: benefita; Owner: -
 --
 
 ALTER TABLE ONLY benefita.judul_training
@@ -57595,7 +57971,15 @@ ALTER TABLE ONLY benefita.judul_training
 
 
 --
--- Name: kontak kontak_pkey; Type: CONSTRAINT; Schema: benefita; Owner: postgres
+-- Name: konfirmasi konfirmasi_pkey; Type: CONSTRAINT; Schema: benefita; Owner: -
+--
+
+ALTER TABLE ONLY benefita.konfirmasi
+    ADD CONSTRAINT konfirmasi_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: kontak kontak_pkey; Type: CONSTRAINT; Schema: benefita; Owner: -
 --
 
 ALTER TABLE ONLY benefita.kontak
@@ -57603,7 +57987,7 @@ ALTER TABLE ONLY benefita.kontak
 
 
 --
--- Name: lini_bisnis lini_bisnis_pkey; Type: CONSTRAINT; Schema: benefita; Owner: postgres
+-- Name: lini_bisnis lini_bisnis_pkey; Type: CONSTRAINT; Schema: benefita; Owner: -
 --
 
 ALTER TABLE ONLY benefita.lini_bisnis
@@ -57611,7 +57995,7 @@ ALTER TABLE ONLY benefita.lini_bisnis
 
 
 --
--- Name: lini_bisnis_training lini_bisnis_training_pkey; Type: CONSTRAINT; Schema: benefita; Owner: postgres
+-- Name: lini_bisnis_training lini_bisnis_training_pkey; Type: CONSTRAINT; Schema: benefita; Owner: -
 --
 
 ALTER TABLE ONLY benefita.lini_bisnis_training
@@ -57619,7 +58003,7 @@ ALTER TABLE ONLY benefita.lini_bisnis_training
 
 
 --
--- Name: log_perubahan_perusahaan log_perubahan_perusahaan_pkey; Type: CONSTRAINT; Schema: benefita; Owner: postgres
+-- Name: log_perubahan_perusahaan log_perubahan_perusahaan_pkey; Type: CONSTRAINT; Schema: benefita; Owner: -
 --
 
 ALTER TABLE ONLY benefita.log_perubahan_perusahaan
@@ -57627,7 +58011,7 @@ ALTER TABLE ONLY benefita.log_perubahan_perusahaan
 
 
 --
--- Name: penawaran penawaran_pkey; Type: CONSTRAINT; Schema: benefita; Owner: postgres
+-- Name: penawaran penawaran_pkey; Type: CONSTRAINT; Schema: benefita; Owner: -
 --
 
 ALTER TABLE ONLY benefita.penawaran
@@ -57635,7 +58019,7 @@ ALTER TABLE ONLY benefita.penawaran
 
 
 --
--- Name: pengajuan_judul_training pengajuan_judul_training_pkey; Type: CONSTRAINT; Schema: benefita; Owner: postgres
+-- Name: pengajuan_judul_training pengajuan_judul_training_pkey; Type: CONSTRAINT; Schema: benefita; Owner: -
 --
 
 ALTER TABLE ONLY benefita.pengajuan_judul_training
@@ -57643,7 +58027,7 @@ ALTER TABLE ONLY benefita.pengajuan_judul_training
 
 
 --
--- Name: permintaan_nomor_surat permintaan_nomor_surat_pkey; Type: CONSTRAINT; Schema: benefita; Owner: postgres
+-- Name: permintaan_nomor_surat permintaan_nomor_surat_pkey; Type: CONSTRAINT; Schema: benefita; Owner: -
 --
 
 ALTER TABLE ONLY benefita.permintaan_nomor_surat
@@ -57651,7 +58035,7 @@ ALTER TABLE ONLY benefita.permintaan_nomor_surat
 
 
 --
--- Name: permohonan_hak_akses permohonan_hak_akses_pkey; Type: CONSTRAINT; Schema: benefita; Owner: postgres
+-- Name: permohonan_hak_akses permohonan_hak_akses_pkey; Type: CONSTRAINT; Schema: benefita; Owner: -
 --
 
 ALTER TABLE ONLY benefita.permohonan_hak_akses
@@ -57659,7 +58043,7 @@ ALTER TABLE ONLY benefita.permohonan_hak_akses
 
 
 --
--- Name: peserta_training peserta_training_pkey; Type: CONSTRAINT; Schema: benefita; Owner: postgres
+-- Name: peserta_training peserta_training_pkey; Type: CONSTRAINT; Schema: benefita; Owner: -
 --
 
 ALTER TABLE ONLY benefita.peserta_training
@@ -57667,7 +58051,7 @@ ALTER TABLE ONLY benefita.peserta_training
 
 
 --
--- Name: tabposperusahaan tabposperusahaan_pkey; Type: CONSTRAINT; Schema: benefita; Owner: postgres
+-- Name: tabposperusahaan tabposperusahaan_pkey; Type: CONSTRAINT; Schema: benefita; Owner: -
 --
 
 ALTER TABLE ONLY benefita.tabposperusahaan
@@ -57675,7 +58059,15 @@ ALTER TABLE ONLY benefita.tabposperusahaan
 
 
 --
--- Name: trainer_on_jadwal trainer_on_jadwal_pkey; Type: CONSTRAINT; Schema: benefita; Owner: postgres
+-- Name: trainer_on_jadwal_hari trainer_on_jadwal_hari_pkey; Type: CONSTRAINT; Schema: benefita; Owner: -
+--
+
+ALTER TABLE ONLY benefita.trainer_on_jadwal_hari
+    ADD CONSTRAINT trainer_on_jadwal_hari_pkey PRIMARY KEY ("jadwalHariId", "trainerKode");
+
+
+--
+-- Name: trainer_on_jadwal trainer_on_jadwal_pkey; Type: CONSTRAINT; Schema: benefita; Owner: -
 --
 
 ALTER TABLE ONLY benefita.trainer_on_jadwal
@@ -57683,7 +58075,7 @@ ALTER TABLE ONLY benefita.trainer_on_jadwal
 
 
 --
--- Name: umk umk_pkey; Type: CONSTRAINT; Schema: benefita; Owner: postgres
+-- Name: umk umk_pkey; Type: CONSTRAINT; Schema: benefita; Owner: -
 --
 
 ALTER TABLE ONLY benefita.umk
@@ -57691,154 +58083,175 @@ ALTER TABLE ONLY benefita.umk
 
 
 --
--- Name: DeviceTrusted_userId_deviceHash_key; Type: INDEX; Schema: benefita; Owner: postgres
+-- Name: DeviceTrusted_userId_deviceHash_key; Type: INDEX; Schema: benefita; Owner: -
 --
 
 CREATE UNIQUE INDEX "DeviceTrusted_userId_deviceHash_key" ON benefita."DeviceTrusted" USING btree ("userId", "deviceHash");
 
 
 --
--- Name: Pegawai_nip_key; Type: INDEX; Schema: benefita; Owner: postgres
+-- Name: Pegawai_nip_key; Type: INDEX; Schema: benefita; Owner: -
 --
 
 CREATE UNIQUE INDEX "Pegawai_nip_key" ON benefita."Pegawai" USING btree (nip);
 
 
 --
--- Name: RefreshToken_token_key; Type: INDEX; Schema: benefita; Owner: postgres
+-- Name: RefreshToken_token_key; Type: INDEX; Schema: benefita; Owner: -
 --
 
 CREATE UNIQUE INDEX "RefreshToken_token_key" ON benefita."RefreshToken" USING btree (token);
 
 
 --
--- Name: RefreshToken_userId_idx; Type: INDEX; Schema: benefita; Owner: postgres
+-- Name: RefreshToken_userId_idx; Type: INDEX; Schema: benefita; Owner: -
 --
 
 CREATE INDEX "RefreshToken_userId_idx" ON benefita."RefreshToken" USING btree ("userId");
 
 
 --
--- Name: TableJenisBiaya_kode_key; Type: INDEX; Schema: benefita; Owner: postgres
+-- Name: TableJenisBiaya_kode_key; Type: INDEX; Schema: benefita; Owner: -
 --
 
 CREATE UNIQUE INDEX "TableJenisBiaya_kode_key" ON benefita."TableJenisBiaya" USING btree (kode);
 
 
 --
--- Name: User_email_key; Type: INDEX; Schema: benefita; Owner: postgres
+-- Name: User_email_key; Type: INDEX; Schema: benefita; Owner: -
 --
 
 CREATE UNIQUE INDEX "User_email_key" ON benefita."User" USING btree (email);
 
 
 --
--- Name: User_pegawaiId_key; Type: INDEX; Schema: benefita; Owner: postgres
+-- Name: User_pegawaiId_key; Type: INDEX; Schema: benefita; Owner: -
 --
 
 CREATE UNIQUE INDEX "User_pegawaiId_key" ON benefita."User" USING btree ("pegawaiId");
 
 
 --
--- Name: User_phone_key; Type: INDEX; Schema: benefita; Owner: postgres
+-- Name: User_phone_key; Type: INDEX; Schema: benefita; Owner: -
 --
 
 CREATE UNIQUE INDEX "User_phone_key" ON benefita."User" USING btree (phone);
 
 
 --
--- Name: contact_person_perusahaan_KODE_PERUSAHAAN_idx; Type: INDEX; Schema: benefita; Owner: postgres
+-- Name: contact_person_perusahaan_KODE_PERUSAHAAN_idx; Type: INDEX; Schema: benefita; Owner: -
 --
 
 CREATE INDEX "contact_person_perusahaan_KODE_PERUSAHAAN_idx" ON benefita.contact_person_perusahaan USING btree ("KODE_PERUSAHAAN");
 
 
 --
--- Name: daily_activity_PEGAWAI_ID_idx; Type: INDEX; Schema: benefita; Owner: postgres
+-- Name: daily_activity_PEGAWAI_ID_idx; Type: INDEX; Schema: benefita; Owner: -
 --
 
 CREATE INDEX "daily_activity_PEGAWAI_ID_idx" ON benefita.daily_activity USING btree ("PEGAWAI_ID");
 
 
 --
--- Name: daily_activity_PERUSAHAAN_ID_idx; Type: INDEX; Schema: benefita; Owner: postgres
+-- Name: daily_activity_PERUSAHAAN_ID_idx; Type: INDEX; Schema: benefita; Owner: -
 --
 
 CREATE INDEX "daily_activity_PERUSAHAAN_ID_idx" ON benefita.daily_activity USING btree ("PERUSAHAAN_ID");
 
 
 --
--- Name: hotel_kode_hotel_key; Type: INDEX; Schema: benefita; Owner: postgres
+-- Name: evaluasi_pelatihan_pesertaTrainingId_key; Type: INDEX; Schema: benefita; Owner: -
+--
+
+CREATE UNIQUE INDEX "evaluasi_pelatihan_pesertaTrainingId_key" ON benefita.evaluasi_pelatihan USING btree ("pesertaTrainingId");
+
+
+--
+-- Name: hotel_kode_hotel_key; Type: INDEX; Schema: benefita; Owner: -
 --
 
 CREATE UNIQUE INDEX hotel_kode_hotel_key ON benefita.hotel USING btree (kode_hotel);
 
 
 --
--- Name: jadwal_training_noJadwal_key; Type: INDEX; Schema: benefita; Owner: postgres
+-- Name: jadwal_training_hari_jadwalId_tanggal_key; Type: INDEX; Schema: benefita; Owner: -
+--
+
+CREATE UNIQUE INDEX "jadwal_training_hari_jadwalId_tanggal_key" ON benefita.jadwal_training_hari USING btree ("jadwalId", tanggal);
+
+
+--
+-- Name: jadwal_training_noJadwal_key; Type: INDEX; Schema: benefita; Owner: -
 --
 
 CREATE UNIQUE INDEX "jadwal_training_noJadwal_key" ON benefita.jadwal_training USING btree ("noJadwal");
 
 
 --
--- Name: judul_training_kode_key; Type: INDEX; Schema: benefita; Owner: postgres
+-- Name: judul_training_kode_key; Type: INDEX; Schema: benefita; Owner: -
 --
 
 CREATE UNIQUE INDEX judul_training_kode_key ON benefita.judul_training USING btree (kode);
 
 
 --
--- Name: kontak_kode_key; Type: INDEX; Schema: benefita; Owner: postgres
+-- Name: konfirmasi_noKonfirmasi_key; Type: INDEX; Schema: benefita; Owner: -
+--
+
+CREATE UNIQUE INDEX "konfirmasi_noKonfirmasi_key" ON benefita.konfirmasi USING btree ("noKonfirmasi");
+
+
+--
+-- Name: kontak_kode_key; Type: INDEX; Schema: benefita; Owner: -
 --
 
 CREATE UNIQUE INDEX kontak_kode_key ON benefita.kontak USING btree (kode);
 
 
 --
--- Name: lini_bisnis_nama_key; Type: INDEX; Schema: benefita; Owner: postgres
+-- Name: lini_bisnis_nama_key; Type: INDEX; Schema: benefita; Owner: -
 --
 
 CREATE UNIQUE INDEX lini_bisnis_nama_key ON benefita.lini_bisnis USING btree (nama);
 
 
 --
--- Name: lini_bisnis_training_liniBisnisId_judulTrainingId_key; Type: INDEX; Schema: benefita; Owner: postgres
+-- Name: lini_bisnis_training_liniBisnisId_judulTrainingId_key; Type: INDEX; Schema: benefita; Owner: -
 --
 
 CREATE UNIQUE INDEX "lini_bisnis_training_liniBisnisId_judulTrainingId_key" ON benefita.lini_bisnis_training USING btree ("liniBisnisId", "judulTrainingId");
 
 
 --
--- Name: log_perubahan_perusahaan_perusahaan_id_idx; Type: INDEX; Schema: benefita; Owner: postgres
+-- Name: log_perubahan_perusahaan_perusahaan_id_idx; Type: INDEX; Schema: benefita; Owner: -
 --
 
 CREATE INDEX log_perubahan_perusahaan_perusahaan_id_idx ON benefita.log_perubahan_perusahaan USING btree (perusahaan_id);
 
 
 --
--- Name: permintaan_nomor_surat_noSurat_key; Type: INDEX; Schema: benefita; Owner: postgres
+-- Name: permintaan_nomor_surat_noSurat_key; Type: INDEX; Schema: benefita; Owner: -
 --
 
 CREATE UNIQUE INDEX "permintaan_nomor_surat_noSurat_key" ON benefita.permintaan_nomor_surat USING btree ("noSurat");
 
 
 --
--- Name: permintaan_nomor_surat_tujuan_no_induk_pengirim_id_tanggal__key; Type: INDEX; Schema: benefita; Owner: postgres
+-- Name: permintaan_nomor_surat_tujuan_no_induk_pengirim_id_tanggal__key; Type: INDEX; Schema: benefita; Owner: -
 --
 
 CREATE UNIQUE INDEX permintaan_nomor_surat_tujuan_no_induk_pengirim_id_tanggal__key ON benefita.permintaan_nomor_surat USING btree (tujuan_no_induk, pengirim_id, tanggal_kirim);
 
 
 --
--- Name: umk_No_umk_key; Type: INDEX; Schema: benefita; Owner: postgres
+-- Name: umk_No_umk_key; Type: INDEX; Schema: benefita; Owner: -
 --
 
 CREATE UNIQUE INDEX "umk_No_umk_key" ON benefita.umk USING btree ("No_umk");
 
 
 --
--- Name: BuktiIzin BuktiIzin_pengajuanIzinId_fkey; Type: FK CONSTRAINT; Schema: benefita; Owner: postgres
+-- Name: BuktiIzin BuktiIzin_pengajuanIzinId_fkey; Type: FK CONSTRAINT; Schema: benefita; Owner: -
 --
 
 ALTER TABLE ONLY benefita."BuktiIzin"
@@ -57846,7 +58259,7 @@ ALTER TABLE ONLY benefita."BuktiIzin"
 
 
 --
--- Name: DeviceTrusted DeviceTrusted_userId_fkey; Type: FK CONSTRAINT; Schema: benefita; Owner: postgres
+-- Name: DeviceTrusted DeviceTrusted_userId_fkey; Type: FK CONSTRAINT; Schema: benefita; Owner: -
 --
 
 ALTER TABLE ONLY benefita."DeviceTrusted"
@@ -57854,7 +58267,7 @@ ALTER TABLE ONLY benefita."DeviceTrusted"
 
 
 --
--- Name: DokumenPegawai DokumenPegawai_pegawaiId_fkey; Type: FK CONSTRAINT; Schema: benefita; Owner: postgres
+-- Name: DokumenPegawai DokumenPegawai_pegawaiId_fkey; Type: FK CONSTRAINT; Schema: benefita; Owner: -
 --
 
 ALTER TABLE ONLY benefita."DokumenPegawai"
@@ -57862,7 +58275,7 @@ ALTER TABLE ONLY benefita."DokumenPegawai"
 
 
 --
--- Name: HakAksesKaryawan HakAksesKaryawan_pegawaiId_fkey; Type: FK CONSTRAINT; Schema: benefita; Owner: postgres
+-- Name: HakAksesKaryawan HakAksesKaryawan_pegawaiId_fkey; Type: FK CONSTRAINT; Schema: benefita; Owner: -
 --
 
 ALTER TABLE ONLY benefita."HakAksesKaryawan"
@@ -57870,7 +58283,7 @@ ALTER TABLE ONLY benefita."HakAksesKaryawan"
 
 
 --
--- Name: HakAksesKaryawan HakAksesKaryawan_perusahaanId_fkey; Type: FK CONSTRAINT; Schema: benefita; Owner: postgres
+-- Name: HakAksesKaryawan HakAksesKaryawan_perusahaanId_fkey; Type: FK CONSTRAINT; Schema: benefita; Owner: -
 --
 
 ALTER TABLE ONLY benefita."HakAksesKaryawan"
@@ -57878,7 +58291,7 @@ ALTER TABLE ONLY benefita."HakAksesKaryawan"
 
 
 --
--- Name: OtpCode OtpCode_userId_fkey; Type: FK CONSTRAINT; Schema: benefita; Owner: postgres
+-- Name: OtpCode OtpCode_userId_fkey; Type: FK CONSTRAINT; Schema: benefita; Owner: -
 --
 
 ALTER TABLE ONLY benefita."OtpCode"
@@ -57886,7 +58299,7 @@ ALTER TABLE ONLY benefita."OtpCode"
 
 
 --
--- Name: PengajuanIzin PengajuanIzin_pegawaiId_fkey; Type: FK CONSTRAINT; Schema: benefita; Owner: postgres
+-- Name: PengajuanIzin PengajuanIzin_pegawaiId_fkey; Type: FK CONSTRAINT; Schema: benefita; Owner: -
 --
 
 ALTER TABLE ONLY benefita."PengajuanIzin"
@@ -57894,7 +58307,7 @@ ALTER TABLE ONLY benefita."PengajuanIzin"
 
 
 --
--- Name: RefreshToken RefreshToken_userId_fkey; Type: FK CONSTRAINT; Schema: benefita; Owner: postgres
+-- Name: RefreshToken RefreshToken_userId_fkey; Type: FK CONSTRAINT; Schema: benefita; Owner: -
 --
 
 ALTER TABLE ONLY benefita."RefreshToken"
@@ -57902,7 +58315,7 @@ ALTER TABLE ONLY benefita."RefreshToken"
 
 
 --
--- Name: SertifikasiBnsp SertifikasiBnsp_perusahaanId_fkey; Type: FK CONSTRAINT; Schema: benefita; Owner: postgres
+-- Name: SertifikasiBnsp SertifikasiBnsp_perusahaanId_fkey; Type: FK CONSTRAINT; Schema: benefita; Owner: -
 --
 
 ALTER TABLE ONLY benefita."SertifikasiBnsp"
@@ -57910,7 +58323,7 @@ ALTER TABLE ONLY benefita."SertifikasiBnsp"
 
 
 --
--- Name: TabPerusahaan TabPerusahaan_liniBisnisId_fkey; Type: FK CONSTRAINT; Schema: benefita; Owner: postgres
+-- Name: TabPerusahaan TabPerusahaan_liniBisnisId_fkey; Type: FK CONSTRAINT; Schema: benefita; Owner: -
 --
 
 ALTER TABLE ONLY benefita."TabPerusahaan"
@@ -57918,7 +58331,7 @@ ALTER TABLE ONLY benefita."TabPerusahaan"
 
 
 --
--- Name: TableNeraca TableNeraca_jenisBiayaId_fkey; Type: FK CONSTRAINT; Schema: benefita; Owner: postgres
+-- Name: TableNeraca TableNeraca_jenisBiayaId_fkey; Type: FK CONSTRAINT; Schema: benefita; Owner: -
 --
 
 ALTER TABLE ONLY benefita."TableNeraca"
@@ -57926,7 +58339,7 @@ ALTER TABLE ONLY benefita."TableNeraca"
 
 
 --
--- Name: TableNeraca TableNeraca_userInputId_fkey; Type: FK CONSTRAINT; Schema: benefita; Owner: postgres
+-- Name: TableNeraca TableNeraca_userInputId_fkey; Type: FK CONSTRAINT; Schema: benefita; Owner: -
 --
 
 ALTER TABLE ONLY benefita."TableNeraca"
@@ -57934,7 +58347,7 @@ ALTER TABLE ONLY benefita."TableNeraca"
 
 
 --
--- Name: TableNeraca TableNeraca_userUpdateId_fkey; Type: FK CONSTRAINT; Schema: benefita; Owner: postgres
+-- Name: TableNeraca TableNeraca_userUpdateId_fkey; Type: FK CONSTRAINT; Schema: benefita; Owner: -
 --
 
 ALTER TABLE ONLY benefita."TableNeraca"
@@ -57942,7 +58355,7 @@ ALTER TABLE ONLY benefita."TableNeraca"
 
 
 --
--- Name: User User_pegawaiId_fkey; Type: FK CONSTRAINT; Schema: benefita; Owner: postgres
+-- Name: User User_pegawaiId_fkey; Type: FK CONSTRAINT; Schema: benefita; Owner: -
 --
 
 ALTER TABLE ONLY benefita."User"
@@ -57950,7 +58363,7 @@ ALTER TABLE ONLY benefita."User"
 
 
 --
--- Name: contact_person_perusahaan contact_person_perusahaan_KODE_PERUSAHAAN_fkey; Type: FK CONSTRAINT; Schema: benefita; Owner: postgres
+-- Name: contact_person_perusahaan contact_person_perusahaan_KODE_PERUSAHAAN_fkey; Type: FK CONSTRAINT; Schema: benefita; Owner: -
 --
 
 ALTER TABLE ONLY benefita.contact_person_perusahaan
@@ -57958,7 +58371,7 @@ ALTER TABLE ONLY benefita.contact_person_perusahaan
 
 
 --
--- Name: daily_activity daily_activity_PEGAWAI_ID_fkey; Type: FK CONSTRAINT; Schema: benefita; Owner: postgres
+-- Name: daily_activity daily_activity_PEGAWAI_ID_fkey; Type: FK CONSTRAINT; Schema: benefita; Owner: -
 --
 
 ALTER TABLE ONLY benefita.daily_activity
@@ -57966,7 +58379,7 @@ ALTER TABLE ONLY benefita.daily_activity
 
 
 --
--- Name: daily_activity daily_activity_PERUSAHAAN_ID_fkey; Type: FK CONSTRAINT; Schema: benefita; Owner: postgres
+-- Name: daily_activity daily_activity_PERUSAHAAN_ID_fkey; Type: FK CONSTRAINT; Schema: benefita; Owner: -
 --
 
 ALTER TABLE ONLY benefita.daily_activity
@@ -57974,7 +58387,39 @@ ALTER TABLE ONLY benefita.daily_activity
 
 
 --
--- Name: jadwal_training jadwal_training_kodePelatihan_fkey; Type: FK CONSTRAINT; Schema: benefita; Owner: postgres
+-- Name: evaluasi_pelatihan_diminati evaluasi_pelatihan_diminati_evaluasiId_fkey; Type: FK CONSTRAINT; Schema: benefita; Owner: -
+--
+
+ALTER TABLE ONLY benefita.evaluasi_pelatihan_diminati
+    ADD CONSTRAINT "evaluasi_pelatihan_diminati_evaluasiId_fkey" FOREIGN KEY ("evaluasiId") REFERENCES benefita.evaluasi_pelatihan(id) ON UPDATE CASCADE ON DELETE CASCADE;
+
+
+--
+-- Name: evaluasi_pelatihan_diminati evaluasi_pelatihan_diminati_judulTrainingId_fkey; Type: FK CONSTRAINT; Schema: benefita; Owner: -
+--
+
+ALTER TABLE ONLY benefita.evaluasi_pelatihan_diminati
+    ADD CONSTRAINT "evaluasi_pelatihan_diminati_judulTrainingId_fkey" FOREIGN KEY ("judulTrainingId") REFERENCES benefita.judul_training(id) ON UPDATE CASCADE ON DELETE RESTRICT;
+
+
+--
+-- Name: evaluasi_pelatihan evaluasi_pelatihan_pesertaTrainingId_fkey; Type: FK CONSTRAINT; Schema: benefita; Owner: -
+--
+
+ALTER TABLE ONLY benefita.evaluasi_pelatihan
+    ADD CONSTRAINT "evaluasi_pelatihan_pesertaTrainingId_fkey" FOREIGN KEY ("pesertaTrainingId") REFERENCES benefita.peserta_training(id) ON UPDATE CASCADE ON DELETE RESTRICT;
+
+
+--
+-- Name: jadwal_training_hari jadwal_training_hari_jadwalId_fkey; Type: FK CONSTRAINT; Schema: benefita; Owner: -
+--
+
+ALTER TABLE ONLY benefita.jadwal_training_hari
+    ADD CONSTRAINT "jadwal_training_hari_jadwalId_fkey" FOREIGN KEY ("jadwalId") REFERENCES benefita.jadwal_training(id) ON UPDATE CASCADE ON DELETE CASCADE;
+
+
+--
+-- Name: jadwal_training jadwal_training_kodePelatihan_fkey; Type: FK CONSTRAINT; Schema: benefita; Owner: -
 --
 
 ALTER TABLE ONLY benefita.jadwal_training
@@ -57982,7 +58427,7 @@ ALTER TABLE ONLY benefita.jadwal_training
 
 
 --
--- Name: jadwal_training jadwal_training_updateOleh_fkey; Type: FK CONSTRAINT; Schema: benefita; Owner: postgres
+-- Name: jadwal_training jadwal_training_updateOleh_fkey; Type: FK CONSTRAINT; Schema: benefita; Owner: -
 --
 
 ALTER TABLE ONLY benefita.jadwal_training
@@ -57990,7 +58435,39 @@ ALTER TABLE ONLY benefita.jadwal_training
 
 
 --
--- Name: lini_bisnis_training lini_bisnis_training_judulTrainingId_fkey; Type: FK CONSTRAINT; Schema: benefita; Owner: postgres
+-- Name: konfirmasi konfirmasi_dibuatOlehId_fkey; Type: FK CONSTRAINT; Schema: benefita; Owner: -
+--
+
+ALTER TABLE ONLY benefita.konfirmasi
+    ADD CONSTRAINT "konfirmasi_dibuatOlehId_fkey" FOREIGN KEY ("dibuatOlehId") REFERENCES benefita."Pegawai"(id) ON UPDATE CASCADE ON DELETE RESTRICT;
+
+
+--
+-- Name: konfirmasi konfirmasi_noIndukInstansi_fkey; Type: FK CONSTRAINT; Schema: benefita; Owner: -
+--
+
+ALTER TABLE ONLY benefita.konfirmasi
+    ADD CONSTRAINT "konfirmasi_noIndukInstansi_fkey" FOREIGN KEY ("noIndukInstansi") REFERENCES benefita."TabPerusahaan"("0NO_INDUK") ON UPDATE CASCADE ON DELETE SET NULL;
+
+
+--
+-- Name: konfirmasi konfirmasi_noJadwal_fkey; Type: FK CONSTRAINT; Schema: benefita; Owner: -
+--
+
+ALTER TABLE ONLY benefita.konfirmasi
+    ADD CONSTRAINT "konfirmasi_noJadwal_fkey" FOREIGN KEY ("noJadwal") REFERENCES benefita.jadwal_training("noJadwal") ON UPDATE CASCADE ON DELETE RESTRICT;
+
+
+--
+-- Name: konfirmasi konfirmasi_pesertaTrainingId_fkey; Type: FK CONSTRAINT; Schema: benefita; Owner: -
+--
+
+ALTER TABLE ONLY benefita.konfirmasi
+    ADD CONSTRAINT "konfirmasi_pesertaTrainingId_fkey" FOREIGN KEY ("pesertaTrainingId") REFERENCES benefita.peserta_training(id) ON UPDATE CASCADE ON DELETE RESTRICT;
+
+
+--
+-- Name: lini_bisnis_training lini_bisnis_training_judulTrainingId_fkey; Type: FK CONSTRAINT; Schema: benefita; Owner: -
 --
 
 ALTER TABLE ONLY benefita.lini_bisnis_training
@@ -57998,7 +58475,7 @@ ALTER TABLE ONLY benefita.lini_bisnis_training
 
 
 --
--- Name: lini_bisnis_training lini_bisnis_training_liniBisnisId_fkey; Type: FK CONSTRAINT; Schema: benefita; Owner: postgres
+-- Name: lini_bisnis_training lini_bisnis_training_liniBisnisId_fkey; Type: FK CONSTRAINT; Schema: benefita; Owner: -
 --
 
 ALTER TABLE ONLY benefita.lini_bisnis_training
@@ -58006,7 +58483,7 @@ ALTER TABLE ONLY benefita.lini_bisnis_training
 
 
 --
--- Name: log_perubahan_perusahaan log_perubahan_perusahaan_perusahaan_id_fkey; Type: FK CONSTRAINT; Schema: benefita; Owner: postgres
+-- Name: log_perubahan_perusahaan log_perubahan_perusahaan_perusahaan_id_fkey; Type: FK CONSTRAINT; Schema: benefita; Owner: -
 --
 
 ALTER TABLE ONLY benefita.log_perubahan_perusahaan
@@ -58014,7 +58491,7 @@ ALTER TABLE ONLY benefita.log_perubahan_perusahaan
 
 
 --
--- Name: penawaran penawaran_perusahaanId_fkey; Type: FK CONSTRAINT; Schema: benefita; Owner: postgres
+-- Name: penawaran penawaran_perusahaanId_fkey; Type: FK CONSTRAINT; Schema: benefita; Owner: -
 --
 
 ALTER TABLE ONLY benefita.penawaran
@@ -58022,7 +58499,7 @@ ALTER TABLE ONLY benefita.penawaran
 
 
 --
--- Name: pengajuan_judul_training pengajuan_judul_training_inputOlehId_fkey; Type: FK CONSTRAINT; Schema: benefita; Owner: postgres
+-- Name: pengajuan_judul_training pengajuan_judul_training_inputOlehId_fkey; Type: FK CONSTRAINT; Schema: benefita; Owner: -
 --
 
 ALTER TABLE ONLY benefita.pengajuan_judul_training
@@ -58030,7 +58507,7 @@ ALTER TABLE ONLY benefita.pengajuan_judul_training
 
 
 --
--- Name: pengajuan_judul_training pengajuan_judul_training_perusahaanId_fkey; Type: FK CONSTRAINT; Schema: benefita; Owner: postgres
+-- Name: pengajuan_judul_training pengajuan_judul_training_perusahaanId_fkey; Type: FK CONSTRAINT; Schema: benefita; Owner: -
 --
 
 ALTER TABLE ONLY benefita.pengajuan_judul_training
@@ -58038,7 +58515,7 @@ ALTER TABLE ONLY benefita.pengajuan_judul_training
 
 
 --
--- Name: permintaan_nomor_surat permintaan_nomor_surat_pengirim_id_fkey; Type: FK CONSTRAINT; Schema: benefita; Owner: postgres
+-- Name: permintaan_nomor_surat permintaan_nomor_surat_pengirim_id_fkey; Type: FK CONSTRAINT; Schema: benefita; Owner: -
 --
 
 ALTER TABLE ONLY benefita.permintaan_nomor_surat
@@ -58046,7 +58523,7 @@ ALTER TABLE ONLY benefita.permintaan_nomor_surat
 
 
 --
--- Name: permintaan_nomor_surat permintaan_nomor_surat_tujuan_no_induk_fkey; Type: FK CONSTRAINT; Schema: benefita; Owner: postgres
+-- Name: permintaan_nomor_surat permintaan_nomor_surat_tujuan_no_induk_fkey; Type: FK CONSTRAINT; Schema: benefita; Owner: -
 --
 
 ALTER TABLE ONLY benefita.permintaan_nomor_surat
@@ -58054,7 +58531,7 @@ ALTER TABLE ONLY benefita.permintaan_nomor_surat
 
 
 --
--- Name: permohonan_hak_akses permohonan_hak_akses_pegawai_id_fkey; Type: FK CONSTRAINT; Schema: benefita; Owner: postgres
+-- Name: permohonan_hak_akses permohonan_hak_akses_pegawai_id_fkey; Type: FK CONSTRAINT; Schema: benefita; Owner: -
 --
 
 ALTER TABLE ONLY benefita.permohonan_hak_akses
@@ -58062,7 +58539,7 @@ ALTER TABLE ONLY benefita.permohonan_hak_akses
 
 
 --
--- Name: permohonan_hak_akses permohonan_hak_akses_perusahaan_id_fkey; Type: FK CONSTRAINT; Schema: benefita; Owner: postgres
+-- Name: permohonan_hak_akses permohonan_hak_akses_perusahaan_id_fkey; Type: FK CONSTRAINT; Schema: benefita; Owner: -
 --
 
 ALTER TABLE ONLY benefita.permohonan_hak_akses
@@ -58070,7 +58547,7 @@ ALTER TABLE ONLY benefita.permohonan_hak_akses
 
 
 --
--- Name: peserta_training peserta_training_inputOleh_fkey; Type: FK CONSTRAINT; Schema: benefita; Owner: postgres
+-- Name: peserta_training peserta_training_inputOleh_fkey; Type: FK CONSTRAINT; Schema: benefita; Owner: -
 --
 
 ALTER TABLE ONLY benefita.peserta_training
@@ -58078,7 +58555,7 @@ ALTER TABLE ONLY benefita.peserta_training
 
 
 --
--- Name: peserta_training peserta_training_konfirmasiOleh_fkey; Type: FK CONSTRAINT; Schema: benefita; Owner: postgres
+-- Name: peserta_training peserta_training_konfirmasiOleh_fkey; Type: FK CONSTRAINT; Schema: benefita; Owner: -
 --
 
 ALTER TABLE ONLY benefita.peserta_training
@@ -58086,7 +58563,7 @@ ALTER TABLE ONLY benefita.peserta_training
 
 
 --
--- Name: peserta_training peserta_training_noIndukPerusahaan_fkey; Type: FK CONSTRAINT; Schema: benefita; Owner: postgres
+-- Name: peserta_training peserta_training_noIndukPerusahaan_fkey; Type: FK CONSTRAINT; Schema: benefita; Owner: -
 --
 
 ALTER TABLE ONLY benefita.peserta_training
@@ -58094,7 +58571,7 @@ ALTER TABLE ONLY benefita.peserta_training
 
 
 --
--- Name: peserta_training peserta_training_noJadwal_fkey; Type: FK CONSTRAINT; Schema: benefita; Owner: postgres
+-- Name: peserta_training peserta_training_noJadwal_fkey; Type: FK CONSTRAINT; Schema: benefita; Owner: -
 --
 
 ALTER TABLE ONLY benefita.peserta_training
@@ -58102,7 +58579,7 @@ ALTER TABLE ONLY benefita.peserta_training
 
 
 --
--- Name: peserta_training peserta_training_updateOleh_fkey; Type: FK CONSTRAINT; Schema: benefita; Owner: postgres
+-- Name: peserta_training peserta_training_updateOleh_fkey; Type: FK CONSTRAINT; Schema: benefita; Owner: -
 --
 
 ALTER TABLE ONLY benefita.peserta_training
@@ -58110,7 +58587,7 @@ ALTER TABLE ONLY benefita.peserta_training
 
 
 --
--- Name: tabposperusahaan tabposperusahaan_NO_INDUK_fkey; Type: FK CONSTRAINT; Schema: benefita; Owner: postgres
+-- Name: tabposperusahaan tabposperusahaan_NO_INDUK_fkey; Type: FK CONSTRAINT; Schema: benefita; Owner: -
 --
 
 ALTER TABLE ONLY benefita.tabposperusahaan
@@ -58118,7 +58595,23 @@ ALTER TABLE ONLY benefita.tabposperusahaan
 
 
 --
--- Name: trainer_on_jadwal trainer_on_jadwal_jadwalId_fkey; Type: FK CONSTRAINT; Schema: benefita; Owner: postgres
+-- Name: trainer_on_jadwal_hari trainer_on_jadwal_hari_jadwalHariId_fkey; Type: FK CONSTRAINT; Schema: benefita; Owner: -
+--
+
+ALTER TABLE ONLY benefita.trainer_on_jadwal_hari
+    ADD CONSTRAINT "trainer_on_jadwal_hari_jadwalHariId_fkey" FOREIGN KEY ("jadwalHariId") REFERENCES benefita.jadwal_training_hari(id) ON UPDATE CASCADE ON DELETE CASCADE;
+
+
+--
+-- Name: trainer_on_jadwal_hari trainer_on_jadwal_hari_trainerKode_fkey; Type: FK CONSTRAINT; Schema: benefita; Owner: -
+--
+
+ALTER TABLE ONLY benefita.trainer_on_jadwal_hari
+    ADD CONSTRAINT "trainer_on_jadwal_hari_trainerKode_fkey" FOREIGN KEY ("trainerKode") REFERENCES benefita.kontak(kode) ON UPDATE CASCADE ON DELETE RESTRICT;
+
+
+--
+-- Name: trainer_on_jadwal trainer_on_jadwal_jadwalId_fkey; Type: FK CONSTRAINT; Schema: benefita; Owner: -
 --
 
 ALTER TABLE ONLY benefita.trainer_on_jadwal
@@ -58126,7 +58619,7 @@ ALTER TABLE ONLY benefita.trainer_on_jadwal
 
 
 --
--- Name: trainer_on_jadwal trainer_on_jadwal_trainerKode_fkey; Type: FK CONSTRAINT; Schema: benefita; Owner: postgres
+-- Name: trainer_on_jadwal trainer_on_jadwal_trainerKode_fkey; Type: FK CONSTRAINT; Schema: benefita; Owner: -
 --
 
 ALTER TABLE ONLY benefita.trainer_on_jadwal
@@ -58134,7 +58627,7 @@ ALTER TABLE ONLY benefita.trainer_on_jadwal
 
 
 --
--- Name: umk umk_PIC_umk_fkey; Type: FK CONSTRAINT; Schema: benefita; Owner: postgres
+-- Name: umk umk_PIC_umk_fkey; Type: FK CONSTRAINT; Schema: benefita; Owner: -
 --
 
 ALTER TABLE ONLY benefita.umk
@@ -58142,7 +58635,7 @@ ALTER TABLE ONLY benefita.umk
 
 
 --
--- Name: umk umk_inputter_fkey; Type: FK CONSTRAINT; Schema: benefita; Owner: postgres
+-- Name: umk umk_inputter_fkey; Type: FK CONSTRAINT; Schema: benefita; Owner: -
 --
 
 ALTER TABLE ONLY benefita.umk
@@ -58153,4 +58646,5 @@ ALTER TABLE ONLY benefita.umk
 -- PostgreSQL database dump complete
 --
 
+\unrestrict x8umZF4teoIMQdouzXuEfKwgOOuYR1MDts7YwYZhYieremaRTLf0SuabOsn1II3
 

@@ -33,6 +33,9 @@ const {
   getTrainerOptions,
   getRekapEvaluasi,
   getNextNoJadwal,
+
+  getJadwalTrainingHari,
+  updateJadwalTrainingHari,
 } = require("../controllers");
 const { authMiddleware } = require("../middlewares/auth.middleware");
 const { upload } = require("../middlewares/upload.middleware");
@@ -97,6 +100,19 @@ router.delete(
   "/jadwal-training/:noJadwal",
   authMiddleware,
   deleteJadwalTraining,
+);
+
+// Assign trainer per hari — rentang tglMulai–tglSelesai dibongkar per hari,
+// tiap hari bisa diisi lebih dari 1 trainer.
+router.get(
+  "/jadwal-training/:noJadwal/hari-trainer",
+  authMiddleware,
+  getJadwalTrainingHari,
+);
+router.put(
+  "/jadwal-training/:noJadwal/hari-trainer",
+  authMiddleware,
+  updateJadwalTrainingHari,
 );
 
 // Rekap evaluasi pelatihan per jadwal — admin, protected

@@ -61,6 +61,7 @@ model Pegawai {
   pesertaDiinput         PesertaTraining[]        @relation("PesertaInputOleh")
   pesertaDiupdate        PesertaTraining[]        @relation("PesertaUpdateOleh")
   pesertaDikonfirmasi    PesertaTraining[]        @relation("PesertaKonfirmasiOleh")
+  konfirmasiDibuat       Konfirmasi[]             @relation("KonfirmasiDibuatOleh")
   pengajuanIzin          PengajuanIzin[]
   permintaanSurat        PermintaanNomorSurat[]
   inputNeraca            TableNeraca[]            @relation("inputNeraca")
@@ -298,6 +299,7 @@ model TabPerusahaan {
   pengajuanJudulTraining PengajuanJudulTraining[]
   pesertaTraining        PesertaTraining[]
   permintaanSurat        PermintaanNomorSurat[]
+  konfirmasi             Konfirmasi[]
 }
 
 model ContactPersonPerusahaan {
@@ -473,6 +475,7 @@ model Trainer {
   kantor       String?
   alamatKantor String?
   noTelpKantor String?
+  statusAktif  Boolean   @default(true)
 
   CV_Trainer String?
 
@@ -480,6 +483,7 @@ model Trainer {
   updatedAt DateTime @updatedAt
 
   jadwalTraining TrainerOnJadwal[]
+  jadwalHari     TrainerOnJadwalHari[]
 
   @@map("kontak")
 }
@@ -566,10 +570,12 @@ model JadwalTraining {
 
   // Relations
   updateOleh    String
-  pegawai       Pegawai           @relation(fields: [updateOleh], references: [id])
-  judulTraining JudulTraining     @relation(fields: [kodePelatihan], references: [kode])
+  pegawai       Pegawai              @relation(fields: [updateOleh], references: [id])
+  judulTraining JudulTraining        @relation(fields: [kodePelatihan], references: [kode])
   trainers      TrainerOnJadwal[]
   peserta       PesertaTraining[]
+  konfirmasi    Konfirmasi[]
+  hariTrainer   JadwalTrainingHari[]
 
   @@map("jadwal_training")
 }
@@ -584,6 +590,32 @@ model TrainerOnJadwal {
 
   @@id([jadwalId, trainerKode])
   @@map("trainer_on_jadwal")
+}
+
+// Breakdown per-hari dari rentang tglMulai–tglSelesai JadwalTraining.
+// Tiap hari bisa diisi lebih dari 1 trainer (assign trainer per hari).
+model JadwalTrainingHari {
+  id       Int      @id @default(autoincrement())
+  jadwalId Int
+  tanggal  DateTime @db.Date
+
+  jadwal   JadwalTraining        @relation(fields: [jadwalId], references: [id], onDelete: Cascade)
+  trainers TrainerOnJadwalHari[]
+
+  @@unique([jadwalId, tanggal])
+  @@map("jadwal_training_hari")
+}
+
+// Pivot table Trainer <-> JadwalTrainingHari (assign trainer per hari, bisa multiple)
+model TrainerOnJadwalHari {
+  jadwalHariId Int
+  trainerKode  String
+
+  jadwalHari JadwalTrainingHari @relation(fields: [jadwalHariId], references: [id], onDelete: Cascade)
+  trainer    Trainer            @relation(fields: [trainerKode], references: [kode])
+
+  @@id([jadwalHariId, trainerKode])
+  @@map("trainer_on_jadwal_hari")
 }
 
 model PesertaTraining {
@@ -672,9 +704,52 @@ model PesertaTraining {
   tglInput  DateTime @default(now())
   tglUpdate DateTime @updatedAt
 
-  evaluasi EvaluasiPelatihan?
+  evaluasi   EvaluasiPelatihan?
+  konfirmasi Konfirmasi[]
 
   @@map("peserta_training")
+}
+
+model Konfirmasi {
+  id Int @id @default(autoincrement())
+
+  // Nomor & tanggal
+  noKonfirmasi      String    @unique
+  tanggalKonfirmasi DateTime  @default(now())
+  tanggalPelatihan  DateTime?
+  metode            String // "Offline" | "Online"
+  kepada            String?
+
+  // Snapshot data pelatihan & peserta (biar histori tetap utuh walau data asal berubah)
+  kodePelatihan String?
+  namaPeserta   String
+  jabatan       String?
+  kontak        String? // No Hp
+
+  // File konfirmasi
+  filePath String?
+
+  // Relasi ke Instansi (TabPerusahaan) — fallback teks manual kalau tidak match
+  noIndukInstansi String?
+  instansiNama    String?
+  instansi        TabPerusahaan? @relation(fields: [noIndukInstansi], references: [noInduk])
+
+  // Relasi ke JadwalTraining
+  noJadwal       String
+  jadwalTraining JadwalTraining @relation(fields: [noJadwal], references: [noJadwal])
+
+  // Relasi ke PesertaTraining
+  pesertaTrainingId Int
+  pesertaTraining   PesertaTraining @relation(fields: [pesertaTrainingId], references: [id])
+
+  // Dikonfirmasi oleh siapa
+  dibuatOlehId String
+  dibuatOleh   Pegawai @relation("KonfirmasiDibuatOleh", fields: [dibuatOlehId], references: [id])
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("konfirmasi")
 }
 
 model EvaluasiPelatihan {

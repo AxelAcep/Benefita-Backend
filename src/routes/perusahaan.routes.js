@@ -33,6 +33,14 @@ const {
   getLogPerubahanSummary,
   getProperByTahun,
   getLiniBisnis,
+  getPerusahaanTbkList,
+  getPerusahaanProperList,
+  getPerusahaanIsoList,
+  getPerusahaanPrioritasList,
+  getPerusahaanVendorList,
+  getPerusahaanByAlamatList,
+  getPelatihanTahunOptions,
+  getPerusahaanCustomerList,
 } = require("../controllers");
 const { authMiddleware } = require("../middlewares/auth.middleware");
 const { upload } = require("../middlewares/upload.middleware");
@@ -40,6 +48,41 @@ const { upload } = require("../middlewares/upload.middleware");
 // Route tanpa parameter
 router.get("/perusahaan", authMiddleware, getTabPerusahaanList);
 router.post("/perusahaan", authMiddleware, createTabPerusahaan);
+
+// Daftar perusahaan Tbk (kategoriCpn mengandung "Tbk")
+router.get("/perusahaan-tbk", authMiddleware, getPerusahaanTbkList);
+
+// Daftar perusahaan yang punya riwayat rating PROPER
+router.get("/perusahaan-proper", authMiddleware, getPerusahaanProperList);
+
+// Daftar perusahaan yang kategoriCpn-nya mengandung "ISO"
+router.get("/perusahaan-iso", authMiddleware, getPerusahaanIsoList);
+
+// Daftar perusahaan by Prioritas MA / Prioritas AE (rentang huruf A–E)
+router.get("/perusahaan-prioritas", authMiddleware, getPerusahaanPrioritasList);
+
+// Daftar perusahaan yang field vendor-nya keisi (bukan null/kosong)
+router.get("/perusahaan-vendor", authMiddleware, getPerusahaanVendorList);
+
+// Daftar semua perusahaan diurutkan berdasarkan alamat
+router.get(
+  "/perusahaan-by-alamat",
+  authMiddleware,
+  getPerusahaanByAlamatList,
+);
+
+// Daftar semua perusahaan (Customer) — riwayat pelatihan pertama/terakhir,
+// PROPER, PIC ENV/CSR/TSM/EPM
+router.get(
+  "/pelatihan-tahun-options",
+  authMiddleware,
+  getPelatihanTahunOptions,
+);
+router.get(
+  "/perusahaan-customer",
+  authMiddleware,
+  getPerusahaanCustomerList,
+);
 
 // Route spesifik harus didefinisikan sebelum route dengan parameter dinamis
 router.get(

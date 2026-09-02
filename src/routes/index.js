@@ -11,6 +11,7 @@ const suratRoutes = require("./surat.routes");
 const dashboardRoutes = require("./dashboard.routes");
 const accountingRoutes = require("./accounting.routes");
 const publicRoutes = require("./public.routes");
+const konfirmasiRoutes = require("./konfirmasi.routes");
 
 const router = express.Router();
 
@@ -25,5 +26,6 @@ router.use("/permintaan-surat", suratRoutes);
 router.use("/dashboard", dashboardRoutes);
 router.use("/accounting", accountingRoutes);
 router.use("/public", publicRoutes);
+router.use("/konfirmasi", konfirmasiRoutes);
 
 module.exports = router;

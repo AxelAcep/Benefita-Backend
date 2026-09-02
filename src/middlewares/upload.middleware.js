@@ -65,4 +65,16 @@ const uploadIzin = createUpload("uploads/izin", [
   ".xlsx",
 ]);
 
-module.exports = { upload, uploadPegawai, uploadIzin };
+const uploadKonfirmasi = createUpload("uploads/konfirmasi", [
+  ".jpg",
+  ".jpeg",
+  ".png",
+  ".webp",
+  ".pdf",
+  ".doc",
+  ".docx",
+  ".xls",
+  ".xlsx",
+]);
+
+module.exports = { upload, uploadPegawai, uploadIzin, uploadKonfirmasi };

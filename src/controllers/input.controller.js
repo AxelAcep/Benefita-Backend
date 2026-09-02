@@ -94,6 +94,7 @@ const getPesertaTraining = async (req, res) => {
           status: true,
           ujian: true,
           konfirmasiOleh: true,
+          konTgl: true,
           hargaTotal: true,
           diskon: true,
           ppn: true,
