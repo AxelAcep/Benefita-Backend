@@ -1,7 +1,8 @@
 // routes/izin.js
 const express = require("express");
 const router = express.Router();
-const { authMiddleware } = require("../middlewares/auth.middleware");
+const { authMiddleware, authorizeRole } = require("../middlewares/auth.middleware");
+const { uploadRequestKeuangan } = require("../middlewares/upload.middleware");
 
 const {
   getPendapatan,
@@ -18,7 +19,23 @@ const {
   updateUmk,
   getUmkById,
   getPegawaiUmk,
+
+  createAkun,
+  getAkunList,
+  getAkunById,
+  updateAkun,
+  toggleAkunStatus,
+
+  createRequestKeuangan,
+  getRequestKeuanganList,
+  getRequestKeuanganById,
+  approveRequestKeuangan,
+  rejectRequestKeuangan,
 } = require("../controllers");
+
+// Role yang boleh approve/reject request keuangan — pakai role existing
+// (FINANCE, SUPER_ADMIN), gak bikin role baru.
+const APPROVER_ROLES = ["FINANCE", "SUPER_ADMIN"];
 
 router.get("/pendapatan", authMiddleware, getPendapatan);
 router.get("/piutang", authMiddleware, getPiutang);
@@ -39,5 +56,34 @@ router.post("/umk", authMiddleware, createUmk);
 router.put("/umk/:id", authMiddleware, updateUmk);
 router.get("/umk/:id", authMiddleware, getUmkById);
 router.get("/pegawai", authMiddleware, getPegawaiUmk);
+
+// Master Akun
+router.post("/akun", authMiddleware, createAkun);
+router.get("/akun", authMiddleware, getAkunList);
+router.get("/akun/:id", authMiddleware, getAkunById);
+router.put("/akun/:id", authMiddleware, updateAkun);
+router.patch("/akun/:id/status", authMiddleware, toggleAkunStatus);
+
+// Pengeluaran & Pemasukan
+router.post(
+  "/request-keuangan",
+  authMiddleware,
+  uploadRequestKeuangan.single("buktiFile"),
+  createRequestKeuangan,
+);
+router.get("/request-keuangan", authMiddleware, getRequestKeuanganList);
+router.get("/request-keuangan/:id", authMiddleware, getRequestKeuanganById);
+router.patch(
+  "/request-keuangan/:id/approve",
+  authMiddleware,
+  authorizeRole(...APPROVER_ROLES),
+  approveRequestKeuangan,
+);
+router.patch(
+  "/request-keuangan/:id/reject",
+  authMiddleware,
+  authorizeRole(...APPROVER_ROLES),
+  rejectRequestKeuangan,
+);
 
 module.exports = router;

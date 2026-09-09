@@ -9,7 +9,7 @@ const prisma = new PrismaClient();
 const getPesertaTraining = async (req, res) => {
   try {
     const { noJadwal } = req.params;
-    const { page = 1, limit = 10, search = "", status } = req.query;
+    const { page = 1, limit = 10, search = "", status, final } = req.query;
 
     if (!noJadwal) {
       return res.status(400).json({ message: "noJadwal wajib diisi." });
@@ -22,6 +22,7 @@ const getPesertaTraining = async (req, res) => {
         metode: true,
         biaya: true,
         status: true,
+        jenisTraining: true,
         kodePelatihan: true,
         lokasiDetail: true,
         judulLengkap: true,
@@ -60,6 +61,9 @@ const getPesertaTraining = async (req, res) => {
         ...(status
           ? [{ status: { equals: status, mode: "insensitive" } }]
           : []),
+        ...(final !== undefined
+          ? [{ statusFinal: final === "true" }]
+          : []),
         ...(search
           ? [
               {
@@ -95,6 +99,8 @@ const getPesertaTraining = async (req, res) => {
           ujian: true,
           konfirmasiOleh: true,
           konTgl: true,
+          statusFinal: true,
+          finalTgl: true,
           hargaTotal: true,
           diskon: true,
           ppn: true,
@@ -107,6 +113,7 @@ const getPesertaTraining = async (req, res) => {
           pegawaiInput: { select: { id: true, nama: true } },
           pegawaiUpdate: { select: { id: true, nama: true } },
           pegawaiKonfirmasi: { select: { id: true, nama: true } },
+          pegawaiFinal: { select: { id: true, nama: true } },
         },
       }),
     ]);
@@ -123,6 +130,7 @@ const getPesertaTraining = async (req, res) => {
         metode: jadwal.metode,
         biaya: jadwal.biaya,
         status: jadwal.status,
+        jenisTraining: jadwal.jenisTraining,
         kodePelatihan: jadwal.kodePelatihan,
         lokasiDetail: jadwal.lokasiDetail,
         judulLengkap: jadwal.judulLengkap,
@@ -437,6 +445,173 @@ const updatePesertaTraining = async (req, res) => {
   }
 };
 
+// ─────────────────────────────────────────────
+// UPDATE STATUS FINAL PESERTA
+// Peserta yang statusnya Final = udah nyelesain training & berhak
+// didaftarkan ke uji kompetensi (buat sertifikat LSP).
+// ─────────────────────────────────────────────
+
+const updateStatusFinalPeserta = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const parsedId = parseInt(id);
+    if (!id || isNaN(parsedId)) {
+      return res.status(400).json({ message: "ID tidak valid." });
+    }
+
+    // Default true — tombol "Peserta Final" di tabel manggil endpoint ini
+    // tanpa body, tapi tetep bisa di-un-final-in dengan kirim { statusFinal: false }.
+    const statusFinal =
+      req.body?.statusFinal === undefined ? true : !!req.body.statusFinal;
+
+    const userId = req.user?.userId;
+    if (!userId) {
+      return res.status(401).json({ message: "Unauthorized." });
+    }
+
+    const user = await prisma.user.findUnique({
+      where: { id: userId },
+      select: { pegawaiId: true },
+    });
+    if (!user?.pegawaiId) {
+      return res.status(401).json({ message: "User tidak ditemukan." });
+    }
+
+    const existing = await prisma.pesertaTraining.findUnique({
+      where: { id: parsedId },
+    });
+    if (!existing) {
+      return res
+        .status(404)
+        .json({ message: "Peserta Training tidak ditemukan." });
+    }
+
+    const data = await prisma.pesertaTraining.update({
+      where: { id: parsedId },
+      data: statusFinal
+        ? {
+            statusFinal: true,
+            finalTgl: new Date(),
+            finalOleh: user.pegawaiId,
+          }
+        : {
+            statusFinal: false,
+            finalTgl: null,
+            finalOleh: null,
+          },
+      include: {
+        perusahaan: { select: { noInduk: true, company: true } },
+        pegawaiFinal: { select: { id: true, nama: true } },
+      },
+    });
+
+    res.status(200).json({
+      message: statusFinal
+        ? "Peserta berhasil ditandai Final."
+        : "Status Final peserta dibatalkan.",
+      data,
+    });
+  } catch (error) {
+    res
+      .status(500)
+      .json({ message: "Internal server error.", error: error.message });
+  }
+};
+
+// ─────────────────────────────────────────────
+// BRIDGE: DAFTARKAN PESERTA (FINAL) KE UJI KOMPETENSI (LSP)
+// Dipanggil dari tombol "Daftarkan ke Uji" di JadwalTraining yang jenisnya "UJI".
+// ─────────────────────────────────────────────
+
+const getSkemaKualifikasiOptions = async (req, res) => {
+  try {
+    const data = await prisma.skemaKualifikasi.findMany({
+      orderBy: { kode: "asc" },
+      select: { id: true, kode: true, nama: true },
+    });
+    res.status(200).json({ data });
+  } catch (error) {
+    res
+      .status(500)
+      .json({ message: "Internal server error.", error: error.message });
+  }
+};
+
+const createPesertaUjiFromTraining = async (req, res) => {
+  try {
+    const { pesertaTrainingId, skemaId } = req.body;
+
+    const parsedPesertaId = parseInt(pesertaTrainingId);
+    if (!pesertaTrainingId || isNaN(parsedPesertaId)) {
+      return res
+        .status(400)
+        .json({ message: "pesertaTrainingId wajib diisi." });
+    }
+
+    const parsedSkemaId = parseInt(skemaId);
+    if (!skemaId || isNaN(parsedSkemaId)) {
+      return res.status(400).json({ message: "skemaId wajib diisi." });
+    }
+
+    const peserta = await prisma.pesertaTraining.findUnique({
+      where: { id: parsedPesertaId },
+      include: {
+        perusahaan: { select: { company: true } },
+      },
+    });
+    if (!peserta) {
+      return res
+        .status(404)
+        .json({ message: "Peserta Training tidak ditemukan." });
+    }
+
+    if (!peserta.statusFinal) {
+      return res.status(400).json({
+        message:
+          "Peserta belum berstatus Final, belum bisa didaftarkan ke uji kompetensi.",
+      });
+    }
+
+    const skema = await prisma.skemaKualifikasi.findUnique({
+      where: { id: parsedSkemaId },
+    });
+    if (!skema) {
+      return res
+        .status(404)
+        .json({ message: "Skema kualifikasi tidak ditemukan." });
+    }
+
+    const data = await prisma.pesertaUji.create({
+      data: {
+        pesertaTrainingId: peserta.id,
+        nama: peserta.nama,
+        instansi:
+          peserta.perusahaan?.company ??
+          peserta.namaPerusahaan ??
+          peserta.instansi ??
+          null,
+        email: peserta.email,
+        wa: peserta.noHp ?? peserta.noTelp ?? null,
+        skemaId: parsedSkemaId,
+        status: "CALON",
+      },
+      include: {
+        skema: { select: { id: true, kode: true, nama: true } },
+        pesertaTraining: { select: { id: true, nama: true, noJadwal: true } },
+      },
+    });
+
+    res.status(201).json({
+      message: "Peserta berhasil didaftarkan ke uji kompetensi.",
+      data,
+    });
+  } catch (error) {
+    res
+      .status(500)
+      .json({ message: "Internal server error.", error: error.message });
+  }
+};
+
 const getPesertaTrainingById = async (req, res) => {
   try {
     const { id } = req.params;
@@ -471,6 +646,7 @@ const getPesertaTrainingById = async (req, res) => {
         pegawaiInput: { select: { id: true, nama: true } },
         pegawaiUpdate: { select: { id: true, nama: true } },
         pegawaiKonfirmasi: { select: { id: true, nama: true } },
+        pegawaiFinal: { select: { id: true, nama: true } },
       },
     });
 
@@ -810,6 +986,9 @@ module.exports = {
   updatePesertaTraining,
   createPesertaTraining,
   getPesertaTrainingById,
+  updateStatusFinalPeserta,
+  getSkemaKualifikasiOptions,
+  createPesertaUjiFromTraining,
   updateBiodataPeserta,
   getBiodataPeserta,
   getEvaluasiContext,

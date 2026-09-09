@@ -52,23 +52,28 @@ model Pegawai {
   statusAktif        Boolean   @default(false)
 
   // Dokumen (relasi ke model terpisah)
-  dokumen                DokumenPegawai[]
-  dailyActivities        DailyActivity[]
-  hakAksesKaryawan       HakAksesKaryawan[]
-  permohonanHakAkses     PermohonanHakAkses[]
-  pengajuanJudulTraining PengajuanJudulTraining[]
-  jadwalDiupdate         JadwalTraining[]
-  pesertaDiinput         PesertaTraining[]        @relation("PesertaInputOleh")
-  pesertaDiupdate        PesertaTraining[]        @relation("PesertaUpdateOleh")
-  pesertaDikonfirmasi    PesertaTraining[]        @relation("PesertaKonfirmasiOleh")
-  konfirmasiDibuat       Konfirmasi[]             @relation("KonfirmasiDibuatOleh")
-  pengajuanIzin          PengajuanIzin[]
-  permintaanSurat        PermintaanNomorSurat[]
-  inputNeraca            TableNeraca[]            @relation("inputNeraca")
-  updateNeraca           TableNeraca[]            @relation("updateNeraca")
-  umkPic                 Umk[]                    @relation("UmkPic")
-  umkInputter            Umk[]                    @relation("UmkInputter")
-  user                   User?
+  dokumen                  DokumenPegawai[]
+  dailyActivities          DailyActivity[]
+  hakAksesKaryawan         HakAksesKaryawan[]
+  permohonanHakAkses       PermohonanHakAkses[]
+  pengajuanJudulTraining   PengajuanJudulTraining[]
+  jadwalDiupdate           JadwalTraining[]
+  pesertaDiinput           PesertaTraining[]        @relation("PesertaInputOleh")
+  pesertaDiupdate          PesertaTraining[]        @relation("PesertaUpdateOleh")
+  pesertaDikonfirmasi      PesertaTraining[]        @relation("PesertaKonfirmasiOleh")
+  pesertaDifinalkan        PesertaTraining[]        @relation("PesertaFinalOleh")
+  tukDiupdate              TUK[]                    @relation("TukUpdateOleh")
+  asesorDiupdate           Asesor[]                 @relation("AsesorUpdateOleh")
+  requestKeuanganDiajukan  RequestKeuangan[]        @relation("RequestKeuanganRequestedBy")
+  requestKeuanganDisetujui RequestKeuangan[]        @relation("RequestKeuanganApprovedBy")
+  konfirmasiDibuat         Konfirmasi[]             @relation("KonfirmasiDibuatOleh")
+  pengajuanIzin            PengajuanIzin[]
+  permintaanSurat          PermintaanNomorSurat[]
+  inputNeraca              TableNeraca[]            @relation("inputNeraca")
+  updateNeraca             TableNeraca[]            @relation("updateNeraca")
+  umkPic                   Umk[]                    @relation("UmkPic")
+  umkInputter              Umk[]                    @relation("UmkInputter")
+  user                     User?
 }
 
 model DokumenPegawai {
@@ -700,12 +705,20 @@ model PesertaTraining {
   konfirmasiOleh    String?
   pegawaiKonfirmasi Pegawai? @relation("PesertaKonfirmasiOleh", fields: [konfirmasiOleh], references: [id])
 
+  // Status Final — peserta yang sudah menyelesaikan training & berhak
+  // didaftarkan ke uji kompetensi (buat sertifikat LSP)
+  statusFinal  Boolean   @default(false)
+  finalTgl     DateTime?
+  finalOleh    String?
+  pegawaiFinal Pegawai?  @relation("PesertaFinalOleh", fields: [finalOleh], references: [id])
+
   // Timestamps
   tglInput  DateTime @default(now())
   tglUpdate DateTime @updatedAt
 
   evaluasi   EvaluasiPelatihan?
   konfirmasi Konfirmasi[]
+  pesertaUji PesertaUji[]
 
   @@map("peserta_training")
 }
@@ -750,6 +763,110 @@ model Konfirmasi {
   updatedAt DateTime @updatedAt
 
   @@map("konfirmasi")
+}
+
+// ─────────────────────────────────────────────
+// LSP (Lembaga Sertifikasi Profesi) — Step 1: master data + transaksi
+// PesertaUji. Belum ada controller/endpoint, cuma schema dulu.
+// ─────────────────────────────────────────────
+
+model TUK {
+  id          Int       @id @default(autoincrement())
+  noSK        String
+  noPenetapan String?
+  tglSanggup  DateTime?
+  nama        String
+  alamat      String
+  telp        String?
+
+  updateOleh String?
+  pegawai    Pegawai? @relation("TukUpdateOleh", fields: [updateOleh], references: [id])
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  pesertaUji PesertaUji[]
+
+  @@map("tuk")
+}
+
+model Asesor {
+  id          Int     @id @default(autoincrement())
+  nama        String
+  noRegAsesor String?
+
+  updateOleh String?
+  pegawai    Pegawai? @relation("AsesorUpdateOleh", fields: [updateOleh], references: [id])
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  pesertaUji PesertaUji[]
+
+  @@map("asesor")
+}
+
+model SkemaKualifikasi {
+  id   Int    @id @default(autoincrement())
+  kode String @unique // HAZ-04, WM-07, EM-06, dst
+  nama String // "3R Sampah/Limbah Padat Non B3"
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  pesertaUji PesertaUji[]
+
+  @@map("skema_kualifikasi")
+}
+
+model PesertaUji {
+  id Int @id @default(autoincrement())
+
+  // Relasi opsional ke PesertaTraining — kalau peserta ini asalnya
+  // didaftarkan dari training (lewat fitur "Daftarkan ke Uji" di Step 3)
+  pesertaTrainingId Int?
+  pesertaTraining   PesertaTraining? @relation(fields: [pesertaTrainingId], references: [id])
+
+  nama          String
+  instansi      String?
+  tempatTinggal String?
+  email         String?
+  wa            String?
+
+  skemaId Int
+  skema   SkemaKualifikasi @relation(fields: [skemaId], references: [id])
+
+  tukId Int?
+  tuk   TUK? @relation(fields: [tukId], references: [id])
+
+  asesorId Int?
+  asesor   Asesor? @relation(fields: [asesorId], references: [id])
+
+  tglUji      DateTime?
+  noReg       String?
+  noSerBNSP   String?
+  tglTerbit   DateTime?
+  statusHasil String? // "K" (Kompeten) | "BK" (Belum Kompeten) | null (belum uji)
+
+  // Checklist dokumen kelengkapan pendaftaran uji
+  suratKetKerja Boolean @default(false)
+  suratRekom    Boolean @default(false)
+  sertPel       Boolean @default(false)
+  cv            Boolean @default(false)
+  ktp           Boolean @default(false)
+  ijazah        Boolean @default(false)
+  pasFoto       Boolean @default(false)
+  verTUK        Boolean @default(false)
+  ksediaTUK     Boolean @default(false)
+  apl01         Boolean @default(false)
+  apl02         Boolean @default(false)
+
+  status String @default("CALON") // CALON | SIAP_UJI | SUDAH_UJI
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("peserta_uji")
 }
 
 model EvaluasiPelatihan {
@@ -973,4 +1090,80 @@ model LiniBisnisTraining {
 
   @@unique([liniBisnisId, judulTrainingId])
   @@map("lini_bisnis_training")
+}
+
+// ─────────────────────────────────────────────
+// KEUANGAN — Tahap 1: Master Akun
+// 5 jenis akun baku (enum, gak bisa nambah dari UI), isi akun per jenis bebas.
+// ─────────────────────────────────────────────
+
+enum JenisAkun {
+  ASET
+  LIABILITAS
+  MODAL
+  PENDAPATAN
+  BEBAN
+}
+
+model Akun {
+  id        Int       @id @default(autoincrement())
+  kode      String?   @unique
+  nama      String
+  jenis     JenisAkun
+  saldoAwal Decimal   @default(0)
+  isActive  Boolean   @default(true)
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+
+  requestKeuangan RequestKeuangan[]
+
+  @@map("akun")
+}
+
+// ─────────────────────────────────────────────
+// KEUANGAN — Fitur 0 (lanjutan): Pengeluaran & Pemasukan
+// Alur: user request → approver approve/reject → selesai (belum nyentuh
+// Jurnal Keuangan/Fitur 2 — itu integrasi menyusul, ditandain TODO di
+// controller approve nanti).
+// ─────────────────────────────────────────────
+
+enum JenisRequestKeuangan {
+  PENGELUARAN
+  PEMASUKAN
+}
+
+enum StatusRequestKeuangan {
+  PENDING
+  APPROVED
+  REJECTED
+}
+
+model RequestKeuangan {
+  id        Int                  @id @default(autoincrement())
+  jenis     JenisRequestKeuangan
+  akunId    Int?
+  akun      Akun?                @relation(fields: [akunId], references: [id])
+  deskripsi String
+  nominal   Decimal
+  tanggal   DateTime             @default(now())
+
+  // requestedBy/approvedBy String, bukan Int — Pegawai.id di schema ini
+  // cuid (String), sama kayak inputOleh/updateOleh/konfirmasiOleh dkk di
+  // model-model lain. Disesuaikan dari spek biar konsisten.
+  requestedBy   String
+  requestedOleh Pegawai @relation("RequestKeuanganRequestedBy", fields: [requestedBy], references: [id])
+
+  status StatusRequestKeuangan @default(PENDING)
+
+  approvedBy   String?
+  approvedOleh Pegawai?  @relation("RequestKeuanganApprovedBy", fields: [approvedBy], references: [id])
+  approvedAt   DateTime?
+
+  catatan   String?
+  buktiFile String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("request_keuangan")
 }

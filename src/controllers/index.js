@@ -10,6 +10,7 @@ const dashboardControllers = require("./dashboard.controller");
 const accountingControllers = require("./accounting.controller");
 const publicControllers = require("./public.controller");
 const konfirmasiControllers = require("./konfirmasi.controller");
+const lspControllers = require("./lsp.controller");
 
 module.exports = {
   ...userControllers,
@@ -24,4 +25,5 @@ module.exports = {
   ...accountingControllers,
   ...publicControllers,
   ...konfirmasiControllers,
+  ...lspControllers,
 };

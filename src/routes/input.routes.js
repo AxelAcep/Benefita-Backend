@@ -5,6 +5,9 @@ const {
   updatePesertaTraining,
   createPesertaTraining,
   getPesertaTrainingById,
+  updateStatusFinalPeserta,
+  getSkemaKualifikasiOptions,
+  createPesertaUjiFromTraining,
   getBiodataPeserta,
   updateBiodataPeserta,
 } = require("../controllers");
@@ -34,5 +37,24 @@ router.put(
 
 router.get("/peserta/:id/biodata", getBiodataPeserta);
 router.patch("/peserta/:id/biodata", updateBiodataPeserta);
+
+// Peserta Final — prasyarat buat didaftarkan ke uji kompetensi (LSP)
+router.patch(
+  "/peserta/:id/final",
+  authMiddleware,
+  updateStatusFinalPeserta,
+);
+
+// Bridge ke LSP: daftarkan peserta (Final) ke uji kompetensi
+router.get(
+  "/skema-kualifikasi/list",
+  authMiddleware,
+  getSkemaKualifikasiOptions,
+);
+router.post(
+  "/peserta-uji/dari-training",
+  authMiddleware,
+  createPesertaUjiFromTraining,
+);
 
 module.exports = router;

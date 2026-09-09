@@ -12,6 +12,7 @@ const dashboardRoutes = require("./dashboard.routes");
 const accountingRoutes = require("./accounting.routes");
 const publicRoutes = require("./public.routes");
 const konfirmasiRoutes = require("./konfirmasi.routes");
+const lspRoutes = require("./lsp.routes");
 
 const router = express.Router();
 
@@ -27,5 +28,6 @@ router.use("/dashboard", dashboardRoutes);
 router.use("/accounting", accountingRoutes);
 router.use("/public", publicRoutes);
 router.use("/konfirmasi", konfirmasiRoutes);
+router.use("/lsp", lspRoutes);
 
 module.exports = router;

@@ -1035,6 +1035,397 @@ const getPegawaiUmk = async (req, res) => {
   }
 };
 
+// ─────────────────────────────────────────────
+// MASTER AKUN — Keuangan Tahap 1
+// 5 jenis akun baku (enum JenisAkun), isi akun per jenis bebas custom user.
+// ─────────────────────────────────────────────
+
+const JENIS_AKUN_VALUES = ["ASET", "LIABILITAS", "MODAL", "PENDAPATAN", "BEBAN"];
+
+// ─── CREATE AKUN ──────────────────────────────────────────────────
+const createAkun = async (req, res) => {
+  try {
+    const { kode, nama, jenis, saldoAwal } = req.body;
+
+    if (!nama) return res.status(400).json({ message: "Nama akun wajib diisi" });
+    if (!jenis || !JENIS_AKUN_VALUES.includes(jenis)) {
+      return res.status(400).json({
+        message: `Jenis akun wajib salah satu dari: ${JENIS_AKUN_VALUES.join(", ")}`,
+      });
+    }
+
+    if (kode) {
+      const existing = await prisma.akun.findUnique({ where: { kode } });
+      if (existing) {
+        return res
+          .status(400)
+          .json({ message: `Kode akun "${kode}" sudah dipakai` });
+      }
+    }
+
+    const data = await prisma.akun.create({
+      data: {
+        kode: kode || null,
+        nama,
+        jenis,
+        saldoAwal: saldoAwal ? Number(saldoAwal) : 0,
+      },
+    });
+
+    return res.status(201).json({ message: "Akun berhasil dibuat", data });
+  } catch (error) {
+    console.error("[createAkun error]", error);
+    return res.status(500).json({ message: "Terjadi kesalahan server." });
+  }
+};
+
+// ─── GET LIST AKUN (filter by jenis, search, pagination) ──────────
+const getAkunList = async (req, res) => {
+  try {
+    const page = parseInt(req.query.page) || 1;
+    const limit = parseInt(req.query.limit) || 10;
+    const jenis = req.query.jenis;
+    const search = req.query.search || "";
+    const isActive = req.query.isActive; // "true" | "false" | undefined (semua)
+
+    const where = {};
+    if (jenis && JENIS_AKUN_VALUES.includes(jenis)) where.jenis = jenis;
+    if (isActive === "true") where.isActive = true;
+    if (isActive === "false") where.isActive = false;
+    if (search) {
+      where.OR = [
+        { nama: { contains: search, mode: "insensitive" } },
+        { kode: { contains: search, mode: "insensitive" } },
+      ];
+    }
+
+    const skip = (page - 1) * limit;
+    const [data, total] = await Promise.all([
+      prisma.akun.findMany({
+        where,
+        orderBy: [{ jenis: "asc" }, { nama: "asc" }],
+        skip,
+        take: limit,
+      }),
+      prisma.akun.count({ where }),
+    ]);
+
+    return res.status(200).json({
+      data,
+      pagination: { page, limit, total, totalPages: Math.ceil(total / limit) || 1 },
+    });
+  } catch (error) {
+    console.error("[getAkunList error]", error);
+    return res.status(500).json({ message: "Terjadi kesalahan server." });
+  }
+};
+
+// ─── GET AKUN BY ID ─────────────────────────────────────────────────
+const getAkunById = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const data = await prisma.akun.findUnique({ where: { id: parseInt(id) } });
+    if (!data) return res.status(404).json({ message: "Akun tidak ditemukan" });
+    return res.status(200).json({ data });
+  } catch (error) {
+    console.error("[getAkunById error]", error);
+    return res.status(500).json({ message: "Terjadi kesalahan server." });
+  }
+};
+
+// ─── UPDATE AKUN (edit) ─────────────────────────────────────────────
+const updateAkun = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { kode, nama, jenis, saldoAwal } = req.body;
+
+    const existing = await prisma.akun.findUnique({ where: { id: parseInt(id) } });
+    if (!existing) return res.status(404).json({ message: "Akun tidak ditemukan" });
+
+    if (jenis && !JENIS_AKUN_VALUES.includes(jenis)) {
+      return res.status(400).json({
+        message: `Jenis akun wajib salah satu dari: ${JENIS_AKUN_VALUES.join(", ")}`,
+      });
+    }
+
+    if (kode && kode !== existing.kode) {
+      const dup = await prisma.akun.findUnique({ where: { kode } });
+      if (dup) {
+        return res
+          .status(400)
+          .json({ message: `Kode akun "${kode}" sudah dipakai` });
+      }
+    }
+
+    const data = await prisma.akun.update({
+      where: { id: parseInt(id) },
+      data: {
+        kode: kode === undefined ? existing.kode : kode || null,
+        nama: nama ?? existing.nama,
+        jenis: jenis ?? existing.jenis,
+        saldoAwal: saldoAwal !== undefined ? Number(saldoAwal) : existing.saldoAwal,
+      },
+    });
+
+    return res.status(200).json({ message: "Akun berhasil diupdate", data });
+  } catch (error) {
+    console.error("[updateAkun error]", error);
+    return res.status(500).json({ message: "Terjadi kesalahan server." });
+  }
+};
+
+// ─── TOGGLE STATUS AKUN (nonaktifkan / aktifkan — soft delete) ─────
+// Akun gak boleh di-hard-delete karena bisa udah dipakai di transaksi
+// (RequestKeuangan.akunId, dan nanti Jurnal Keuangan). Cukup isActive.
+const toggleAkunStatus = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { isActive } = req.body;
+
+    const existing = await prisma.akun.findUnique({ where: { id: parseInt(id) } });
+    if (!existing) return res.status(404).json({ message: "Akun tidak ditemukan" });
+
+    const nextActive = isActive === undefined ? !existing.isActive : !!isActive;
+
+    const data = await prisma.akun.update({
+      where: { id: parseInt(id) },
+      data: { isActive: nextActive },
+    });
+
+    return res.status(200).json({
+      message: nextActive ? "Akun berhasil diaktifkan" : "Akun berhasil dinonaktifkan",
+      data,
+    });
+  } catch (error) {
+    console.error("[toggleAkunStatus error]", error);
+    return res.status(500).json({ message: "Terjadi kesalahan server." });
+  }
+};
+
+// ─────────────────────────────────────────────
+// PENGELUARAN & PEMASUKAN — Fitur 0 (lanjutan)
+// Alur: user request → approver approve/reject → selesai.
+// Belum nyentuh Jurnal Keuangan (Fitur 2) — itu integrasi menyusul.
+// ─────────────────────────────────────────────
+
+const JENIS_REQUEST_VALUES = ["PENGELUARAN", "PEMASUKAN"];
+const STATUS_REQUEST_VALUES = ["PENDING", "APPROVED", "REJECTED"];
+
+// PENGELUARAN → akun jenis BEBAN, PEMASUKAN → akun jenis PENDAPATAN
+const JENIS_REQUEST_TO_AKUN = {
+  PENGELUARAN: "BEBAN",
+  PEMASUKAN: "PENDAPATAN",
+};
+
+const REQUEST_KEUANGAN_INCLUDE = {
+  akun: { select: { id: true, kode: true, nama: true, jenis: true } },
+  requestedOleh: { select: { id: true, nama: true } },
+  approvedOleh: { select: { id: true, nama: true } },
+};
+
+// ─── CREATE REQUEST (sisi pengaju) ─────────────────────────────────
+const createRequestKeuangan = async (req, res) => {
+  try {
+    const { jenis, akunId, deskripsi, nominal, tanggal } = req.body;
+
+    if (!jenis || !JENIS_REQUEST_VALUES.includes(jenis)) {
+      return res.status(400).json({
+        message: `Jenis wajib salah satu dari: ${JENIS_REQUEST_VALUES.join(", ")}`,
+      });
+    }
+    if (!deskripsi) {
+      return res.status(400).json({ message: "Deskripsi wajib diisi" });
+    }
+    if (!nominal || Number(nominal) <= 0) {
+      return res.status(400).json({ message: "Nominal wajib diisi dan lebih dari 0" });
+    }
+
+    const requestedBy = req.user?.pegawaiId;
+    if (!requestedBy) {
+      return res.status(401).json({ message: "Unauthorized." });
+    }
+
+    // Dropdown akun difilter sesuai jenis request — validasi ulang di backend
+    // (bukan cuma percaya filter dari frontend).
+    if (akunId) {
+      const akun = await prisma.akun.findUnique({ where: { id: parseInt(akunId) } });
+      if (!akun) {
+        return res.status(404).json({ message: "Akun tidak ditemukan" });
+      }
+      if (!akun.isActive) {
+        return res.status(400).json({ message: "Akun ini sudah nonaktif" });
+      }
+      const jenisAkunHarusnya = JENIS_REQUEST_TO_AKUN[jenis];
+      if (akun.jenis !== jenisAkunHarusnya) {
+        return res.status(400).json({
+          message: `Akun untuk request ${jenis} harus jenis ${jenisAkunHarusnya}`,
+        });
+      }
+    }
+
+    const buktiFile = req.file ? req.file.path : null;
+
+    const data = await prisma.requestKeuangan.create({
+      data: {
+        jenis,
+        akunId: akunId ? parseInt(akunId) : null,
+        deskripsi,
+        nominal: Number(nominal),
+        tanggal: tanggal ? new Date(tanggal) : new Date(),
+        requestedBy,
+        status: "PENDING",
+        buktiFile,
+      },
+      include: REQUEST_KEUANGAN_INCLUDE,
+    });
+
+    return res.status(201).json({ message: "Request berhasil diajukan", data });
+  } catch (error) {
+    console.error("[createRequestKeuangan error]", error);
+    return res.status(500).json({ message: "Terjadi kesalahan server." });
+  }
+};
+
+// ─── GET LIST REQUEST (filter status & jenis) ──────────────────────
+const getRequestKeuanganList = async (req, res) => {
+  try {
+    const page = parseInt(req.query.page) || 1;
+    const limit = parseInt(req.query.limit) || 10;
+    const status = req.query.status;
+    const jenis = req.query.jenis;
+    const search = req.query.search || "";
+
+    const where = {};
+    if (status && STATUS_REQUEST_VALUES.includes(status)) where.status = status;
+    if (jenis && JENIS_REQUEST_VALUES.includes(jenis)) where.jenis = jenis;
+    if (search) {
+      where.OR = [
+        { deskripsi: { contains: search, mode: "insensitive" } },
+        { requestedOleh: { is: { nama: { contains: search, mode: "insensitive" } } } },
+      ];
+    }
+
+    const skip = (page - 1) * limit;
+    const [data, total] = await Promise.all([
+      prisma.requestKeuangan.findMany({
+        where,
+        orderBy: { createdAt: "desc" },
+        skip,
+        take: limit,
+        include: REQUEST_KEUANGAN_INCLUDE,
+      }),
+      prisma.requestKeuangan.count({ where }),
+    ]);
+
+    return res.status(200).json({
+      data,
+      pagination: { page, limit, total, totalPages: Math.ceil(total / limit) || 1 },
+    });
+  } catch (error) {
+    console.error("[getRequestKeuanganList error]", error);
+    return res.status(500).json({ message: "Terjadi kesalahan server." });
+  }
+};
+
+// ─── GET REQUEST BY ID ──────────────────────────────────────────────
+const getRequestKeuanganById = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const data = await prisma.requestKeuangan.findUnique({
+      where: { id: parseInt(id) },
+      include: REQUEST_KEUANGAN_INCLUDE,
+    });
+    if (!data) return res.status(404).json({ message: "Request tidak ditemukan" });
+    return res.status(200).json({ data });
+  } catch (error) {
+    console.error("[getRequestKeuanganById error]", error);
+    return res.status(500).json({ message: "Terjadi kesalahan server." });
+  }
+};
+
+// ─── APPROVE REQUEST (sisi approver) ───────────────────────────────
+// Guard role approver dipasang di route (authorizeRole).
+const approveRequestKeuangan = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const approvedBy = req.user?.pegawaiId;
+    if (!approvedBy) return res.status(401).json({ message: "Unauthorized." });
+
+    const existing = await prisma.requestKeuangan.findUnique({
+      where: { id: parseInt(id) },
+    });
+    if (!existing) return res.status(404).json({ message: "Request tidak ditemukan" });
+    if (existing.status !== "PENDING") {
+      return res.status(400).json({
+        message: `Request ini sudah diproses sebelumnya (status: ${existing.status})`,
+      });
+    }
+
+    const data = await prisma.requestKeuangan.update({
+      where: { id: parseInt(id) },
+      data: {
+        status: "APPROVED",
+        approvedBy,
+        approvedAt: new Date(),
+        catatan: req.body?.catatan || null,
+      },
+      include: REQUEST_KEUANGAN_INCLUDE,
+    });
+
+    // TODO(Fitur 2 — Jurnal Keuangan): begitu request APPROVED, ini titik
+    // integrasinya — generate entry debit/kredit ke Jurnal Keuangan pakai
+    // data.akun (kalau ada) dan data.nominal. Belum dibangun di tahap ini,
+    // sengaja gak disentuh dulu.
+
+    return res.status(200).json({ message: "Request berhasil disetujui", data });
+  } catch (error) {
+    console.error("[approveRequestKeuangan error]", error);
+    return res.status(500).json({ message: "Terjadi kesalahan server." });
+  }
+};
+
+// ─── REJECT REQUEST (sisi approver) — wajib isi catatan alasan ─────
+const rejectRequestKeuangan = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { catatan } = req.body;
+    const approvedBy = req.user?.pegawaiId;
+    if (!approvedBy) return res.status(401).json({ message: "Unauthorized." });
+
+    if (!catatan || !catatan.trim()) {
+      return res
+        .status(400)
+        .json({ message: "Catatan alasan wajib diisi kalau reject" });
+    }
+
+    const existing = await prisma.requestKeuangan.findUnique({
+      where: { id: parseInt(id) },
+    });
+    if (!existing) return res.status(404).json({ message: "Request tidak ditemukan" });
+    if (existing.status !== "PENDING") {
+      return res.status(400).json({
+        message: `Request ini sudah diproses sebelumnya (status: ${existing.status})`,
+      });
+    }
+
+    const data = await prisma.requestKeuangan.update({
+      where: { id: parseInt(id) },
+      data: {
+        status: "REJECTED",
+        approvedBy,
+        approvedAt: new Date(),
+        catatan,
+      },
+      include: REQUEST_KEUANGAN_INCLUDE,
+    });
+
+    return res.status(200).json({ message: "Request berhasil ditolak", data });
+  } catch (error) {
+    console.error("[rejectRequestKeuangan error]", error);
+    return res.status(500).json({ message: "Terjadi kesalahan server." });
+  }
+};
+
 module.exports = {
   getPendapatan,
   getPiutang,
@@ -1053,4 +1444,16 @@ module.exports = {
   updateUmk,
   getUmkById,
   getPegawaiUmk,
+
+  createAkun,
+  getAkunList,
+  getAkunById,
+  updateAkun,
+  toggleAkunStatus,
+
+  createRequestKeuangan,
+  getRequestKeuanganList,
+  getRequestKeuanganById,
+  approveRequestKeuangan,
+  rejectRequestKeuangan,
 };
