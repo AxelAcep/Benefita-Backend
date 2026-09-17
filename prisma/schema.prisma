@@ -66,6 +66,8 @@ model Pegawai {
   asesorDiupdate           Asesor[]                 @relation("AsesorUpdateOleh")
   requestKeuanganDiajukan  RequestKeuangan[]        @relation("RequestKeuanganRequestedBy")
   requestKeuanganDisetujui RequestKeuangan[]        @relation("RequestKeuanganApprovedBy")
+  jurnalDibuat             JurnalTransaksi[]        @relation("JurnalCreatedBy")
+  periodeDitutupOleh       PeriodeAkuntansi[]       @relation("PeriodeClosedBy")
   konfirmasiDibuat         Konfirmasi[]             @relation("KonfirmasiDibuatOleh")
   pengajuanIzin            PengajuanIzin[]
   permintaanSurat          PermintaanNomorSurat[]
@@ -1112,10 +1114,17 @@ model Akun {
   jenis     JenisAkun
   saldoAwal Decimal   @default(0)
   isActive  Boolean   @default(true)
-  createdAt DateTime  @default(now())
-  updatedAt DateTime  @updatedAt
+
+  // Fitur 6 (Kas & Bank) — flag buat nandain akun ASET mana yang termasuk
+  // kategori Kas & Bank. Bukan jenis akun baru (5 jenis baku tetap gak
+  // berubah), cuma sub-tag orthogonal buat filter laporan Kas & Bank.
+  isKasBank Boolean @default(false)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
   requestKeuangan RequestKeuangan[]
+  jurnalBaris     JurnalBaris[]
 
   @@map("akun")
 }
@@ -1162,8 +1171,123 @@ model RequestKeuangan {
   catatan   String?
   buktiFile String?
 
+  // Fitur 0 lanjutan — jurnal yang otomatis di-generate begitu request ini
+  // di-approve (1 request approved = paling banyak 1 transaksi jurnal).
+  jurnalTransaksiId Int?             @unique
+  jurnalTransaksi   JurnalTransaksi? @relation(fields: [jurnalTransaksiId], references: [id])
+
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
   @@map("request_keuangan")
+}
+
+// ─────────────────────────────────────────────
+// KEUANGAN — Fitur 2: Jurnal Keuangan (double-entry, baru)
+//
+// Ini SKEMA BARU, terpisah dari TableNeraca/TableJenisBiaya lama (yang
+// dibiarkan jadi arsip "(Lama)" di UI — single-sided, gak ada relasi ke
+// Akun, gak ada status). Jurnal baru: 1 transaksi (header) = N baris
+// (detail), tiap baris nunjuk ke 1 Akun + isi debit ATAU kredit. Total
+// debit transaksi harus sama dengan total kredit (balance).
+//
+// Mode Simple (FE): user pilih "Dari Akun" & "Ke Akun" + 1 nominal →
+// otomatis jadi 2 JurnalBaris (kredit di akun asal, debit di akun tujuan).
+// Mode Advanced (FE): user isi bebas banyak baris, tiap baris salah satu
+// dari debit/kredit, minimal 2 baris, total harus balance.
+// Backend gak peduli mode-nya — cuma nerima array baris & validasi balance.
+// ─────────────────────────────────────────────
+
+enum ModeJurnal {
+  SIMPLE
+  ADVANCED
+}
+
+enum StatusJurnal {
+  POSTED
+  CLOSED
+}
+
+// Nandain asal-usul transaksi jurnal — bukan enum ketat biar fleksibel buat
+// sumber baru di masa depan tanpa migration (manual input, auto dari
+// RequestKeuangan, hasil Tutup Buku, atau seed dari TableNeraca lama).
+model JurnalTransaksi {
+  id        Int          @id @default(autoincrement())
+  noJurnal  String       @unique
+  tanggal   DateTime
+  deskripsi String
+  mode      ModeJurnal   @default(SIMPLE)
+  status    StatusJurnal @default(POSTED)
+
+  // Total debit (= total kredit, karena wajib balance) — disimpan biar gak
+  // perlu agregasi ulang tiap nampilin daftar transaksi.
+  totalNominal Decimal @default(0)
+
+  // YYYYMM — buat pengelompokan per periode (Buku Besar & Tutup Buku)
+  periode String
+
+  sumber String @default("MANUAL") // MANUAL | REQUEST_KEUANGAN | TUTUP_BUKU | MIGRASI_LAMA
+
+  createdBy  String?
+  dibuatOleh Pegawai? @relation("JurnalCreatedBy", fields: [createdBy], references: [id])
+
+  closedAt DateTime?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  baris           JurnalBaris[]
+  requestKeuangan RequestKeuangan?
+  periodeDitutup  PeriodeAkuntansi? @relation("PeriodeJurnalPenutup")
+
+  @@map("jurnal_transaksi")
+}
+
+model JurnalBaris {
+  id          Int             @id @default(autoincrement())
+  transaksiId Int
+  transaksi   JurnalTransaksi @relation(fields: [transaksiId], references: [id], onDelete: Cascade)
+
+  akunId Int
+  akun   Akun @relation(fields: [akunId], references: [id])
+
+  debit      Decimal @default(0)
+  kredit     Decimal @default(0)
+  keterangan String?
+
+  createdAt DateTime @default(now())
+
+  @@index([akunId])
+  @@map("jurnal_baris")
+}
+
+// ─────────────────────────────────────────────
+// KEUANGAN — Fitur 3: Tutup Buku per periode
+// ─────────────────────────────────────────────
+
+enum StatusPeriode {
+  OPEN
+  CLOSED
+}
+
+model PeriodeAkuntansi {
+  id      Int           @id @default(autoincrement())
+  periode String        @unique // YYYYMM
+  status  StatusPeriode @default(OPEN)
+
+  // Snapshot Laba/Rugi bersih periode ini pas ditutup (Fitur 4 hasilnya
+  // dipindah ke Modal - Laba Ditahan lewat jurnal penutup di bawah).
+  labaRugiBersih Decimal?
+
+  jurnalPenutupId Int?             @unique
+  jurnalPenutup   JurnalTransaksi? @relation("PeriodeJurnalPenutup", fields: [jurnalPenutupId], references: [id])
+
+  closedAt    DateTime?
+  closedBy    String?
+  ditutupOleh Pegawai?  @relation("PeriodeClosedBy", fields: [closedBy], references: [id])
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("periode_akuntansi")
 }

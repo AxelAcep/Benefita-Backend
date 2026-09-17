@@ -1,6 +1,7 @@
 // controllers/pendapatanController.js
 const { PrismaClient } = require("@prisma/client");
 const prisma = new PrismaClient();
+const { toPeriode, createJurnalTransaksi } = require("../services/jurnal.service");
 
 /**
  * GET /api/accounting/pendapatan
@@ -1045,7 +1046,7 @@ const JENIS_AKUN_VALUES = ["ASET", "LIABILITAS", "MODAL", "PENDAPATAN", "BEBAN"]
 // ─── CREATE AKUN ──────────────────────────────────────────────────
 const createAkun = async (req, res) => {
   try {
-    const { kode, nama, jenis, saldoAwal } = req.body;
+    const { kode, nama, jenis, saldoAwal, isKasBank } = req.body;
 
     if (!nama) return res.status(400).json({ message: "Nama akun wajib diisi" });
     if (!jenis || !JENIS_AKUN_VALUES.includes(jenis)) {
@@ -1069,6 +1070,7 @@ const createAkun = async (req, res) => {
         nama,
         jenis,
         saldoAwal: saldoAwal ? Number(saldoAwal) : 0,
+        isKasBank: Boolean(isKasBank),
       },
     });
 
@@ -1137,7 +1139,7 @@ const getAkunById = async (req, res) => {
 const updateAkun = async (req, res) => {
   try {
     const { id } = req.params;
-    const { kode, nama, jenis, saldoAwal } = req.body;
+    const { kode, nama, jenis, saldoAwal, isKasBank } = req.body;
 
     const existing = await prisma.akun.findUnique({ where: { id: parseInt(id) } });
     if (!existing) return res.status(404).json({ message: "Akun tidak ditemukan" });
@@ -1164,6 +1166,7 @@ const updateAkun = async (req, res) => {
         nama: nama ?? existing.nama,
         jenis: jenis ?? existing.jenis,
         saldoAwal: saldoAwal !== undefined ? Number(saldoAwal) : existing.saldoAwal,
+        isKasBank: isKasBank !== undefined ? Boolean(isKasBank) : existing.isKasBank,
       },
     });
 
@@ -1361,23 +1364,78 @@ const approveRequestKeuangan = async (req, res) => {
       });
     }
 
-    const data = await prisma.requestKeuangan.update({
-      where: { id: parseInt(id) },
-      data: {
-        status: "APPROVED",
-        approvedBy,
-        approvedAt: new Date(),
-        catatan: req.body?.catatan || null,
-      },
-      include: REQUEST_KEUANGAN_INCLUDE,
+    // ── Fitur 0 lanjutan: auto-generate jurnal begitu request di-approve ──
+    // Butuh akun lawan (Kas & Bank) buat nge-balance-in entry-nya. Kalau
+    // request gak punya akun (akunId null) atau belum ada akun Kas & Bank
+    // sama sekali, approve tetep jalan tapi jurnalnya di-skip (dikasih
+    // catatan di response, bukan bikin approve gagal).
+    let jurnalInfo = null;
+    let skipAlasan = null;
+
+    const akunKasBank = existing.akunId
+      ? await prisma.akun.findFirst({ where: { isKasBank: true, isActive: true }, orderBy: { id: "asc" } })
+      : null;
+
+    if (!existing.akunId) {
+      skipAlasan = "Request ini gak nunjuk akun, jurnal gak di-generate otomatis.";
+    } else if (!akunKasBank) {
+      skipAlasan = "Belum ada akun Kas & Bank aktif — jurnal gak di-generate otomatis. Tambahin dulu di Master Akun (tandai isKasBank).";
+    } else {
+      const periode = toPeriode(existing.tanggal);
+      const periodeRow = await prisma.periodeAkuntansi.findUnique({ where: { periode } });
+      if (periodeRow?.status === "CLOSED") {
+        skipAlasan = `Periode ${periode} udah ditutup — jurnal gak di-generate otomatis buat tanggal ini.`;
+      }
+    }
+
+    const data = await prisma.$transaction(async (tx) => {
+      let jurnalTransaksiId = null;
+
+      if (!skipAlasan) {
+        const nominal = Number(existing.nominal);
+        const baris =
+          existing.jenis === "PENGELUARAN"
+            ? [
+                { akunId: existing.akunId, debit: nominal, keterangan: existing.deskripsi },
+                { akunId: akunKasBank.id, kredit: nominal, keterangan: existing.deskripsi },
+              ]
+            : [
+                { akunId: akunKasBank.id, debit: nominal, keterangan: existing.deskripsi },
+                { akunId: existing.akunId, kredit: nominal, keterangan: existing.deskripsi },
+              ];
+
+        const jurnal = await createJurnalTransaksi(tx, {
+          tanggal: existing.tanggal,
+          deskripsi: `${existing.jenis === "PENGELUARAN" ? "Pengeluaran" : "Pemasukan"}: ${existing.deskripsi}`,
+          mode: "SIMPLE",
+          baris,
+          sumber: "REQUEST_KEUANGAN",
+          status: "POSTED",
+          createdBy: approvedBy,
+        });
+        jurnalInfo = jurnal;
+        jurnalTransaksiId = jurnal.id;
+      }
+
+      return tx.requestKeuangan.update({
+        where: { id: parseInt(id) },
+        data: {
+          status: "APPROVED",
+          approvedBy,
+          approvedAt: new Date(),
+          catatan: req.body?.catatan || null,
+          jurnalTransaksiId,
+        },
+        include: REQUEST_KEUANGAN_INCLUDE,
+      });
     });
 
-    // TODO(Fitur 2 — Jurnal Keuangan): begitu request APPROVED, ini titik
-    // integrasinya — generate entry debit/kredit ke Jurnal Keuangan pakai
-    // data.akun (kalau ada) dan data.nominal. Belum dibangun di tahap ini,
-    // sengaja gak disentuh dulu.
-
-    return res.status(200).json({ message: "Request berhasil disetujui", data });
+    return res.status(200).json({
+      message: skipAlasan
+        ? `Request berhasil disetujui. ${skipAlasan}`
+        : `Request berhasil disetujui, jurnal ${jurnalInfo.noJurnal} otomatis dibuat.`,
+      data,
+    });
   } catch (error) {
     console.error("[approveRequestKeuangan error]", error);
     return res.status(500).json({ message: "Terjadi kesalahan server." });

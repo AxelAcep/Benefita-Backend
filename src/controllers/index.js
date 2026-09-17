@@ -11,6 +11,7 @@ const accountingControllers = require("./accounting.controller");
 const publicControllers = require("./public.controller");
 const konfirmasiControllers = require("./konfirmasi.controller");
 const lspControllers = require("./lsp.controller");
+const jurnalControllers = require("./jurnal.controller");
 
 module.exports = {
   ...userControllers,
@@ -26,4 +27,5 @@ module.exports = {
   ...publicControllers,
   ...konfirmasiControllers,
   ...lspControllers,
+  ...jurnalControllers,
 };

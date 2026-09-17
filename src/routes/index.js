@@ -13,6 +13,7 @@ const accountingRoutes = require("./accounting.routes");
 const publicRoutes = require("./public.routes");
 const konfirmasiRoutes = require("./konfirmasi.routes");
 const lspRoutes = require("./lsp.routes");
+const jurnalRoutes = require("./jurnal.routes");
 
 const router = express.Router();
 
@@ -29,5 +30,6 @@ router.use("/accounting", accountingRoutes);
 router.use("/public", publicRoutes);
 router.use("/konfirmasi", konfirmasiRoutes);
 router.use("/lsp", lspRoutes);
+router.use("/jurnal", jurnalRoutes);
 
 module.exports = router;
