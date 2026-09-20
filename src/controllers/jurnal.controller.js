@@ -410,10 +410,17 @@ const getLaporanLabaRugi = async (req, res) => {
     let totalBeban = 0;
 
     for (const akun of akunList) {
+      // sumber TUTUP_BUKU dikecualikan — itu jurnal penutup yang nol-in
+      // akun Pendapatan/Beban periode yang sama, kalau ikut diagregat bakal
+      // nge-cancel-in mutasi asli periode itu sendiri (Laba Rugi jadi 0).
       const agg = await prisma.jurnalBaris.aggregate({
         where: {
           akunId: akun.id,
-          transaksi: { status: { in: ["POSTED", "CLOSED"] }, periode: { gte: startPeriode, lte: endPeriode } },
+          transaksi: {
+            status: { in: ["POSTED", "CLOSED"] },
+            sumber: { not: "TUTUP_BUKU" },
+            periode: { gte: startPeriode, lte: endPeriode },
+          },
         },
         _sum: { debit: true, kredit: true },
       });
