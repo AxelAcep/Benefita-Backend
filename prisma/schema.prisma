@@ -1120,6 +1120,11 @@ model Akun {
   // berubah), cuma sub-tag orthogonal buat filter laporan Kas & Bank.
   isKasBank Boolean @default(false)
 
+  // Fitur 5 (Neraca) — subgrup akun buat grouping Aktiva Lancar/Aktiva
+  // Tetap/Hutang Lancar/dst di layout Neraca. Nullable: PENDAPATAN/BEBAN
+  // gak butuh subgrup (flat list di Laba Rugi).
+  kategori KategoriAkun?
+
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
@@ -1201,6 +1206,19 @@ model RequestKeuangan {
 enum ModeJurnal {
   SIMPLE
   ADVANCED
+}
+
+// Subgrup akun buat layout Neraca (Fitur 5). ASET → KAS_BANK/PIUTANG_USAHA/
+// PIUTANG_LAINNYA (Aktiva Lancar) atau AKTIVA_TETAP. LIABILITAS →
+// HUTANG_LANCAR atau HUTANG_JANGKA_PANJANG. MODAL → MODAL_AKUN (satu grup).
+enum KategoriAkun {
+  KAS_BANK
+  PIUTANG_USAHA
+  PIUTANG_LAINNYA
+  AKTIVA_TETAP
+  HUTANG_LANCAR
+  HUTANG_JANGKA_PANJANG
+  MODAL_AKUN
 }
 
 enum StatusJurnal {

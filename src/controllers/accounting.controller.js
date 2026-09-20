@@ -1042,16 +1042,30 @@ const getPegawaiUmk = async (req, res) => {
 // ─────────────────────────────────────────────
 
 const JENIS_AKUN_VALUES = ["ASET", "LIABILITAS", "MODAL", "PENDAPATAN", "BEBAN"];
+const KATEGORI_AKUN_VALUES = [
+  "KAS_BANK",
+  "PIUTANG_USAHA",
+  "PIUTANG_LAINNYA",
+  "AKTIVA_TETAP",
+  "HUTANG_LANCAR",
+  "HUTANG_JANGKA_PANJANG",
+  "MODAL_AKUN",
+];
 
 // ─── CREATE AKUN ──────────────────────────────────────────────────
 const createAkun = async (req, res) => {
   try {
-    const { kode, nama, jenis, saldoAwal, isKasBank } = req.body;
+    const { kode, nama, jenis, saldoAwal, isKasBank, kategori } = req.body;
 
     if (!nama) return res.status(400).json({ message: "Nama akun wajib diisi" });
     if (!jenis || !JENIS_AKUN_VALUES.includes(jenis)) {
       return res.status(400).json({
         message: `Jenis akun wajib salah satu dari: ${JENIS_AKUN_VALUES.join(", ")}`,
+      });
+    }
+    if (kategori && !KATEGORI_AKUN_VALUES.includes(kategori)) {
+      return res.status(400).json({
+        message: `Kategori akun wajib salah satu dari: ${KATEGORI_AKUN_VALUES.join(", ")}`,
       });
     }
 
@@ -1071,6 +1085,7 @@ const createAkun = async (req, res) => {
         jenis,
         saldoAwal: saldoAwal ? Number(saldoAwal) : 0,
         isKasBank: Boolean(isKasBank),
+        kategori: kategori || null,
       },
     });
 
@@ -1139,7 +1154,7 @@ const getAkunById = async (req, res) => {
 const updateAkun = async (req, res) => {
   try {
     const { id } = req.params;
-    const { kode, nama, jenis, saldoAwal, isKasBank } = req.body;
+    const { kode, nama, jenis, saldoAwal, isKasBank, kategori } = req.body;
 
     const existing = await prisma.akun.findUnique({ where: { id: parseInt(id) } });
     if (!existing) return res.status(404).json({ message: "Akun tidak ditemukan" });
@@ -1147,6 +1162,11 @@ const updateAkun = async (req, res) => {
     if (jenis && !JENIS_AKUN_VALUES.includes(jenis)) {
       return res.status(400).json({
         message: `Jenis akun wajib salah satu dari: ${JENIS_AKUN_VALUES.join(", ")}`,
+      });
+    }
+    if (kategori && !KATEGORI_AKUN_VALUES.includes(kategori)) {
+      return res.status(400).json({
+        message: `Kategori akun wajib salah satu dari: ${KATEGORI_AKUN_VALUES.join(", ")}`,
       });
     }
 
@@ -1167,6 +1187,7 @@ const updateAkun = async (req, res) => {
         jenis: jenis ?? existing.jenis,
         saldoAwal: saldoAwal !== undefined ? Number(saldoAwal) : existing.saldoAwal,
         isKasBank: isKasBank !== undefined ? Boolean(isKasBank) : existing.isKasBank,
+        kategori: kategori !== undefined ? kategori || null : existing.kategori,
       },
     });
 

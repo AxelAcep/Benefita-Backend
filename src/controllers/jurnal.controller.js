@@ -454,16 +454,28 @@ const getLaporanLabaRugi = async (req, res) => {
 // FITUR 5 — NERACA (snapshot, read-only)
 // ─────────────────────────────────────────────
 
+// Kategori Akun → grup layout Neraca. Kategori kosong/null dianggap masuk
+// grup default per jenis (Aktiva Lancar / Hutang Lancar) biar akun lama
+// yang belum diisi kategorinya tetap muncul di laporan.
+const ASET_TETAP_KATEGORI = ["AKTIVA_TETAP"];
+const HUTANG_JP_KATEGORI = ["HUTANG_JANGKA_PANJANG"];
+
 const getNeracaSnapshot = async (req, res) => {
   try {
     const tanggal = req.query.tanggal ? new Date(`${req.query.tanggal}T23:59:59.999Z`) : new Date();
 
     const akunList = await prisma.akun.findMany({
       where: { jenis: { in: ["ASET", "LIABILITAS", "MODAL"] } },
-      orderBy: [{ jenis: "asc" }, { nama: "asc" }],
+      orderBy: [{ jenis: "asc" }, { kode: "asc" }, { nama: "asc" }],
     });
 
-    const kelompok = { ASET: [], LIABILITAS: [], MODAL: [] };
+    const grup = {
+      aktivaLancar: [],
+      aktivaTetap: [],
+      hutangLancar: [],
+      hutangJangkaPanjang: [],
+      modal: [],
+    };
     const totals = { ASET: 0, LIABILITAS: 0, MODAL: 0 };
 
     for (const akun of akunList) {
@@ -474,18 +486,39 @@ const getNeracaSnapshot = async (req, res) => {
       const saldo = Number(akun.saldoAwal) + mutasiBersih(akun.jenis, agg._sum.debit || 0, agg._sum.kredit || 0);
       if (saldo === 0 && Number(akun.saldoAwal) === 0) continue;
 
-      kelompok[akun.jenis].push({ akun: { id: akun.id, kode: akun.kode, nama: akun.nama }, saldo });
+      const item = { akun: { id: akun.id, kode: akun.kode, nama: akun.nama }, saldo };
       totals[akun.jenis] += saldo;
+
+      if (akun.jenis === "ASET") {
+        if (ASET_TETAP_KATEGORI.includes(akun.kategori)) grup.aktivaTetap.push(item);
+        else grup.aktivaLancar.push(item);
+      } else if (akun.jenis === "LIABILITAS") {
+        if (HUTANG_JP_KATEGORI.includes(akun.kategori)) grup.hutangJangkaPanjang.push(item);
+        else grup.hutangLancar.push(item);
+      } else {
+        grup.modal.push(item);
+      }
     }
+
+    const totalAktivaLancar = grup.aktivaLancar.reduce((s, i) => s + i.saldo, 0);
+    const totalAktivaTetap = grup.aktivaTetap.reduce((s, i) => s + i.saldo, 0);
+    const totalHutangLancar = grup.hutangLancar.reduce((s, i) => s + i.saldo, 0);
+    const totalHutangJangkaPanjang = grup.hutangJangkaPanjang.reduce((s, i) => s + i.saldo, 0);
 
     const selisih = Math.round((totals.ASET - (totals.LIABILITAS + totals.MODAL)) * 100) / 100;
 
     return res.status(200).json({
       data: {
         tanggal,
-        aset: kelompok.ASET,
-        liabilitas: kelompok.LIABILITAS,
-        modal: kelompok.MODAL,
+        aktivaLancar: grup.aktivaLancar,
+        totalAktivaLancar,
+        aktivaTetap: grup.aktivaTetap,
+        totalAktivaTetap,
+        hutangLancar: grup.hutangLancar,
+        totalHutangLancar,
+        hutangJangkaPanjang: grup.hutangJangkaPanjang,
+        totalHutangJangkaPanjang,
+        modal: grup.modal,
         totalAset: totals.ASET,
         totalLiabilitas: totals.LIABILITAS,
         totalModal: totals.MODAL,
