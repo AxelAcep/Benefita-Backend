@@ -283,6 +283,7 @@ const getBukuBesarRingkasan = async (req, res) => {
 // FITUR 4 — LABA RUGI (read-only)
 // ─────────────────────────────────────────────
 
+const HARGA_POKOK_KATEGORI = ["HARGA_POKOK_JASA"];
 const BEBAN_PENJUALAN_KATEGORI = ["BEBAN_PENJUALAN"];
 
 async function computeLabaRugi(startDate, endDate) {
@@ -297,9 +298,11 @@ async function computeLabaRugi(startDate, endDate) {
   });
 
   const pendapatan = [];
+  const hargaPokok = [];
   const bebanPenjualan = [];
   const bebanAdministrasi = [];
   let totalPendapatan = 0;
+  let totalHargaPokok = 0;
   let totalBebanPenjualan = 0;
   let totalBebanAdministrasi = 0;
 
@@ -316,6 +319,9 @@ async function computeLabaRugi(startDate, endDate) {
     if (akun.jenis === "PENDAPATAN") {
       totalPendapatan += saldo;
       pendapatan.push(item);
+    } else if (HARGA_POKOK_KATEGORI.includes(akun.kategori)) {
+      totalHargaPokok += saldo;
+      hargaPokok.push(item);
     } else if (BEBAN_PENJUALAN_KATEGORI.includes(akun.kategori)) {
       totalBebanPenjualan += saldo;
       bebanPenjualan.push(item);
@@ -325,7 +331,8 @@ async function computeLabaRugi(startDate, endDate) {
     }
   }
 
-  const totalBeban = totalBebanPenjualan + totalBebanAdministrasi;
+  const totalBeban = totalHargaPokok + totalBebanPenjualan + totalBebanAdministrasi;
+  const labaKotor = totalPendapatan - totalHargaPokok;
   const labaRugiBersih = totalPendapatan - totalBeban;
 
   return {
@@ -333,6 +340,9 @@ async function computeLabaRugi(startDate, endDate) {
     endDate,
     pendapatan,
     totalPendapatan,
+    hargaPokok,
+    totalHargaPokok,
+    labaKotor,
     bebanPenjualan,
     totalBebanPenjualan,
     bebanAdministrasi,
@@ -580,6 +590,13 @@ const exportLabaRugiPdf = async (req, res) => {
         indent: 10,
       })),
       { cells: ["Total Pendapatan", formatRupiah(data.totalPendapatan), "100.0%"], bold: true, fillColor: "#ecfdf5" },
+      { cells: ["HARGA POKOK JASA", "", ""], bold: true, fillColor: "#f4f4f5" },
+      ...data.hargaPokok.map((r) => ({
+        cells: [r.akun.nama, formatRupiah(r.saldo), persen(r.saldo)],
+        indent: 10,
+      })),
+      { cells: ["Total Harga Pokok Jasa", formatRupiah(data.totalHargaPokok), persen(data.totalHargaPokok)], bold: true, fillColor: "#fafafa" },
+      { cells: ["LABA KOTOR", formatRupiah(data.labaKotor), persen(data.labaKotor)], bold: true, fillColor: "#e4e4e7" },
       { cells: ["BEBAN PENJUALAN", "", ""], bold: true, fillColor: "#f4f4f5" },
       ...data.bebanPenjualan.map((r) => ({
         cells: [r.akun.nama, formatRupiah(r.saldo), persen(r.saldo)],
