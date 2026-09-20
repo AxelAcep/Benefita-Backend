@@ -1,7 +1,7 @@
 // controllers/pendapatanController.js
 const { PrismaClient } = require("@prisma/client");
 const prisma = new PrismaClient();
-const { toPeriode, createJurnalTransaksi } = require("../services/jurnal.service");
+const { createJurnalTransaksi } = require("../services/jurnal.service");
 
 /**
  * GET /api/accounting/pendapatan
@@ -1050,6 +1050,8 @@ const KATEGORI_AKUN_VALUES = [
   "HUTANG_LANCAR",
   "HUTANG_JANGKA_PANJANG",
   "MODAL_AKUN",
+  "BEBAN_PENJUALAN",
+  "BEBAN_ADMINISTRASI",
 ];
 
 // ─── CREATE AKUN ──────────────────────────────────────────────────
@@ -1401,12 +1403,6 @@ const approveRequestKeuangan = async (req, res) => {
       skipAlasan = "Request ini gak nunjuk akun, jurnal gak di-generate otomatis.";
     } else if (!akunKasBank) {
       skipAlasan = "Belum ada akun Kas & Bank aktif — jurnal gak di-generate otomatis. Tambahin dulu di Master Akun (tandai isKasBank).";
-    } else {
-      const periode = toPeriode(existing.tanggal);
-      const periodeRow = await prisma.periodeAkuntansi.findUnique({ where: { periode } });
-      if (periodeRow?.status === "CLOSED") {
-        skipAlasan = `Periode ${periode} udah ditutup — jurnal gak di-generate otomatis buat tanggal ini.`;
-      }
     }
 
     const data = await prisma.$transaction(async (tx) => {

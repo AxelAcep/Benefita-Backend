@@ -6,12 +6,9 @@
 // lama yang dibiarkan jadi arsip "(Lama)".
 const {
   prisma,
-  isDebitNormal,
   mutasiBersih,
-  toPeriode,
   validasiBarisJurnal,
   createJurnalTransaksi,
-  findOrCreateLabaDitahan,
 } = require("../services/jurnal.service");
 
 const JURNAL_INCLUDE = {
@@ -41,15 +38,6 @@ const createJurnal = async (req, res) => {
     const validasi = validasiBarisJurnal(baris);
     if (!validasi.valid) {
       return res.status(400).json({ message: validasi.message });
-    }
-
-    // Gak boleh posting ke periode yang udah ditutup.
-    const periode = toPeriode(tanggal);
-    const periodeRow = await prisma.periodeAkuntansi.findUnique({ where: { periode } });
-    if (periodeRow?.status === "CLOSED") {
-      return res.status(400).json({
-        message: `Periode ${periode} sudah ditutup (Closed). Gak bisa nambah jurnal baru di periode itu.`,
-      });
     }
 
     // Semua akun yang dipakai harus ada & aktif.
@@ -88,11 +76,15 @@ const getJurnalList = async (req, res) => {
   try {
     const page = parseInt(req.query.page) || 1;
     const limit = parseInt(req.query.limit) || 10;
-    const { status, periode, search } = req.query;
+    const { search, startDate, endDate } = req.query;
 
     const where = {};
-    if (status && ["POSTED", "CLOSED"].includes(status)) where.status = status;
-    if (periode) where.periode = periode;
+    if (startDate || endDate) {
+      where.tanggal = {
+        ...(startDate ? { gte: new Date(startDate) } : {}),
+        ...(endDate ? { lte: new Date(`${endDate}T23:59:59.999Z`) } : {}),
+      };
+    }
     if (search) {
       where.OR = [
         { deskripsi: { contains: search, mode: "insensitive" } },
@@ -154,30 +146,40 @@ const getBukuBesarAkun = async (req, res) => {
     const akun = await prisma.akun.findUnique({ where: { id: parseInt(akunId) } });
     if (!akun) return res.status(404).json({ message: "Akun tidak ditemukan" });
 
-    const where = {
-      akunId: parseInt(akunId),
-      transaksi: {
-        status: { in: ["POSTED", "CLOSED"] },
-        ...(startDate || endDate
-          ? {
-              tanggal: {
-                ...(startDate ? { gte: new Date(startDate) } : {}),
-                ...(endDate ? { lte: new Date(`${endDate}T23:59:59.999Z`) } : {}),
-              },
-            }
-          : {}),
-      },
-    };
+    // Saldo awal PERIODE (bukan saldo awal akun sejak awal berdiri) — akun
+    // saldoAwal + semua mutasi SEBELUM startDate. Kalau gak, filter tanggal
+    // bakal bikin saldo berjalan keliatan understated karena mutasi
+    // sebelum rentang yang difilter ke-skip padahal harusnya tetep kehitung.
+    let saldoAwalPeriode = Number(akun.saldoAwal);
+    if (startDate) {
+      const aggSebelum = await prisma.jurnalBaris.aggregate({
+        where: { akunId: parseInt(akunId), transaksi: { tanggal: { lt: new Date(startDate) } } },
+        _sum: { debit: true, kredit: true },
+      });
+      saldoAwalPeriode += mutasiBersih(akun.jenis, aggSebelum._sum.debit || 0, aggSebelum._sum.kredit || 0);
+    }
 
     const barisList = await prisma.jurnalBaris.findMany({
-      where,
+      where: {
+        akunId: parseInt(akunId),
+        transaksi: {
+          ...(startDate || endDate
+            ? {
+                tanggal: {
+                  ...(startDate ? { gte: new Date(startDate) } : {}),
+                  ...(endDate ? { lte: new Date(`${endDate}T23:59:59.999Z`) } : {}),
+                },
+              }
+            : {}),
+        },
+      },
       include: {
         transaksi: { select: { id: true, noJurnal: true, tanggal: true, deskripsi: true, status: true } },
       },
       orderBy: [{ transaksi: { tanggal: "asc" } }, { id: "asc" }],
     });
 
-    let saldo = Number(akun.saldoAwal);
+    let saldo = saldoAwalPeriode;
     const rows = barisList.map((b) => {
       saldo += mutasiBersih(akun.jenis, b.debit, b.kredit);
       return {
@@ -194,7 +196,7 @@ const getBukuBesarAkun = async (req, res) => {
 
     return res.status(200).json({
       akun: { id: akun.id, kode: akun.kode, nama: akun.nama, jenis: akun.jenis },
-      saldoAwal: akun.saldoAwal,
+      saldoAwal: saldoAwalPeriode,
       saldoAkhir: saldo,
       rows,
     });
@@ -229,17 +231,28 @@ const getBukuBesarRingkasan = async (req, res) => {
 
     const result = [];
     for (const akun of akunList) {
+      // Saldo awal PERIODE, sama kayak getBukuBesarAkun — biar konsisten
+      // dan gak understated pas difilter ke rentang tanggal tertentu.
+      let saldoAwalPeriode = Number(akun.saldoAwal);
+      if (startDate) {
+        const aggSebelum = await prisma.jurnalBaris.aggregate({
+          where: { akunId: akun.id, transaksi: { tanggal: { lt: new Date(startDate) } } },
+          _sum: { debit: true, kredit: true },
+        });
+        saldoAwalPeriode += mutasiBersih(akun.jenis, aggSebelum._sum.debit || 0, aggSebelum._sum.kredit || 0);
+      }
+
       const agg = await prisma.jurnalBaris.aggregate({
-        where: { akunId: akun.id, transaksi: { status: { in: ["POSTED", "CLOSED"] }, ...tanggalFilter } },
+        where: { akunId: akun.id, transaksi: { ...tanggalFilter } },
         _sum: { debit: true, kredit: true },
       });
       const totalDebit = Number(agg._sum.debit || 0);
       const totalKredit = Number(agg._sum.kredit || 0);
-      const saldoAkhir = Number(akun.saldoAwal) + mutasiBersih(akun.jenis, totalDebit, totalKredit);
+      const saldoAkhir = saldoAwalPeriode + mutasiBersih(akun.jenis, totalDebit, totalKredit);
 
       result.push({
         akun: { id: akun.id, kode: akun.kode, nama: akun.nama, jenis: akun.jenis },
-        saldoAwal: akun.saldoAwal,
+        saldoAwal: saldoAwalPeriode,
         totalDebit,
         totalKredit,
         saldoAkhir,
@@ -253,202 +266,81 @@ const getBukuBesarRingkasan = async (req, res) => {
   }
 };
 
-const getPeriodeList = async (req, res) => {
-  try {
-    // Gabungin periode yang udah ada di PeriodeAkuntansi dengan periode
-    // yang punya transaksi tapi belum pernah ditutup (masih implicitly OPEN).
-    const [periodeRows, distinctTransaksi] = await Promise.all([
-      prisma.periodeAkuntansi.findMany({ orderBy: { periode: "desc" } }),
-      prisma.jurnalTransaksi.findMany({ distinct: ["periode"], select: { periode: true } }),
-    ]);
-
-    const known = new Set(periodeRows.map((p) => p.periode));
-    const implicitOpen = distinctTransaksi
-      .map((t) => t.periode)
-      .filter((p) => !known.has(p))
-      .map((p) => ({ periode: p, status: "OPEN", labaRugiBersih: null, closedAt: null }));
-
-    const data = [...periodeRows, ...implicitOpen].sort((a, b) => (a.periode < b.periode ? 1 : -1));
-    return res.status(200).json({ data });
-  } catch (error) {
-    console.error("[getPeriodeList error]", error);
-    return res.status(500).json({ message: "Terjadi kesalahan server." });
-  }
-};
-
-/**
- * TUTUP BUKU — kunci semua transaksi POSTED di periode itu jadi CLOSED,
- * nolin akun Pendapatan & Beban, selisihnya (Laba/Rugi) dipindah ke Modal
- * "Laba Ditahan" lewat 1 jurnal penutup otomatis.
- */
-const tutupBuku = async (req, res) => {
-  try {
-    const { periode } = req.body; // format YYYYMM
-    if (!periode || !/^\d{6}$/.test(periode)) {
-      return res.status(400).json({ message: "Periode wajib diisi, format YYYYMM (contoh: 202609)" });
-    }
-
-    const existing = await prisma.periodeAkuntansi.findUnique({ where: { periode } });
-    if (existing?.status === "CLOSED") {
-      return res.status(400).json({ message: `Periode ${periode} sudah pernah ditutup` });
-    }
-
-    const closedBy = req.user?.pegawaiId || null;
-
-    const result = await prisma.$transaction(async (tx) => {
-      // Hitung saldo Pendapatan & Beban KHUSUS periode ini (bukan kumulatif)
-      const akunPnB = await tx.akun.findMany({ where: { jenis: { in: ["PENDAPATAN", "BEBAN"] } } });
-
-      const barisPenutup = [];
-      let totalPendapatan = 0;
-      let totalBeban = 0;
-
-      for (const akun of akunPnB) {
-        const agg = await tx.jurnalBaris.aggregate({
-          where: { akunId: akun.id, transaksi: { periode, status: "POSTED" } },
-          _sum: { debit: true, kredit: true },
-        });
-        const totalDebit = Number(agg._sum.debit || 0);
-        const totalKredit = Number(agg._sum.kredit || 0);
-        const saldoPeriode = mutasiBersih(akun.jenis, totalDebit, totalKredit); // kredit-normal utk PENDAPATAN, debit-normal utk BEBAN
-
-        if (saldoPeriode === 0) continue;
-
-        if (akun.jenis === "PENDAPATAN") {
-          totalPendapatan += saldoPeriode;
-          // saldo Pendapatan (kredit-normal, positif) → nol-in dgn DEBIT sebesar saldoPeriode
-          barisPenutup.push({ akunId: akun.id, debit: saldoPeriode, kredit: 0, keterangan: "Tutup buku — nol-in Pendapatan" });
-        } else {
-          totalBeban += saldoPeriode;
-          // saldo Beban (debit-normal, positif) → nol-in dgn KREDIT sebesar saldoPeriode
-          barisPenutup.push({ akunId: akun.id, debit: 0, kredit: saldoPeriode, keterangan: "Tutup buku — nol-in Beban" });
-        }
-      }
-
-      const labaRugiBersih = totalPendapatan - totalBeban;
-
-      let jurnalPenutup = null;
-      if (barisPenutup.length > 0) {
-        const labaDitahan = await findOrCreateLabaDitahan(tx);
-        // Penyeimbang ke Laba Ditahan (MODAL, kredit-normal):
-        // laba (positif) → kredit Laba Ditahan (nambah modal)
-        // rugi (negatif) → debit Laba Ditahan (ngurangin modal)
-        if (labaRugiBersih >= 0) {
-          barisPenutup.push({ akunId: labaDitahan.id, debit: 0, kredit: labaRugiBersih, keterangan: "Tutup buku — Laba periode ke Laba Ditahan" });
-        } else {
-          barisPenutup.push({ akunId: labaDitahan.id, debit: -labaRugiBersih, kredit: 0, keterangan: "Tutup buku — Rugi periode dari Laba Ditahan" });
-        }
-
-        jurnalPenutup = await createJurnalTransaksi(tx, {
-          tanggal: new Date(`${periode.slice(0, 4)}-${periode.slice(4, 6)}-01T00:00:00.000Z`),
-          deskripsi: `Jurnal penutup periode ${periode}`,
-          mode: "ADVANCED",
-          baris: barisPenutup,
-          sumber: "TUTUP_BUKU",
-          status: "CLOSED",
-          createdBy: closedBy,
-        });
-      }
-
-      // Kunci semua transaksi POSTED di periode ini (termasuk jurnal
-      // penutup yang baru dibuat udah CLOSED dari awal).
-      await tx.jurnalTransaksi.updateMany({
-        where: { periode, status: "POSTED" },
-        data: { status: "CLOSED", closedAt: new Date() },
-      });
-
-      const periodeRow = await tx.periodeAkuntansi.upsert({
-        where: { periode },
-        update: {
-          status: "CLOSED",
-          labaRugiBersih,
-          jurnalPenutupId: jurnalPenutup?.id ?? null,
-          closedAt: new Date(),
-          closedBy,
-        },
-        create: {
-          periode,
-          status: "CLOSED",
-          labaRugiBersih,
-          jurnalPenutupId: jurnalPenutup?.id ?? null,
-          closedAt: new Date(),
-          closedBy,
-        },
-      });
-
-      return { periodeRow, jurnalPenutup, totalPendapatan, totalBeban, labaRugiBersih };
-    });
-
-    return res.status(200).json({
-      message: `Periode ${periode} berhasil ditutup`,
-      data: result,
-    });
-  } catch (error) {
-    console.error("[tutupBuku error]", error);
-    return res.status(500).json({ message: error.message || "Terjadi kesalahan server." });
-  }
-};
+// Catatan: fitur Tutup Buku/Periode Akuntansi udah dihapus — semua laporan
+// (Laba Rugi, Neraca, Buku Besar, Kas & Bank) sekarang real-time, dihitung
+// langsung dari JurnalBaris tanpa perlu proses "penutupan" manual. Laba
+// Rugi berjalan otomatis ke-refleksi di Neraca lewat baris "Laba (Rugi)
+// Berjalan" yang dihitung live (lihat getNeracaSnapshot).
 
 // ─────────────────────────────────────────────
 // FITUR 4 — LABA RUGI (read-only)
 // ─────────────────────────────────────────────
 
+const BEBAN_PENJUALAN_KATEGORI = ["BEBAN_PENJUALAN"];
+
+// Real-time: gak ada lagi konsep Draft/Final, laporan selalu dihitung
+// langsung dari JurnalBaris di rentang tanggal yang diminta. Default
+// rentang (kalau startDate/endDate gak dikirim) di-handle di FE (bulan ini).
 const getLaporanLabaRugi = async (req, res) => {
   try {
-    const { startPeriode, endPeriode } = req.query;
-    if (!startPeriode || !endPeriode) {
-      return res.status(400).json({ message: "startPeriode dan endPeriode wajib diisi (format YYYYMM)" });
+    const { startDate, endDate } = req.query;
+    if (!startDate || !endDate) {
+      return res.status(400).json({ message: "startDate dan endDate wajib diisi (format YYYY-MM-DD)" });
     }
+    const tanggalFilter = {
+      gte: new Date(startDate),
+      lte: new Date(`${endDate}T23:59:59.999Z`),
+    };
 
     const akunList = await prisma.akun.findMany({
       where: { jenis: { in: ["PENDAPATAN", "BEBAN"] } },
-      orderBy: [{ jenis: "asc" }, { nama: "asc" }],
+      orderBy: [{ jenis: "asc" }, { kode: "asc" }, { nama: "asc" }],
     });
 
-    const rows = [];
+    const pendapatan = [];
+    const bebanPenjualan = [];
+    const bebanAdministrasi = [];
     let totalPendapatan = 0;
-    let totalBeban = 0;
+    let totalBebanPenjualan = 0;
+    let totalBebanAdministrasi = 0;
 
     for (const akun of akunList) {
-      // sumber TUTUP_BUKU dikecualikan — itu jurnal penutup yang nol-in
-      // akun Pendapatan/Beban periode yang sama, kalau ikut diagregat bakal
-      // nge-cancel-in mutasi asli periode itu sendiri (Laba Rugi jadi 0).
       const agg = await prisma.jurnalBaris.aggregate({
-        where: {
-          akunId: akun.id,
-          transaksi: {
-            status: { in: ["POSTED", "CLOSED"] },
-            sumber: { not: "TUTUP_BUKU" },
-            periode: { gte: startPeriode, lte: endPeriode },
-          },
-        },
+        where: { akunId: akun.id, transaksi: { tanggal: tanggalFilter } },
         _sum: { debit: true, kredit: true },
       });
       const saldo = mutasiBersih(akun.jenis, agg._sum.debit || 0, agg._sum.kredit || 0);
       if (saldo === 0) continue;
 
-      if (akun.jenis === "PENDAPATAN") totalPendapatan += saldo;
-      else totalBeban += saldo;
+      const item = { akun: { id: akun.id, kode: akun.kode, nama: akun.nama, jenis: akun.jenis }, saldo };
 
-      rows.push({ akun: { id: akun.id, kode: akun.kode, nama: akun.nama, jenis: akun.jenis }, saldo });
+      if (akun.jenis === "PENDAPATAN") {
+        totalPendapatan += saldo;
+        pendapatan.push(item);
+      } else if (BEBAN_PENJUALAN_KATEGORI.includes(akun.kategori)) {
+        totalBebanPenjualan += saldo;
+        bebanPenjualan.push(item);
+      } else {
+        totalBebanAdministrasi += saldo;
+        bebanAdministrasi.push(item);
+      }
     }
 
-    // Final kalau SEMUA periode dalam rentang ini udah Closed.
-    const periodeInRange = await prisma.periodeAkuntansi.findMany({
-      where: { periode: { gte: startPeriode, lte: endPeriode } },
-    });
-    const semuaAdaDanClosed =
-      periodeInRange.length > 0 && periodeInRange.every((p) => p.status === "CLOSED");
+    const totalBeban = totalBebanPenjualan + totalBebanAdministrasi;
+    const labaRugiBersih = totalPendapatan - totalBeban;
 
     return res.status(200).json({
       data: {
-        startPeriode,
-        endPeriode,
-        rows,
+        startDate,
+        endDate,
+        pendapatan,
         totalPendapatan,
+        bebanPenjualan,
+        totalBebanPenjualan,
+        bebanAdministrasi,
+        totalBebanAdministrasi,
         totalBeban,
-        labaRugiBersih: totalPendapatan - totalBeban,
-        status: semuaAdaDanClosed ? "FINAL" : "DRAFT",
+        labaRugiBersih,
       },
     });
   } catch (error) {
@@ -512,6 +404,25 @@ const getNeracaSnapshot = async (req, res) => {
     const totalHutangLancar = grup.hutangLancar.reduce((s, i) => s + i.saldo, 0);
     const totalHutangJangkaPanjang = grup.hutangJangkaPanjang.reduce((s, i) => s + i.saldo, 0);
 
+    // Real-time: gak ada lagi jurnal penutup yang mindahin Laba/Rugi ke
+    // Laba Ditahan. Laba (Rugi) Berjalan dihitung LIVE (semua Pendapatan -
+    // Beban sejak awal s/d tanggal snapshot) dan ditambahin ke Modal
+    // sebagai baris tersendiri, biar Neraca selalu balance real-time.
+    const pnbAkun = await prisma.akun.findMany({ where: { jenis: { in: ["PENDAPATAN", "BEBAN"] } } });
+    let labaBerjalan = 0;
+    for (const akun of pnbAkun) {
+      const agg = await prisma.jurnalBaris.aggregate({
+        where: { akunId: akun.id, transaksi: { tanggal: { lte: tanggal } } },
+        _sum: { debit: true, kredit: true },
+      });
+      labaBerjalan += mutasiBersih(akun.jenis, agg._sum.debit || 0, agg._sum.kredit || 0) * (akun.jenis === "PENDAPATAN" ? 1 : -1);
+    }
+
+    if (labaBerjalan !== 0) {
+      grup.modal.push({ akun: { id: null, kode: null, nama: "Laba (Rugi) Berjalan" }, saldo: labaBerjalan });
+    }
+    totals.MODAL += labaBerjalan;
+
     const selisih = Math.round((totals.ASET - (totals.LIABILITAS + totals.MODAL)) * 100) / 100;
 
     return res.status(200).json({
@@ -526,6 +437,7 @@ const getNeracaSnapshot = async (req, res) => {
         hutangJangkaPanjang: grup.hutangJangkaPanjang,
         totalHutangJangkaPanjang,
         modal: grup.modal,
+        labaBerjalan,
         totalAset: totals.ASET,
         totalLiabilitas: totals.LIABILITAS,
         totalModal: totals.MODAL,
@@ -565,13 +477,23 @@ const getKasBank = async (req, res) => {
     let totalSaldo = 0;
 
     for (const akun of akunList) {
+      // Saldo awal PERIODE — sama alasannya kayak Buku Besar.
+      let saldoAwalPeriode = Number(akun.saldoAwal);
+      if (startDate) {
+        const aggSebelum = await prisma.jurnalBaris.aggregate({
+          where: { akunId: akun.id, transaksi: { tanggal: { lt: new Date(startDate) } } },
+          _sum: { debit: true, kredit: true },
+        });
+        saldoAwalPeriode += mutasiBersih(akun.jenis, aggSebelum._sum.debit || 0, aggSebelum._sum.kredit || 0);
+      }
+
       const barisList = await prisma.jurnalBaris.findMany({
-        where: { akunId: akun.id, transaksi: { status: { in: ["POSTED", "CLOSED"] }, ...tanggalFilter } },
+        where: { akunId: akun.id, transaksi: { ...tanggalFilter } },
         include: { transaksi: { select: { noJurnal: true, tanggal: true, deskripsi: true } } },
         orderBy: [{ transaksi: { tanggal: "asc" } }, { id: "asc" }],
       });
 
-      let saldo = Number(akun.saldoAwal);
+      let saldo = saldoAwalPeriode;
       const rows = barisList.map((b) => {
         saldo += mutasiBersih(akun.jenis, b.debit, b.kredit);
         return {
@@ -587,7 +509,7 @@ const getKasBank = async (req, res) => {
       totalSaldo += saldo;
       mutasi.push({
         akun: { id: akun.id, kode: akun.kode, nama: akun.nama },
-        saldoAwal: akun.saldoAwal,
+        saldoAwal: saldoAwalPeriode,
         saldoAkhir: saldo,
         rows,
       });
@@ -607,8 +529,6 @@ module.exports = {
 
   getBukuBesarAkun,
   getBukuBesarRingkasan,
-  getPeriodeList,
-  tutupBuku,
 
   getLaporanLabaRugi,
 
