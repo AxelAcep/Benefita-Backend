@@ -228,12 +228,16 @@ const KAS_BANK_KODE = ["1.2001", "1.2002", "1.2003", "1.2004"];
 
 async function seedBulan(bulan) {
   const a = await getAkunMap();
-  let hari = 2;
+  // Siklus tanggal 2..akhirBulan-1 biar entry tersebar ulang sepanjang
+  // bulan (bukan numpuk di 1 tanggal pas jumlah entry > jumlah hari).
+  const lastDayOfMonth = new Date(TAHUN, bulan, 0).getDate();
+  const spreadDays = Math.max(lastDayOfMonth - 3, 20);
+  let dayCounter = 0;
   let count = 0;
   const nextDay = () => {
-    hari += 1;
-    if (hari > 27) hari = 27;
-    return hari;
+    const hari = 2 + (dayCounter % spreadDays);
+    dayCounter++;
+    return Math.min(hari, lastDayOfMonth - 1);
   };
   const kasBankRotasi = (i) => a[KAS_BANK_KODE[i % KAS_BANK_KODE.length]];
 
@@ -253,6 +257,7 @@ async function seedBulan(bulan) {
       { kode: "2.1009", label: "Hutang PPh Final", nominal: trend(6000000, bulan - 1, 0.1, 6) },
       { kode: "2.1010", label: "Hutang PPN Keluaran", nominal: trend(35000000, bulan - 1, 0.12, 7) },
       { kode: "2.1003", label: "Hutang Vendor Venue", nominal: round100k(trend(115000000, bulan - 1, 0.06, 41) * 0.11) },
+      { kode: "2.1001", label: "Hutang Usaha", nominal: trend(28000000, bulan - 1, 0.2, 100) },
     ];
     for (const s of settlements) {
       const nominal = s.nominal;
@@ -277,6 +282,122 @@ async function seedBulan(bulan) {
       baris: [
         { akunId: a["1.2001"].id, debit: piutangBulanLalu, keterangan: "Pelunasan piutang training bulan lalu" },
         { akunId: a["1.3001"].id, kredit: piutangBulanLalu, keterangan: "Pelunasan piutang training bulan lalu" },
+      ],
+    });
+    count++;
+
+    // Pelunasan Piutang Usaha Lain-Lain bulan lalu (kalau ada)
+    if ((bulan - 1) % 4 === 0) {
+      const piutangLainBulanLalu = trend(19000000, bulan - 1, 0.2, 101);
+      await jurnalLangsung({
+        tanggal: tgl(bulan, nextDay()),
+        deskripsi: `Pelunasan Piutang Usaha Lain-Lain bulan lalu`,
+        mode: "SIMPLE",
+        baris: [
+          { akunId: a["1.2002"].id, debit: piutangLainBulanLalu, keterangan: "Pelunasan piutang usaha lain-lain" },
+          { akunId: a["1.3002"].id, kredit: piutangLainBulanLalu, keterangan: "Pelunasan piutang usaha lain-lain" },
+        ],
+      });
+      count++;
+    }
+  }
+
+  // Pembelian barang/jasa secara kredit (Hutang Usaha) — settlement-nya
+  // udah ada di blok settlements di atas.
+  const hutangUsahaBaru = trend(28000000, bulan, 0.2, 100);
+  await jurnalLangsung({
+    tanggal: tgl(bulan, nextDay()),
+    deskripsi: `Pembelian perlengkapan kantor secara kredit ${bulan}/${TAHUN}`,
+    mode: "SIMPLE",
+    baris: [
+      { akunId: a["5.5012"].id, debit: hutangUsahaBaru, keterangan: "Pembelian perlengkapan kantor" },
+      { akunId: a["2.1001"].id, kredit: hutangUsahaBaru, keterangan: "Belum dibayar ke vendor" },
+    ],
+  });
+  count++;
+
+  // Piutang Usaha Lain-Lain baru (setiap 4 bulan)
+  if (bulan % 4 === 0) {
+    const piutangLainBaru = trend(19000000, bulan, 0.2, 101);
+    await jurnalLangsung({
+      tanggal: tgl(bulan, nextDay()),
+      deskripsi: `Piutang Usaha Lain-Lain baru ${bulan}/${TAHUN}`,
+      mode: "SIMPLE",
+      baris: [
+        { akunId: a["1.3002"].id, debit: piutangLainBaru, keterangan: "Piutang usaha lain-lain" },
+        { akunId: a["4.5001"].id, kredit: piutangLainBaru, keterangan: "Pendapatan lain-lain (belum diterima)" },
+      ],
+    });
+    count++;
+  }
+
+  // Uang Muka Perjalanan Dinas — dikasih tiap kuartal, di-reconcile jadi
+  // beban di kuartal berikutnya.
+  if (bulan % 3 === 1) {
+    const uangMuka = trend(14000000, bulan, 0.1, 102);
+    await jurnalLangsung({
+      tanggal: tgl(bulan, nextDay()),
+      deskripsi: `Uang Muka Perjalanan Dinas Instruktur ${bulan}/${TAHUN}`,
+      mode: "SIMPLE",
+      baris: [
+        { akunId: a["1.5101"].id, debit: uangMuka, keterangan: "Uang muka perjalanan dinas" },
+        { akunId: a["1.1001"].id, kredit: uangMuka, keterangan: "Uang muka perjalanan dinas" },
+      ],
+    });
+    count++;
+  } else if (bulan % 3 === 2) {
+    const uangMukaSebelumnya = trend(14000000, bulan - 1, 0.1, 102);
+    await jurnalLangsung({
+      tanggal: tgl(bulan, nextDay()),
+      deskripsi: `Reconcile Uang Muka Perjalanan Dinas jadi beban ${bulan}/${TAHUN}`,
+      mode: "SIMPLE",
+      baris: [
+        { akunId: a["5.0004"].id, debit: uangMukaSebelumnya, keterangan: "Realisasi perjalanan dinas instruktur" },
+        { akunId: a["1.5101"].id, kredit: uangMukaSebelumnya, keterangan: "Uang muka perjalanan dinas terpakai" },
+      ],
+    });
+    count++;
+  }
+
+  // Hutang Lain-Lain — kejadian sesekali (tiap 5 bulan)
+  if (bulan % 5 === 0) {
+    const hutangLain = trend(7500000, bulan, 0.25, 103);
+    await jurnalLangsung({
+      tanggal: tgl(bulan, nextDay()),
+      deskripsi: `Hutang Lain-Lain (titipan pihak ketiga) ${bulan}/${TAHUN}`,
+      mode: "SIMPLE",
+      baris: [
+        { akunId: a["1.1001"].id, debit: hutangLain, keterangan: "Titipan diterima" },
+        { akunId: a["2.1004"].id, kredit: hutangLain, keterangan: "Titipan pihak ketiga" },
+      ],
+    });
+    count++;
+  }
+
+  // Tambahan Modal — 1x kejadian (suntikan modal pertengahan tahun).
+  if (bulan === 6) {
+    await jurnalLangsung({
+      tanggal: tgl(bulan, nextDay()),
+      deskripsi: `Suntikan Tambahan Modal dari Pemegang Saham`,
+      mode: "SIMPLE",
+      baris: [
+        { akunId: a["1.2001"].id, debit: 300000000, keterangan: "Tambahan modal disetor" },
+        { akunId: a["3.1002"].id, kredit: 300000000, keterangan: "Tambahan modal disetor" },
+      ],
+    });
+    count++;
+  }
+
+  // Hutang Dividen — 1x kejadian (deklarasi dividen akhir tahun, dari
+  // Laba Ditahan tahun-tahun sebelumnya, belum dibayar tunai).
+  if (bulan === 12) {
+    await jurnalLangsung({
+      tanggal: tgl(bulan, nextDay()),
+      deskripsi: `Deklarasi Dividen ke Pemegang Saham`,
+      mode: "SIMPLE",
+      baris: [
+        { akunId: a["3.2001"].id, debit: 150000000, keterangan: "Deklarasi dividen dari Laba Ditahan" },
+        { akunId: a["2.2002"].id, kredit: 150000000, keterangan: "Dividen belum dibayar" },
       ],
     });
     count++;
@@ -307,6 +428,20 @@ async function seedBulan(bulan) {
   });
   count++;
 
+  // Training batch ke-2 (gelombang training kedua bulan ini, tunai) —
+  // volume lebih realistis, gak cuma 1 batch/bulan.
+  const trainingBatch2 = trend(180000000, bulan, 0.15, 25);
+  await jurnalLangsung({
+    tanggal: tgl(bulan, nextDay()),
+    deskripsi: `Pendapatan Training batch 2 (tunai) - ${bulan}/${TAHUN}`,
+    mode: "SIMPLE",
+    baris: [
+      { akunId: kasBankRotasi(bulan + 5).id, debit: trainingBatch2, keterangan: "Pelunasan training batch 2" },
+      { akunId: a["4.1001"].id, kredit: trainingBatch2, keterangan: "Pelunasan training batch 2" },
+    ],
+  });
+  count++;
+
   const pendapatanSertifikasi = trend(230000000, bulan, 0.1, 21);
   await jurnalLangsung({
     tanggal: tgl(bulan, nextDay()),
@@ -315,6 +450,19 @@ async function seedBulan(bulan) {
     baris: [
       { akunId: kasBankRotasi(bulan).id, debit: pendapatanSertifikasi, keterangan: "Sertifikasi BNSP" },
       { akunId: a["4.2001"].id, kredit: pendapatanSertifikasi, keterangan: "Sertifikasi BNSP" },
+    ],
+  });
+  count++;
+
+  // Sertifikasi batch ke-2 (bank berbeda)
+  const sertifikasiBatch2 = trend(70000000, bulan, 0.18, 26);
+  await jurnalLangsung({
+    tanggal: tgl(bulan, nextDay()),
+    deskripsi: `Pendapatan Sertifikasi batch 2 - ${bulan}/${TAHUN}`,
+    mode: "SIMPLE",
+    baris: [
+      { akunId: kasBankRotasi(bulan + 1).id, debit: sertifikasiBatch2, keterangan: "Sertifikasi BNSP batch 2" },
+      { akunId: a["4.2001"].id, kredit: sertifikasiBatch2, keterangan: "Sertifikasi BNSP batch 2" },
     ],
   });
   count++;
