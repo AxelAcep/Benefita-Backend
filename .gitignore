@@ -5,3 +5,5 @@ node_modules
 /src/generated/prisma
 baileys_session
 migration-script
+otkhneyd_benefita_fixed.sql
+otkhneyd_benefita.sql
